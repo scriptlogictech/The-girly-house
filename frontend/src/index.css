@@ -1,0 +1,61 @@
+
+
+
+@import "tailwindcss";
+
+/* Optional Global Styles */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background-color: #fffdfc;
+  color: #333;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+
+
+
+
+@keyframes marquee {
+
+  0%{
+    transform:translateX(0%);
+  }
+
+  100%{
+    transform:translateX(-50%);
+  }
+
+}
+
+.animate-marquee{
+
+  display:flex;
+
+  width:max-content;
+
+  animation:marquee 28s linear infinite;
+
+}
+
+.animate-marquee:hover{
+
+  animation-play-state:paused;
+
+}

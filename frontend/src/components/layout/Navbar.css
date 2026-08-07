@@ -1,0 +1,236 @@
+/* ==========================================================================
+   The Girly House — Navbar
+   Palette pulled from the brand mark: deep burgundy on warm cream.
+   --primary is assumed to already be set globally (e.g. #5C1626).
+   ========================================================================== */
+
+.tgh-navbar {
+  width: 100%;
+  z-index: 50;
+  background-color: #fff;
+  position: relative;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.tgh-navbar--sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  box-shadow: 0 4px 24px rgba(92, 22, 38, 0.08);
+  animation: tgh-slide-down 0.35s ease;
+}
+
+@keyframes tgh-slide-down {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* -------------------------------- Brand -------------------------------- */
+
+.tgh-brand {
+  display: flex;
+  align-items: center;
+}
+
+.tgh-logo {
+  height: 64px;
+  width: auto;
+  object-fit: contain;
+  transition: height 0.3s ease;
+}
+
+.tgh-navbar--sticky .tgh-logo {
+  height: 48px;
+}
+
+/* ------------------------------ Nav links ------------------------------- */
+
+.tgh-navlink {
+  position: relative;
+  color: #57534e;
+  padding-bottom: 4px;
+  transition: color 0.25s ease;
+}
+
+.tgh-navlink::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0%;
+  height: 2px;
+  background-color: var(--primary, #5c1626);
+  transition: width 0.25s ease;
+}
+
+.tgh-navlink:hover {
+  color: var(--primary, #5c1626);
+}
+
+.tgh-navlink:hover::after {
+  width: 100%;
+}
+
+.tgh-navlink--active {
+  color: var(--primary, #5c1626);
+  font-weight: 600;
+}
+
+.tgh-navlink--active::after {
+  width: 100%;
+}
+
+/* -------------------------------- Icons --------------------------------- */
+
+.tgh-icon-btn {
+  color: #57534e;
+  transition: color 0.25s ease, transform 0.2s ease;
+}
+
+.tgh-icon-btn:hover {
+  color: var(--primary, #5c1626);
+  transform: translateY(-1px);
+}
+
+.tgh-badge {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  display: flex;
+  height: 20px;
+  width: 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background-color: var(--primary, #5c1626);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  box-shadow: 0 0 0 2px #fff;
+}
+
+.tgh-badge--static {
+  position: static;
+  box-shadow: none;
+  padding: 2px 8px;
+  height: auto;
+  width: auto;
+}
+
+/* -------------------------------- Avatar --------------------------------- */
+
+.tgh-avatar {
+  display: flex;
+  height: 36px;
+  width: 36px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, var(--primary, #5c1626), #8a2b40);
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* ------------------------------- Dropdown -------------------------------- */
+
+.tgh-dropdown {
+  position: absolute;
+  right: 0;
+  margin-top: 14px;
+  width: 240px;
+  overflow: hidden;
+  border-radius: 14px;
+  background-color: #fff;
+  box-shadow: 0 12px 32px rgba(92, 22, 38, 0.14);
+  animation: tgh-fade-in 0.2s ease;
+}
+
+@keyframes tgh-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tgh-dropdown__header {
+  border-bottom: 1px solid #f1e9e3;
+  padding: 16px 20px;
+  background-color: #fbf4e9;
+}
+
+.tgh-dropdown__item {
+  display: block;
+  width: 100%;
+  padding: 12px 20px;
+  text-align: left;
+  color: #44403c;
+  font-size: 14px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.tgh-dropdown__item:hover {
+  background-color: #fbf4e9;
+  color: var(--primary, #5c1626);
+}
+
+.tgh-dropdown__item--danger {
+  border-top: 1px solid #f1e9e3;
+  color: #dc2626;
+}
+
+.tgh-dropdown__item--danger:hover {
+  background-color: #fef2f2;
+  color: #b91c1c;
+}
+
+/* ----------------------------- Mobile panel ------------------------------- */
+
+.tgh-mobile-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 100;
+  height: 100vh;
+  width: 288px;
+  background-color: #fff;
+  box-shadow: -12px 0 32px rgba(92, 22, 38, 0.12);
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+}
+
+.tgh-mobile-panel--open {
+  transform: translateX(0);
+}
+
+/* ------------------------------ Accessibility ----------------------------- */
+
+.tgh-navlink:focus-visible,
+.tgh-icon-btn:focus-visible,
+.tgh-dropdown__item:focus-visible {
+  outline: 2px solid var(--primary, #5c1626);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tgh-navbar,
+  .tgh-navbar--sticky,
+  .tgh-logo,
+  .tgh-navlink::after,
+  .tgh-icon-btn,
+  .tgh-dropdown,
+  .tgh-mobile-panel {
+    animation: none !important;
+    transition: none !important;
+  }
+}

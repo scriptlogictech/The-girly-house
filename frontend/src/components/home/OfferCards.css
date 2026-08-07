@@ -1,0 +1,179 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap");
+
+.offer-section{
+    padding:80px 0;
+    background:#faf7f2;
+}
+
+.offer-container{
+    width:90%;
+    max-width:1400px;
+    margin:auto;
+
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:30px;
+}
+
+.offer-card{
+    position:relative;
+    overflow:hidden;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    border:2px solid #1f2238;
+    border-radius:28px;
+
+    padding:20px 20px 0px 20px;
+
+    min-height:320px;
+
+    background:#fffdf8;
+}
+
+.offer-content{
+    width:45%;
+    z-index:2;
+}
+
+.offer-small{
+    color:#636878;
+    font-size:18px;
+    font-weight:500;
+    letter-spacing:1px;
+}
+
+.offer-content h2{
+    font-size:82px;
+    line-height:1;
+    color:#181c34;
+    font-family:"Playfair Display", serif;
+    margin:10px 0 30px;
+}
+
+.offer-content h3{
+    font-family:"Playfair Display", serif;
+    font-size:30px;
+    line-height:1.3;
+    color:#5f6475;
+    margin-bottom:40px;
+}
+
+.offer-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    width:180px;
+    height:60px;
+
+    border-radius:50px;
+
+    background:#171c34;
+    color:#fff;
+    text-decoration:none;
+    font-weight:600;
+    transition:.3s;
+}
+
+.offer-btn:hover{
+    background:#6B1028;
+}
+
+.offer-image{
+    width:52%;
+    height:100%;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+}
+
+.offer-image img{
+    width:100%;
+    max-height:420px;
+    object-fit:contain;
+    /* z-index: 500; */
+}
+
+.offer-circle{
+    position:absolute;
+    border:2px dashed #a6acb8;
+    border-radius:50%;
+}
+
+.offer-circle.top{
+    width:260px;
+    height:260px;
+    top:-120px;
+    right:-120px;
+}
+
+.offer-circle.bottom{
+    width:240px;
+    height:240px;
+    left:40%;
+    bottom:-150px;
+}
+
+.offer-badge{
+    position:absolute;
+    top:55px;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:75px;
+    height:75px;
+
+    border:4px solid #676d7b;
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:34px;
+    color:#676d7b;
+    font-weight:bold;
+}
+
+@media(max-width:992px){
+
+.offer-container{
+grid-template-columns:1fr;
+}
+
+.offer-content{
+width:50%;
+}
+
+}
+
+@media(max-width:768px){
+
+.offer-card{
+flex-direction:column;
+text-align:center;
+padding:30px;
+}
+
+.offer-content,
+.offer-image{
+width:100%;
+}
+
+.offer-content h2{
+font-size:60px;
+}
+
+.offer-content h3{
+font-size:28px;
+}
+
+.offer-badge{
+display:none;
+}
+
+}

@@ -12,7 +12,8 @@ require("./config/db");
 // =======================
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    // origin: "http://localhost:5173",
+    origin: "https://thegirlyhouse.com/",
     credentials: true,
   })
 );

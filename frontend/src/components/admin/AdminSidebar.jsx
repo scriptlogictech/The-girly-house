@@ -16,6 +16,11 @@ const menuItems = [
     icon: <FaHome />,
   },
   {
+    name: "Home",
+    path: "/",
+    icon: <FaHome />,
+  },
+  {
     name: "Categories",
     path: "/admin/categories",
     icon: <FaTags />,

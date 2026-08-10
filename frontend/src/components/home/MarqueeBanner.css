@@ -1,0 +1,366 @@
+/* =========================================================
+   THE GIRLY HOUSE
+   MARQUEE BANNER
+========================================================= */
+
+.marquee-banner {
+  --wine: #6b1028;
+  --cream: #f9f4ec;
+  --gold: #d8b36a;
+
+  position: relative;
+  width: 100%;
+
+  overflow: hidden;
+
+  background: var(--wine);
+
+  /*
+    Keep the banner compact.
+    The waves are included inside this height.
+  */
+  padding: 22px 0;
+
+  color: var(--cream);
+}
+
+
+/* =========================================================
+   MARQUEE TRACK
+========================================================= */
+
+.marquee-banner__track {
+  display: flex;
+
+  width: max-content;
+
+  align-items: center;
+
+  position: relative;
+  z-index: 3;
+
+  animation: marquee-scroll 28s linear infinite;
+}
+
+
+/* =========================================================
+   MARQUEE ITEM
+========================================================= */
+
+.marquee-banner__item {
+  display: flex;
+
+  align-items: center;
+
+  flex-shrink: 0;
+
+  margin: 0 28px;
+}
+
+
+/* =========================================================
+   MARQUEE TEXT
+========================================================= */
+
+.marquee-banner__item h2 {
+  margin: 0;
+
+  font-family: "Jost", sans-serif;
+
+  font-size: clamp(2rem, 4vw, 3.4rem);
+
+  font-weight: 600;
+
+  line-height: 1;
+
+  letter-spacing: 0.08em;
+
+  text-transform: uppercase;
+
+  color: var(--cream);
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   STAR
+========================================================= */
+
+.marquee-banner__star {
+  flex-shrink: 0;
+
+  margin-left: 55px;
+
+  color: var(--gold);
+
+  font-size: 20px;
+
+  animation: star-rotate 6s linear infinite;
+}
+
+
+/* =========================================================
+   WAVE CONTAINER
+========================================================= */
+
+.marquee-wave {
+  position: absolute;
+
+  left: 0;
+
+  width: 100%;
+
+  height: 30px;
+
+  overflow: hidden;
+
+  pointer-events: none;
+
+  z-index: 2;
+}
+
+
+/* =========================================================
+   SVG
+========================================================= */
+
+.marquee-wave svg {
+  display: block;
+
+  width: 100%;
+
+  height: 100%;
+}
+
+
+/* =========================================================
+   WAVE LINES
+========================================================= */
+
+.marquee-wave path {
+  fill: none;
+
+  stroke: var(--cream);
+
+  stroke-width: 2;
+
+  vector-effect: non-scaling-stroke;
+
+  opacity: 0.85;
+}
+
+
+/* =========================================================
+   TOP WAVE
+========================================================= */
+
+.marquee-wave--top {
+  top: 0;
+}
+
+
+/* =========================================================
+   BOTTOM WAVE
+========================================================= */
+
+.marquee-wave--bottom {
+  bottom: 0;
+
+  transform: rotate(180deg);
+}
+
+
+/* =========================================================
+   SUBTLE WAVE MOVEMENT
+========================================================= */
+
+.marquee-wave--top svg {
+  animation: wave-top 8s ease-in-out infinite;
+}
+
+.marquee-wave--bottom svg {
+  animation: wave-bottom 8s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   MARQUEE ANIMATION
+========================================================= */
+
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+
+/* =========================================================
+   TOP WAVE ANIMATION
+========================================================= */
+
+@keyframes wave-top {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(-15px);
+  }
+}
+
+
+/* =========================================================
+   BOTTOM WAVE ANIMATION
+========================================================= */
+
+@keyframes wave-bottom {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(15px);
+  }
+}
+
+
+/* =========================================================
+   STAR ROTATION
+========================================================= */
+
+@keyframes star-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================================
+   HOVER
+========================================================= */
+
+.marquee-banner:hover
+.marquee-banner__track {
+  animation-play-state: paused;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 768px) {
+
+  .marquee-banner {
+    padding: 28px 0;
+  }
+
+  .marquee-wave {
+    height: 22px;
+  }
+
+  .marquee-banner__item {
+    margin: 0 12px;
+  }
+
+  .marquee-banner__item h2 {
+    font-size: 1.35rem;
+
+    letter-spacing: 0.045em;
+  }
+
+  .marquee-banner__star {
+    margin-left: 20px;
+
+    font-size: 13px;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .marquee-banner {
+    padding: 25px 0;
+  }
+
+  .marquee-wave {
+    height: 18px;
+  }
+
+  .marquee-banner__item {
+    margin: 0 9px;
+  }
+
+  .marquee-banner__item h2 {
+    font-size: 1.15rem;
+
+    letter-spacing: 0.035em;
+  }
+
+  .marquee-banner__star {
+    margin-left: 15px;
+
+    font-size: 11px;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+
+@media (max-width: 360px) {
+
+  .marquee-banner {
+    padding: 23px 0;
+  }
+
+  .marquee-wave {
+    height: 17px;
+  }
+
+  .marquee-banner__item {
+    margin: 0 7px;
+  }
+
+  .marquee-banner__item h2 {
+    font-size: 1rem;
+
+    letter-spacing: 0.025em;
+  }
+
+  .marquee-banner__star {
+    margin-left: 12px;
+
+    font-size: 10px;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .marquee-banner__track,
+  .marquee-banner__star,
+  .marquee-wave svg {
+    animation: none;
+  }
+}

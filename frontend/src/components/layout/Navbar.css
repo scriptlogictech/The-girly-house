@@ -37,14 +37,14 @@
 }
 
 .tgh-logo {
-  height: 64px;
+  height: 78px;
   width: auto;
   object-fit: contain;
   transition: height 0.3s ease;
 }
 
 .tgh-navbar--sticky .tgh-logo {
-  height: 48px;
+  height: 50px;
 }
 
 /* ------------------------------ Nav links ------------------------------- */
@@ -234,3 +234,28 @@
     transition: none !important;
   }
 }
+
+
+/* ----------------------------- Mobile Logo ----------------------------- */
+
+@media (max-width: 1023px) {
+  .tgh-logo {
+    height: 48px;
+  }
+
+  .tgh-navbar--sticky .tgh-logo {
+    /* height: 50px; */
+  }
+}
+
+@media (max-width: 480px) {
+  .tgh-logo {
+    height: 48px;
+  }
+
+  .tgh-navbar--sticky .tgh-logo {
+    /* height: 36px; */
+  }
+}
+
+

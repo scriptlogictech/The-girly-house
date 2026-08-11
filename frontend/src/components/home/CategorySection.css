@@ -55,6 +55,8 @@
   font-size: 17px;
 }
 
+
+
 /* ==========================
    GRID
 ========================== */
@@ -298,11 +300,20 @@ height:330px;
 @media(max-width:500px){
 
 .category-section{
-padding:70px 0;
+padding:20px 0;
+}
+
+.category-header p {
+  width: 650px;
+  max-width: 100%;
+  /* margin: 20px auto 0; */
+  color: #777;
+  /* line-height: 1.8; */
+  font-size: 16px;
 }
 
 .category-header h2{
-font-size:30px;
+font-size:25px;
 }
 
 .category-content h3{

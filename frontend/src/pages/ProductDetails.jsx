@@ -10,6 +10,7 @@ import RelatedProducts from "../components/product/RelatedProducts";
 
 import "./ProductDetails.css";
 
+
 const ProductDetails = () => {
   const { slug } = useParams();
 

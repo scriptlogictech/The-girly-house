@@ -1,0 +1,330 @@
+/* =========================================================
+   THE GIRLY HOUSE — SHOP PAGE
+========================================================= */
+
+.shop-page {
+  min-height: 100vh;
+  padding: 40px 0 70px;
+  background: #fffdfc;
+}
+
+.shop-container {
+  width: 92%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* =========================================================
+   BREADCRUMB
+========================================================= */
+
+.shop-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-bottom: 12px;
+
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  color: #777;
+}
+
+.shop-breadcrumb a {
+  color: #777;
+  text-decoration: none;
+
+  transition: color 0.25s ease;
+}
+
+.shop-breadcrumb a:hover {
+  color: #6b1028;
+}
+
+.shop-breadcrumb__current {
+  color: #6b1028;
+  font-weight: 500;
+}
+
+/* =========================================================
+   SHOP HEADER
+========================================================= */
+
+.shop-header {
+  margin-bottom: 35px;
+}
+
+.shop-title {
+  margin: 0;
+
+  color: #6b1028;
+
+  font-family: "Playfair Display", serif;
+  font-size: clamp(38px, 4vw, 58px);
+  font-weight: 700;
+
+  line-height: 1.1;
+}
+
+.shop-description {
+  max-width: 650px;
+
+  margin-top: 10px;
+
+  color: #777;
+
+  font-family: "Poppins", sans-serif;
+  font-size: 15px;
+
+  line-height: 1.7;
+}
+
+/* =========================================================
+   MAIN SHOP LAYOUT
+========================================================= */
+
+.shop-layout {
+  display: grid;
+
+  grid-template-columns: 260px minmax(0, 1fr);
+
+  gap: 35px;
+
+  align-items: start;
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.shop-sidebar {
+  position: sticky;
+  top: 100px;
+
+  width: 100%;
+
+  padding: 22px;
+
+  background: #fff;
+
+  border: 1px solid #eee4dc;
+  border-radius: 18px;
+
+  box-shadow: 0 6px 25px rgba(70, 30, 40, 0.05);
+}
+
+/* =========================================================
+   PRODUCTS SECTION
+========================================================= */
+
+.shop-products {
+  min-width: 0;
+}
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.shop-toolbar {
+  margin-bottom: 25px;
+
+  padding: 15px 18px;
+
+  background: #fff;
+
+  border: 1px solid #eee4dc;
+  border-radius: 16px;
+
+  box-shadow: 0 5px 20px rgba(70, 30, 40, 0.04);
+}
+
+/* =========================================================
+   PRODUCT GRID
+========================================================= */
+
+.shop-product-grid {
+  width: 100%;
+}
+
+/* =========================================================
+   PAGINATION
+========================================================= */
+
+.shop-pagination {
+  display: flex;
+  justify-content: center;
+
+  margin-top: 45px;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1100px) {
+
+  .shop-page {
+    padding-top: 30px;
+  }
+
+  .shop-container {
+    width: 94%;
+  }
+
+  .shop-layout {
+    grid-template-columns: 220px minmax(0, 1fr);
+
+    gap: 25px;
+  }
+
+  .shop-sidebar {
+    padding: 18px;
+  }
+
+  .shop-header {
+    margin-bottom: 28px;
+  }
+}
+
+/* =========================================================
+   SMALL TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .shop-layout {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+
+  .shop-sidebar {
+    position: static;
+  }
+
+  .shop-products {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+  .shop-page {
+    padding: 25px 0 50px;
+  }
+
+  .shop-container {
+    width: 94%;
+  }
+
+  .shop-breadcrumb {
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+
+  .shop-header {
+    margin-bottom: 22px;
+  }
+
+  .shop-title {
+    font-size: 38px;
+  }
+
+  .shop-description {
+    margin-top: 7px;
+
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .shop-layout {
+    gap: 18px;
+  }
+
+  .shop-sidebar {
+    padding: 16px;
+
+    border-radius: 14px;
+  }
+
+  .shop-toolbar {
+    padding: 12px;
+
+    margin-bottom: 18px;
+
+    border-radius: 14px;
+  }
+
+  .shop-pagination {
+    margin-top: 30px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .shop-page {
+    padding: 20px 0 40px;
+  }
+
+  .shop-container {
+    width: 92%;
+  }
+
+  .shop-breadcrumb {
+    font-size: 11px;
+  }
+
+  .shop-title {
+    font-size: 32px;
+  }
+
+  .shop-description {
+    font-size: 12px;
+  }
+
+  .shop-header {
+    margin-bottom: 18px;
+  }
+
+  .shop-layout {
+    gap: 15px;
+  }
+
+  .shop-sidebar {
+    padding: 13px;
+  }
+
+  .shop-toolbar {
+    padding: 10px;
+  }
+
+  .shop-pagination {
+    margin-top: 25px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL DEVICES
+========================================================= */
+
+@media (max-width: 360px) {
+
+  .shop-title {
+    font-size: 29px;
+  }
+
+  .shop-description {
+    font-size: 11px;
+  }
+
+  .shop-container {
+    width: 94%;
+  }
+}

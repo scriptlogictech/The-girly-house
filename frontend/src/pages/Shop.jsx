@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 
+import "./Shop.css";
+
 import FilterSidebar from "../components/shop/FilterSidebar";
 import ProductToolbar from "../components/shop/ProductToolbar";
 import ProductGrid from "../components/shop/ProductGrid";
@@ -79,83 +81,79 @@ const Shop = () => {
   };
 
   return (
-    <section className="bg-[#FFFDFC] min-h-screen py-10">
-      <div className="max-w-7xl mx-auto px-4">
+   <section className="shop-page">
+  <div className="shop-container">
 
-        {/* Breadcrumb */}
+    {/* Breadcrumb */}
+    <div className="shop-breadcrumb">
+      <Link to="/">Home</Link>
 
-        <div className="text-sm text-gray-500 mb-3">
-          <Link
-            to="/"
-            className="hover:text-[#6B1028]"
-          >
-            Home
-          </Link>
+      <span>/</span>
 
-          <span className="mx-2">/</span>
+      <span className="shop-breadcrumb__current">
+        Shop
+      </span>
+    </div>
 
-          <span className="text-[#6B1028] font-medium">
-            Shop
-          </span>
-        </div>
+    {/* Heading */}
+    <div className="shop-header">
+      <h1 className="shop-title">
+        Shop
+      </h1>
 
-        {/* Heading */}
+      <p className="shop-description">
+        Discover our latest collection crafted just for you.
+      </p>
+    </div>
 
-        <div className="mb-8">
+    {/* Shop Layout */}
+    <div className="shop-layout">
 
-          <h1 className="text-4xl md:text-5xl font-serif text-[#6B1028]">
-            Shop
-          </h1>
+      {/* Sidebar */}
+      <div className="shop-sidebar">
+        <FilterSidebar
+          category={category}
+          setCategory={handleCategory}
+          clearFilters={clearFilters}
+        />
+      </div>
 
-          <p className="text-gray-500 mt-2">
-            Discover our latest collection crafted just for you.
-          </p>
+      {/* Products */}
+      <div className="shop-products">
 
-        </div>
-
-        {/* Shop Layout */}
-
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-
-          {/* Sidebar */}
-
-          <FilterSidebar
-            category={category}
-            setCategory={handleCategory}
-            clearFilters={clearFilters}
+        <div className="shop-toolbar">
+          <ProductToolbar
+            search={search}
+            setSearch={handleSearch}
+            total={total}
+            sort={sort}
+            setSort={handleSort}
           />
-
-          {/* Product Section */}
-
-          <div className="lg:col-span-3">
-
-            <ProductToolbar
-              search={search}
-              setSearch={handleSearch}
-              total={total}
-              sort={sort}
-              setSort={handleSort}
-            />
-
-            <ProductGrid
-              products={products}
-              loading={loading}
-            />
-
-            {!loading && products.length > 0 && (
-              <Pagination
-                page={page}
-                pages={pages}
-                setPage={setPage}
-              />
-            )}
-
-          </div>
-
         </div>
+
+        <div className="shop-product-grid">
+          <ProductGrid
+            products={products}
+            loading={loading}
+          />
+        </div>
+
+        {!loading && products.length > 0 && (
+          <div className="shop-pagination">
+            <Pagination
+              page={page}
+              pages={pages}
+              setPage={setPage}
+            />
+          </div>
+        )}
 
       </div>
-    </section>
+
+    </div>
+
+  </div>
+</section>
   );
 };
 

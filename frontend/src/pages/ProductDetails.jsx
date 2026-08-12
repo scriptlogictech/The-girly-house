@@ -8,6 +8,8 @@ import ProductInfo from "../components/product/ProductInfo";
 import ProductTabs from "../components/product/ProductTabs";
 import RelatedProducts from "../components/product/RelatedProducts";
 
+import "./ProductDetails.css";
+
 const ProductDetails = () => {
   const { slug } = useParams();
 
@@ -17,6 +19,10 @@ const ProductDetails = () => {
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [quantity, setQuantity] = useState(1);
+
+  /* =====================================================
+     FETCH PRODUCT
+  ===================================================== */
 
   useEffect(() => {
     if (slug) {
@@ -38,68 +44,132 @@ const ProductDetails = () => {
 
       setProduct(productData);
 
-      if (productData.colors?.length > 0) {
-        setSelectedColor(productData.colors[0]);
+      /* Set default color and size */
 
-        if (productData.colors[0].sizes?.length > 0) {
-          setSelectedSize(productData.colors[0].sizes[0]);
+      if (productData.colors?.length > 0) {
+        const firstColor = productData.colors[0];
+
+        setSelectedColor(firstColor);
+
+        if (firstColor.sizes?.length > 0) {
+          setSelectedSize(firstColor.sizes[0]);
+        } else {
+          setSelectedSize(null);
         }
+      } else {
+        setSelectedColor(null);
+        setSelectedSize(null);
       }
+
     } catch (error) {
       console.error("Error fetching product:", error);
+
       setProduct(null);
     } finally {
       setLoading(false);
     }
   };
 
+  /* =====================================================
+     LOADING STATE
+  ===================================================== */
+
   if (loading) {
     return (
-      <section className="min-h-screen flex items-center justify-center">
-        <h2 className="text-xl font-semibold">
-          Loading Product...
-        </h2>
+      <section className="product-details-loading">
+        <div className="product-details-loading__spinner"></div>
+
+        <h2>Loading Product...</h2>
       </section>
     );
   }
+
+  /* =====================================================
+     PRODUCT NOT FOUND
+  ===================================================== */
 
   if (!product) {
     return (
-      <section className="min-h-screen flex items-center justify-center">
-        <h2 className="text-xl font-semibold text-red-500">
-          Product not found.
-        </h2>
+      <section className="product-details-error">
+        <div className="product-details-error__box">
+
+          <div className="product-details-error__icon">
+            !
+          </div>
+
+          <h2>Product Not Found</h2>
+
+          <p>
+            Sorry, we couldn't find the product you're
+            looking for.
+          </p>
+
+        </div>
       </section>
     );
   }
 
+  /* =====================================================
+     PRODUCT DETAILS
+  ===================================================== */
+
   return (
-    <section className="bg-[#FFFDFC] py-10">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <ProductGallery
-            selectedColor={selectedColor}
-          />
+    <section className="product-details-page">
 
-          <ProductInfo
+      <div className="product-details-container">
+
+        {/* ================================================
+            MAIN PRODUCT SECTION
+        ================================================= */}
+
+        <div className="product-details-main">
+
+          {/* Product Gallery */}
+
+          <div className="product-details-gallery">
+            <ProductGallery
+              selectedColor={selectedColor}
+            />
+          </div>
+
+          {/* Product Information */}
+
+          <div className="product-details-info">
+            <ProductInfo
+              product={product}
+              selectedColor={selectedColor}
+              setSelectedColor={setSelectedColor}
+              selectedSize={selectedSize}
+              setSelectedSize={setSelectedSize}
+              quantity={quantity}
+              setQuantity={setQuantity}
+            />
+          </div>
+
+        </div>
+
+        {/* ================================================
+            PRODUCT TABS
+        ================================================= */}
+
+        <div className="product-details-tabs">
+          <ProductTabs
             product={product}
-            selectedColor={selectedColor}
-            setSelectedColor={setSelectedColor}
-            selectedSize={selectedSize}
-            setSelectedSize={setSelectedSize}
-            quantity={quantity}
-            setQuantity={setQuantity}
           />
         </div>
 
-        <div className="mt-16">
-          <ProductTabs product={product} />
+        {/* ================================================
+            RELATED PRODUCTS
+        ================================================= */}
+
+        <div className="product-details-related">
+          <RelatedProducts
+            product={product}
+          />
         </div>
 
-        <div className="mt-20">
-          <RelatedProducts product={product} />
-        </div>
       </div>
+
     </section>
   );
 };

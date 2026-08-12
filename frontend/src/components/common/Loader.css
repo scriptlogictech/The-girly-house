@@ -1,0 +1,255 @@
+/* =========================================================
+   THE GIRLY HOUSE
+   LUXURY LOGO LOADER
+========================================================= */
+
+.logo-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #f9f4ec;
+}
+
+/* Main loader area */
+
+.logo-loader__content {
+  position: relative;
+
+  width: 330px;
+  height: 330px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================================================
+   ROTATING RING
+========================================================= */
+
+.logo-loader__ring {
+  position: absolute;
+
+  width: 290px;
+  height: 290px;
+
+  border-radius: 50%;
+
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 35deg,
+    #6b1028 90deg,
+    #8b1d3a 150deg,
+    #d8b36a 190deg,
+    transparent 230deg,
+    transparent 360deg
+  );
+
+  animation: logoRingRotate 2s linear infinite;
+
+  -webkit-mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 4px),
+    #000 calc(100% - 3px)
+  );
+
+  mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 4px),
+    #000 calc(100% - 3px)
+  );
+}
+
+/* Soft secondary ring */
+
+.logo-loader__ring-inner {
+  position: absolute;
+
+  inset: 12px;
+
+  border-radius: 50%;
+
+  border: 1px solid rgba(107, 16, 40, 0.12);
+}
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.logo-loader__logo {
+  position: relative;
+  z-index: 2;
+
+  width: 220px;
+  height: 155px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  animation: logoPulse 2.2s ease-in-out infinite;
+}
+
+.logo-loader__logo img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  display: block;
+}
+
+/* =========================================================
+   GLOW
+========================================================= */
+
+.logo-loader__content::before {
+  content: "";
+
+  position: absolute;
+
+  width: 210px;
+  height: 210px;
+
+  border-radius: 50%;
+
+  background: rgba(107, 16, 40, 0.08);
+
+  filter: blur(35px);
+
+  animation: logoGlow 2.2s ease-in-out infinite;
+}
+
+/* =========================================================
+   DOTS
+========================================================= */
+
+.logo-loader__dots {
+  position: absolute;
+
+  bottom: 0;
+
+  display: flex;
+  gap: 9px;
+
+  z-index: 5;
+}
+
+.logo-loader__dots span {
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  background: #6b1028;
+
+  animation: dotLoading 1.4s infinite ease-in-out;
+}
+
+.logo-loader__dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.logo-loader__dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes logoRingRotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes logoPulse {
+  0%,
+  100% {
+    transform: scale(0.96);
+    opacity: 0.85;
+  }
+
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes logoGlow {
+  0%,
+  100% {
+    transform: scale(0.85);
+    opacity: 0.35;
+  }
+
+  50% {
+    transform: scale(1.1);
+    opacity: 0.7;
+  }
+}
+
+@keyframes dotLoading {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.35;
+  }
+
+  30% {
+    transform: translateY(-6px);
+    opacity: 1;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+  .logo-loader__content {
+    width: 270px;
+    height: 270px;
+  }
+
+  .logo-loader__ring {
+    width: 240px;
+    height: 240px;
+  }
+
+  .logo-loader__logo {
+    width: 185px;
+    height: 130px;
+  }
+
+  .logo-loader__dots {
+    bottom: 2px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-loader__ring,
+  .logo-loader__logo,
+  .logo-loader__content::before,
+  .logo-loader__dots span {
+    animation: none;
+  }
+}

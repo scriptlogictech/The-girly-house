@@ -1,179 +1,457 @@
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap");
 
-.offer-section{
-    padding:80px 0;
-    background:#faf7f2;
+/* =========================================================
+   OFFER SECTION
+========================================================= */
+
+.offer-section {
+  padding: 20px 0;
+  background: #faf7f2;
 }
 
-.offer-container{
-    width:90%;
-    max-width:1400px;
-    margin:auto;
+.offer-container {
+  width: 90%;
+  max-width: 1400px;
+  margin: auto;
 
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:30px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
 }
 
-.offer-card{
-    position:relative;
-    overflow:hidden;
+/* =========================================================
+   OFFER CARD
+========================================================= */
 
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+.offer-card {
+  position: relative;
+  overflow: hidden;
 
-    border:2px solid #1f2238;
-    border-radius:28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-    padding:20px 20px 0px 20px;
+  border: 2px solid #1f2238;
+  border-radius: 28px;
 
-    min-height:320px;
+  padding: 20px 20px 0;
 
-    background:#fffdf8;
+  min-height: 320px;
+
+  background: #fffdf8;
 }
 
-.offer-content{
-    width:45%;
-    z-index:2;
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.offer-content {
+  width: 45%;
+  z-index: 2;
 }
 
-.offer-small{
-    color:#636878;
-    font-size:18px;
-    font-weight:500;
-    letter-spacing:1px;
+.offer-small {
+  color: #636878;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 1px;
 }
 
-.offer-content h2{
-    font-size:82px;
-    line-height:1;
-    color:#181c34;
-    font-family:"Playfair Display", serif;
-    margin:10px 0 30px;
+.offer-content h2 {
+  font-size: 82px;
+  line-height: 1;
+
+  color: #181c34;
+
+  font-family: "Playfair Display", serif;
+
+  margin: 10px 0 30px;
 }
 
-.offer-content h3{
-    font-family:"Playfair Display", serif;
-    font-size:30px;
-    line-height:1.3;
-    color:#5f6475;
-    margin-bottom:40px;
+.offer-content h3 {
+  font-family: "Playfair Display", serif;
+
+  font-size: 30px;
+  line-height: 1.3;
+
+  color: #5f6475;
+
+  margin-bottom: 40px;
 }
 
-.offer-btn{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
+/* =========================================================
+   BUTTON
+========================================================= */
 
-    width:180px;
-    height:60px;
+.offer-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-    border-radius:50px;
+  width: 180px;
+  height: 60px;
 
-    background:#171c34;
-    color:#fff;
-    text-decoration:none;
-    font-weight:600;
-    transition:.3s;
+  border-radius: 50px;
+
+  background: #171c34;
+  color: #fff;
+
+  text-decoration: none;
+
+  font-weight: 600;
+
+  transition: 0.3s ease;
 }
 
-.offer-btn:hover{
-    background:#6B1028;
+.offer-btn:hover {
+  background: #6b1028;
+  transform: translateY(-2px);
 }
 
-.offer-image{
-    width:52%;
-    height:100%;
-    display:flex;
-    align-items:flex-end;
-    justify-content:center;
+/* =========================================================
+   IMAGE
+========================================================= */
+
+.offer-image {
+  width: 52%;
+  height: 100%;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+
+  z-index: 1;
 }
 
-.offer-image img{
-    width:100%;
-    max-height:420px;
-    object-fit:contain;
-    /* z-index: 500; */
+.offer-image img {
+  width: 100%;
+  max-height: 420px;
+
+  object-fit: contain;
+
+  display: block;
 }
 
-.offer-circle{
-    position:absolute;
-    border:2px dashed #a6acb8;
-    border-radius:50%;
+/* =========================================================
+   DECORATIVE CIRCLES
+========================================================= */
+
+.offer-circle {
+  position: absolute;
+
+  border: 2px dashed #a6acb8;
+  border-radius: 50%;
+
+  pointer-events: none;
 }
 
-.offer-circle.top{
-    width:260px;
-    height:260px;
-    top:-120px;
-    right:-120px;
+.offer-circle.top {
+  width: 260px;
+  height: 260px;
+
+  top: -120px;
+  right: -120px;
 }
 
-.offer-circle.bottom{
-    width:240px;
-    height:240px;
-    left:40%;
-    bottom:-150px;
+.offer-circle.bottom {
+  width: 240px;
+  height: 240px;
+
+  left: 40%;
+  bottom: -150px;
 }
 
-.offer-badge{
-    position:absolute;
-    top:55px;
-    left:50%;
+/* =========================================================
+   BADGE
+========================================================= */
 
-    transform:translateX(-50%);
+.offer-badge {
+  position: absolute;
 
-    width:75px;
-    height:75px;
+  top: 55px;
+  left: 50%;
 
-    border:4px solid #676d7b;
-    border-radius:50%;
+  transform: translateX(-50%);
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
+  width: 75px;
+  height: 75px;
 
-    font-size:34px;
-    color:#676d7b;
-    font-weight:bold;
+  border: 4px solid #676d7b;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 34px;
+
+  color: #676d7b;
+  font-weight: bold;
+
+  z-index: 3;
 }
 
-@media(max-width:992px){
+/* =========================================================
+   TABLET
+========================================================= */
 
-.offer-container{
-grid-template-columns:1fr;
+@media (max-width: 1100px) {
+
+  .offer-container {
+    gap: 20px;
+  }
+
+  .offer-card {
+    min-height: 290px;
+    padding: 18px 15px 0;
+  }
+
+  .offer-small {
+    font-size: 15px;
+  }
+
+  .offer-content h2 {
+    font-size: 65px;
+    margin: 8px 0 20px;
+  }
+
+  .offer-content h3 {
+    font-size: 23px;
+    margin-bottom: 25px;
+  }
+
+  .offer-btn {
+    width: 150px;
+    height: 50px;
+    font-size: 14px;
+  }
+
+  .offer-badge {
+    width: 60px;
+    height: 60px;
+    font-size: 27px;
+    border-width: 3px;
+    top: 40px;
+  }
 }
 
-.offer-content{
-width:50%;
+/* =========================================================
+   TABLET / SMALL LAPTOP
+========================================================= */
+
+@media (max-width: 992px) {
+
+  .offer-container {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .offer-card {
+    min-height: 300px;
+  }
+
+  .offer-content {
+    width: 48%;
+  }
+
+  .offer-image {
+    width: 48%;
+  }
 }
 
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+  .offer-section {
+    padding: 15px 0;
+  }
+
+  .offer-container {
+    width: 92%;
+    gap: 18px;
+  }
+
+  .offer-card {
+    min-height: 240px;
+
+    padding: 15px 10px 0 18px;
+
+    border-radius: 20px;
+
+    align-items: center;
+  }
+
+  .offer-content {
+    width: 52%;
+
+    text-align: left;
+  }
+
+  .offer-image {
+    width: 48%;
+    height: 240px;
+  }
+
+  .offer-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+    object-position: bottom center;
+  }
+
+  .offer-small {
+    font-size: 12px;
+    letter-spacing: 0.7px;
+  }
+
+  .offer-content h2 {
+    font-size: 48px;
+
+    margin: 6px 0 10px;
+  }
+
+  .offer-content h3 {
+    font-size: 17px;
+
+    line-height: 1.25;
+
+    margin-bottom: 15px;
+
+    max-width: 170px;
+  }
+
+  .offer-btn {
+    width: 115px;
+    height: 38px;
+
+    font-size: 12px;
+
+    border-radius: 30px;
+  }
+
+  .offer-badge {
+    display: none;
+  }
+
+  .offer-circle.top {
+    width: 150px;
+    height: 150px;
+
+    top: -80px;
+    right: -75px;
+  }
+
+  .offer-circle.bottom {
+    width: 140px;
+    height: 140px;
+
+    left: 45%;
+    bottom: -100px;
+  }
 }
 
-@media(max-width:768px){
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
 
-.offer-card{
-flex-direction:column;
-text-align:center;
-padding:30px;
+@media (max-width: 480px) {
+
+  .offer-container {
+    width: 94%;
+  }
+
+  .offer-card {
+    min-height: 205px;
+
+    padding: 12px 6px 0 14px;
+
+    border-radius: 18px;
+  }
+
+  .offer-content {
+    width: 54%;
+  }
+
+  .offer-image {
+    width: 46%;
+    height: 205px;
+  }
+
+  .offer-small {
+    font-size: 10px;
+  }
+
+  .offer-content h2 {
+    font-size: 40px;
+
+    margin: 5px 0 8px;
+  }
+
+  .offer-content h3 {
+    font-size: 14px;
+
+    line-height: 1.25;
+
+    margin-bottom: 12px;
+
+    max-width: 145px;
+  }
+
+  .offer-btn {
+    width: 100px;
+    height: 34px;
+
+    font-size: 11px;
+  }
+
+  .offer-circle.top {
+    width: 120px;
+    height: 120px;
+
+    top: -65px;
+    right: -60px;
+  }
+
+  .offer-circle.bottom {
+    width: 110px;
+    height: 110px;
+
+    bottom: -75px;
+  }
 }
 
-.offer-content,
-.offer-image{
-width:100%;
-}
+/* =========================================================
+   VERY SMALL DEVICES
+========================================================= */
 
-.offer-content h2{
-font-size:60px;
-}
+@media (max-width: 360px) {
 
-.offer-content h3{
-font-size:28px;
-}
+  .offer-card {
+    min-height: 185px;
+    padding-left: 12px;
+  }
 
-.offer-badge{
-display:none;
-}
+  .offer-image {
+    height: 185px;
+  }
 
+  .offer-content h2 {
+    font-size: 34px;
+  }
+
+  .offer-content h3 {
+    font-size: 12px;
+    max-width: 125px;
+  }
+
+  .offer-btn {
+    width: 90px;
+    height: 31px;
+
+    font-size: 10px;
+  }
 }

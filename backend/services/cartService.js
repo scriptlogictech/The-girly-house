@@ -82,6 +82,8 @@ const addToCart = async (userId, body) => {
 
   await cart.save();
 
+  await cart.populate("items.product");
+
   return {
     success: true,
     message: "Product added to cart successfully.",
@@ -175,6 +177,8 @@ const updateCartItem = async (userId, itemId, quantity) => {
 
   await cart.save();
 
+  await cart.populate("items.product");
+
   return {
     success: true,
     message: "Cart updated successfully.",
@@ -217,6 +221,8 @@ const removeCartItem = async (userId, itemId) => {
   cart.totalItems = totalItems;
 
   await cart.save();
+
+  
 
   return {
     success: true,

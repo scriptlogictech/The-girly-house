@@ -25,12 +25,14 @@ router.get(
   wishlistController.getWishlist
 );
 
-// ==============================
-// Remove Product from Wishlist
-// ==============================
+
+
+// ==========================================
+// Remove Product From Wishlist
+// ==========================================
 
 router.delete(
-  "/:productId",
+  "/remove/:productId",
   protect,
   wishlistController.removeFromWishlist
 );

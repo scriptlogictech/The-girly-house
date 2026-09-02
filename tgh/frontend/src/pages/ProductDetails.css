@@ -1,0 +1,440 @@
+/* =========================================================
+   THE GIRLY HOUSE
+   PRODUCT DETAILS PAGE
+========================================================= */
+
+.product-details-page {
+  min-height: 100vh;
+  background: #fffdfc;
+  padding: 45px 0 80px;
+}
+
+.product-details-container {
+  width: 92%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* =========================================================
+   PRODUCT MAIN SECTION
+========================================================= */
+
+.product-details-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 70px;
+  align-items: start;
+}
+
+/* =========================================================
+   GALLERY
+========================================================= */
+
+.product-details-gallery {
+  min-width: 0;
+  position: relative;
+}
+
+.product-details-gallery > * {
+  transition: transform 0.35s ease;
+}
+
+/* =========================================================
+   PRODUCT INFO
+========================================================= */
+
+.product-details-info {
+  min-width: 0;
+
+  position: sticky;
+  top: 100px;
+
+  padding: 5px 0;
+}
+
+/* =========================================================
+   LOWER CONTENT SECTIONS
+========================================================= */
+
+.product-details-tabs {
+  margin-top: 90px;
+
+  padding-top: 45px;
+
+  border-top: 1px solid #eadfd8;
+}
+
+.product-details-related {
+  margin-top: 100px;
+
+  padding-top: 45px;
+
+  border-top: 1px solid #eadfd8;
+}
+
+/* =========================================================
+   SECTION ANIMATION
+========================================================= */
+
+.product-details-tabs,
+.product-details-related {
+  animation: productSectionFade 0.7s ease both;
+}
+
+@keyframes productSectionFade {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================================
+   LOADING STATE
+========================================================= */
+
+.product-details-loading {
+  min-height: 75vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-direction: column;
+
+  background: #fffdfc;
+}
+
+.product-details-loading__spinner {
+  width: 45px;
+  height: 45px;
+
+  border-radius: 50%;
+
+  border: 3px solid #eadfd8;
+  border-top-color: #6b1028;
+
+  animation: productSpinner 0.8s linear infinite;
+
+  margin-bottom: 18px;
+}
+
+.product-details-loading h2 {
+  margin: 0;
+
+  color: #6b1028;
+
+  font-family: "Playfair Display", serif;
+
+  font-size: 20px;
+  font-weight: 600;
+}
+
+@keyframes productSpinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================================
+   PRODUCT NOT FOUND
+========================================================= */
+
+.product-details-error {
+  min-height: 75vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 30px;
+}
+
+.product-details-error__box {
+  width: 100%;
+  max-width: 500px;
+
+  padding: 50px 30px;
+
+  text-align: center;
+
+  background: #fff;
+
+  border: 1px solid #eadfd8;
+  border-radius: 24px;
+
+  box-shadow: 0 15px 45px rgba(107, 16, 40, 0.08);
+}
+
+.product-details-error__icon {
+  width: 65px;
+  height: 65px;
+
+  margin: 0 auto 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #f8e9ed;
+
+  color: #6b1028;
+
+  font-size: 25px;
+}
+
+.product-details-error h2 {
+  margin-bottom: 10px;
+
+  color: #6b1028;
+
+  font-family: "Playfair Display", serif;
+
+  font-size: 28px;
+}
+
+.product-details-error p {
+  color: #777;
+
+  font-family: "Poppins", sans-serif;
+
+  font-size: 14px;
+}
+
+/* =========================================================
+   HOVER / INTERACTION
+========================================================= */
+
+.product-details-main img {
+  transition:
+    transform 0.5s ease,
+    opacity 0.3s ease;
+}
+
+.product-details-main img:hover {
+  transform: scale(1.015);
+}
+
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+@media (min-width: 1200px) {
+
+  .product-details-main {
+    gap: 85px;
+  }
+
+  .product-details-page {
+    padding-top: 55px;
+  }
+}
+
+/* =========================================================
+   LAPTOP
+========================================================= */
+
+@media (max-width: 1199px) {
+
+  .product-details-main {
+    gap: 45px;
+  }
+
+  .product-details-info {
+    top: 85px;
+  }
+
+  .product-details-tabs {
+    margin-top: 75px;
+  }
+
+  .product-details-related {
+    margin-top: 80px;
+  }
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 992px) {
+
+  .product-details-page {
+    padding: 35px 0 60px;
+  }
+
+  .product-details-container {
+    width: 94%;
+  }
+
+  .product-details-main {
+    grid-template-columns: 1fr;
+    gap: 45px;
+  }
+
+  .product-details-info {
+    position: static;
+  }
+
+  .product-details-tabs {
+    margin-top: 65px;
+    padding-top: 35px;
+  }
+
+  .product-details-related {
+    margin-top: 65px;
+    padding-top: 35px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+  .product-details-page {
+    padding: 25px 0 50px;
+  }
+
+  .product-details-container {
+    width: 94%;
+  }
+
+  .product-details-main {
+    gap: 30px;
+  }
+
+  .product-details-gallery {
+    width: 100%;
+  }
+
+  .product-details-info {
+    width: 100%;
+  }
+
+  .product-details-tabs {
+    margin-top: 50px;
+    padding-top: 30px;
+  }
+
+  .product-details-related {
+    margin-top: 50px;
+    padding-top: 30px;
+  }
+
+  .product-details-loading {
+    min-height: 65vh;
+  }
+
+  .product-details-error {
+    min-height: 65vh;
+    padding: 20px;
+  }
+
+  .product-details-error__box {
+    padding: 40px 20px;
+    border-radius: 20px;
+  }
+
+  .product-details-error h2 {
+    font-size: 24px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .product-details-page {
+    padding: 18px 0 40px;
+  }
+
+  .product-details-container {
+    width: 92%;
+  }
+
+  .product-details-main {
+    gap: 25px;
+  }
+
+  .product-details-tabs {
+    margin-top: 40px;
+    padding-top: 25px;
+  }
+
+  .product-details-related {
+    margin-top: 45px;
+    padding-top: 25px;
+  }
+
+  .product-details-loading__spinner {
+    width: 38px;
+    height: 38px;
+  }
+
+  .product-details-loading h2 {
+    font-size: 17px;
+  }
+
+  .product-details-error__box {
+    padding: 35px 18px;
+  }
+
+  .product-details-error__icon {
+    width: 55px;
+    height: 55px;
+    font-size: 21px;
+  }
+
+  .product-details-error h2 {
+    font-size: 22px;
+  }
+
+  .product-details-error p {
+    font-size: 13px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL DEVICES
+========================================================= */
+
+@media (max-width: 360px) {
+
+  .product-details-container {
+    width: 94%;
+  }
+
+  .product-details-main {
+    gap: 22px;
+  }
+
+  .product-details-tabs,
+  .product-details-related {
+    padding-top: 22px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .product-details-main img,
+  .product-details-tabs,
+  .product-details-related,
+  .product-details-loading__spinner {
+    animation: none;
+    transition: none;
+  }
+}

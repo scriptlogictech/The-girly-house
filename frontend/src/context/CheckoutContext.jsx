@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+
 import { toast } from "react-toastify";
 
 import addressService from "../services/addressService";
@@ -8,9 +14,12 @@ const CheckoutContext = createContext();
 
 export const CheckoutProvider = ({ children }) => {
   const [addresses, setAddresses] = useState([]);
-  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [selectedAddress, setSelectedAddress] =
+    useState(null);
 
-  const [paymentMethod, setPaymentMethod] = useState("COD");
+  const [paymentMethod, setPaymentMethod] =
+    useState("COD");
+
   const [couponCode, setCouponCode] = useState("");
 
   const [loading, setLoading] = useState(false);
@@ -23,14 +32,17 @@ export const CheckoutProvider = ({ children }) => {
     try {
       setLoading(true);
 
-      const res = await addressService.getAddresses();
+      const res =
+        await addressService.getAddresses();
 
       const addressList = res.data || [];
 
       setAddresses(addressList);
 
       const defaultAddress =
-        addressList.find((address) => address.isDefault) ||
+        addressList.find(
+          (address) => address.isDefault
+        ) ||
         addressList[0] ||
         null;
 
@@ -55,13 +67,17 @@ export const CheckoutProvider = ({ children }) => {
     try {
       setLoading(true);
 
-      const res = await addressService.addAddress(addressData);
+      const res =
+        await addressService.addAddress(
+          addressData
+        );
 
       setAddresses(res.data);
 
       const defaultAddress =
-        res.data.find((address) => address.isDefault) ||
-        res.data[0];
+        res.data.find(
+          (address) => address.isDefault
+        ) || res.data[0];
 
       setSelectedAddress(defaultAddress);
 
@@ -87,16 +103,18 @@ export const CheckoutProvider = ({ children }) => {
     try {
       setLoading(true);
 
-      const res = await addressService.updateAddress(
-        addressId,
-        addressData
-      );
+      const res =
+        await addressService.updateAddress(
+          addressId,
+          addressData
+        );
 
       setAddresses(res.data);
 
       const defaultAddress =
-        res.data.find((address) => address.isDefault) ||
-        res.data[0];
+        res.data.find(
+          (address) => address.isDefault
+        ) || res.data[0];
 
       setSelectedAddress(defaultAddress);
 
@@ -119,14 +137,17 @@ export const CheckoutProvider = ({ children }) => {
     try {
       setLoading(true);
 
-      const res = await addressService.deleteAddress(
-        addressId
-      );
+      const res =
+        await addressService.deleteAddress(
+          addressId
+        );
 
       setAddresses(res.data);
 
       const defaultAddress =
-        res.data.find((address) => address.isDefault) ||
+        res.data.find(
+          (address) => address.isDefault
+        ) ||
         res.data[0] ||
         null;
 
@@ -159,8 +180,9 @@ export const CheckoutProvider = ({ children }) => {
       setAddresses(res.data);
 
       const defaultAddress =
-        res.data.find((address) => address.isDefault) ||
-        res.data[0];
+        res.data.find(
+          (address) => address.isDefault
+        ) || res.data[0];
 
       setSelectedAddress(defaultAddress);
 
@@ -183,6 +205,7 @@ export const CheckoutProvider = ({ children }) => {
     addressId,
     paymentMethod,
     couponCode,
+    buyNowItem,
   }) => {
     try {
       setLoading(true);
@@ -191,11 +214,22 @@ export const CheckoutProvider = ({ children }) => {
         addressId,
         paymentMethod,
         couponCode,
+
+        // Only sent for Buy Now
+        ...(buyNowItem
+          ? {
+              buyNowItem,
+            }
+          : {}),
       });
 
       return response;
     } catch (error) {
-      console.error("Place Order Error:", error);
+      console.error(
+        "Place Order Error:",
+        error
+      );
+
       throw error;
     } finally {
       setLoading(false);

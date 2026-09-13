@@ -10,28 +10,67 @@ import CheckoutSummary from "../components/checkout/CheckoutSummary";
 
 const Checkout = () => {
   const { user } = useAuth();
-  const { cart } = useCart();
 
-  // Redirect if user is not logged in
+  const {
+    cart,
+    directCheckout,
+  } = useCart();
+
+  // =====================================
+  // LOGIN CHECK
+  // =====================================
+
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return (
+      <Navigate
+        to="/login"
+        replace
+      />
+    );
   }
 
-  // Redirect if cart is empty
-  if (!cart?.items?.length) {
-    return <Navigate to="/cart" replace />;
+  // =====================================
+  // CHECKOUT SOURCE
+  // =====================================
+
+  const hasDirectCheckout =
+    !!directCheckout;
+
+  const hasCartItems =
+    cart?.items?.length > 0;
+
+  // =====================================
+  // EMPTY CHECKOUT
+  // =====================================
+
+  if (!hasDirectCheckout && !hasCartItems) {
+    return (
+      <Navigate
+        to="/cart"
+        replace
+      />
+    );
   }
 
   return (
     <div className="min-h-screen bg-[#FFFDFC] py-10">
+
       <div className="max-w-7xl mx-auto px-4">
 
         {/* Heading */}
 
         <motion.div
-          initial={{ opacity: 0, y: 25 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
+          initial={{
+            opacity: 0,
+            y: 25,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            duration: 0.4,
+          }}
           className="mb-10"
         >
           <h1 className="text-4xl font-bold text-[#6B1028]">
@@ -52,17 +91,33 @@ const Checkout = () => {
           <div className="lg:col-span-2 space-y-6">
 
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
+              initial={{
+                opacity: 0,
+                y: 30,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              transition={{
+                delay: 0.1,
+              }}
             >
               <AddressSection />
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
+              initial={{
+                opacity: 0,
+                y: 30,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              transition={{
+                delay: 0.2,
+              }}
             >
               <PaymentMethod />
             </motion.div>
@@ -76,9 +131,17 @@ const Checkout = () => {
             <div className="sticky top-24">
 
               <motion.div
-                initial={{ opacity: 0, x: 40 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 }}
+                initial={{
+                  opacity: 0,
+                  x: 40,
+                }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                }}
+                transition={{
+                  delay: 0.3,
+                }}
               >
                 <CheckoutSummary />
               </motion.div>
@@ -90,6 +153,7 @@ const Checkout = () => {
         </div>
 
       </div>
+
     </div>
   );
 };

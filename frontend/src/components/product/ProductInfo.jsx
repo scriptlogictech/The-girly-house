@@ -1,5 +1,6 @@
 import { FaHeart, FaShoppingCart, FaBolt } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 import ColorSelector from "./ColorSelector";
 import SizeSelector from "./SizeSelector";
@@ -17,7 +18,12 @@ const ProductInfo = ({
   quantity,
   setQuantity,
 }) => {
-  const { handleAddToCart } = useCart();
+  const navigate = useNavigate();
+
+  const {
+    handleAddToCart,
+    startDirectCheckout,
+  } = useCart();
 
   const {
     addToWishlist,
@@ -34,7 +40,8 @@ const ProductInfo = ({
       ? selectedSize.discountPrice
       : selectedSize?.price || 0;
 
-  const originalPrice = selectedSize?.price || 0;
+  const originalPrice =
+    selectedSize?.price || 0;
 
   const discount =
     originalPrice > currentPrice
@@ -45,13 +52,38 @@ const ProductInfo = ({
         )
       : 0;
 
+  /*
+  =====================================================
+  ADD TO CART
+  =====================================================
+  */
+
   const addCart = async () => {
     if (!selectedColor) {
-      return toast.warning("Please select a color.");
+      toast.warning("Please select a color.");
+      return;
     }
 
     if (!selectedSize) {
-      return toast.warning("Please select a size.");
+      toast.warning("Please select a size.");
+      return;
+    }
+
+    if (stock <= 0) {
+      toast.warning("This product is out of stock.");
+      return;
+    }
+
+    if (quantity <= 0) {
+      toast.warning("Please select a valid quantity.");
+      return;
+    }
+
+    if (quantity > stock) {
+      toast.warning(
+        `Only ${stock} items are available.`
+      );
+      return;
     }
 
     await handleAddToCart({
@@ -62,6 +94,61 @@ const ProductInfo = ({
     });
   };
 
+  /*
+  =====================================================
+  BUY NOW
+  =====================================================
+  */
+
+  const handleBuyNow = () => {
+    if (!selectedColor) {
+      toast.warning("Please select a color.");
+      return;
+    }
+
+    if (!selectedSize) {
+      toast.warning("Please select a size.");
+      return;
+    }
+
+    if (stock <= 0) {
+      toast.warning("This product is out of stock.");
+      return;
+    }
+
+    if (quantity <= 0) {
+      toast.warning("Please select a valid quantity.");
+      return;
+    }
+
+    if (quantity > stock) {
+      toast.warning(
+        `Only ${stock} items are available.`
+      );
+      return;
+    }
+
+    /*
+      Store only the information required
+      for direct checkout.
+    */
+
+    startDirectCheckout({
+      productId: product._id,
+      color: selectedColor.name,
+      size: selectedSize.size,
+      quantity,
+    });
+
+    navigate("/checkout");
+  };
+
+  /*
+  =====================================================
+  WISHLIST
+  =====================================================
+  */
+
   const handleWishlist = async () => {
     try {
       if (isInWishlist(product._id)) {
@@ -69,14 +156,20 @@ const ProductInfo = ({
       } else {
         await addToWishlist(product._id);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error(
+        "Wishlist error:",
+        error
+      );
+    }
   };
 
   return (
     <div className="space-y-7">
 
-      <div>
+      {/* PRODUCT HEADER */}
 
+      <div>
         <p className="uppercase tracking-widest text-gray-500 text-sm">
           {product.brand}
         </p>
@@ -88,10 +181,9 @@ const ProductInfo = ({
         <p className="mt-3 text-gray-600">
           {product.shortDescription}
         </p>
-
       </div>
 
-      {/* Rating */}
+      {/* RATING */}
 
       <div className="flex items-center gap-3">
 
@@ -105,7 +197,7 @@ const ProductInfo = ({
 
       </div>
 
-      {/* Price */}
+      {/* PRICE */}
 
       <div className="flex items-center gap-4">
 
@@ -127,7 +219,7 @@ const ProductInfo = ({
 
       </div>
 
-      {/* Description */}
+      {/* DESCRIPTION */}
 
       <div>
 
@@ -141,7 +233,7 @@ const ProductInfo = ({
 
       </div>
 
-      {/* Color */}
+      {/* COLOR */}
 
       <ColorSelector
         colors={product.colors}
@@ -150,7 +242,7 @@ const ProductInfo = ({
         setSelectedSize={setSelectedSize}
       />
 
-      {/* Size */}
+      {/* SIZE */}
 
       <SizeSelector
         sizes={selectedColor?.sizes || []}
@@ -158,7 +250,7 @@ const ProductInfo = ({
         setSelectedSize={setSelectedSize}
       />
 
-      {/* Quantity */}
+      {/* QUANTITY */}
 
       <QuantitySelector
         quantity={quantity}
@@ -166,7 +258,7 @@ const ProductInfo = ({
         max={stock}
       />
 
-      {/* Stock */}
+      {/* STOCK */}
 
       <div>
         {stock > 0 ? (
@@ -180,29 +272,38 @@ const ProductInfo = ({
         )}
       </div>
 
-      {/* Buttons */}
+      {/* BUTTONS */}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
+        {/* ADD TO CART */}
+
         <button
+          type="button"
           onClick={addCart}
           disabled={stock === 0}
           className="bg-[#6B1028] hover:bg-[#54101F] text-white rounded-xl py-4 flex justify-center items-center gap-2 transition disabled:opacity-50"
         >
           <FaShoppingCart />
-
           Add to Cart
         </button>
 
+        {/* BUY NOW */}
+
         <button
-          className="bg-black hover:bg-gray-800 text-white rounded-xl py-4 flex justify-center items-center gap-2 transition"
+          type="button"
+          onClick={handleBuyNow}
+          disabled={stock === 0}
+          className="bg-black hover:bg-gray-800 text-white rounded-xl py-4 flex justify-center items-center gap-2 transition disabled:opacity-50"
         >
           <FaBolt />
-
           Buy Now
         </button>
 
+        {/* WISHLIST */}
+
         <button
+          type="button"
           onClick={handleWishlist}
           className={`rounded-xl py-4 border flex justify-center items-center gap-2 transition ${
             isInWishlist(product._id)
@@ -219,7 +320,7 @@ const ProductInfo = ({
 
       </div>
 
-      {/* Product Details */}
+      {/* PRODUCT DETAILS */}
 
       <div className="rounded-xl border p-5 bg-gray-50 space-y-3">
 
@@ -240,7 +341,7 @@ const ProductInfo = ({
 
       </div>
 
-      {/* Delivery */}
+      {/* DELIVERY */}
 
       <div className="rounded-xl border p-5 bg-white space-y-2">
 

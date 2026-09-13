@@ -10,6 +10,11 @@ import { toast } from "react-toastify";
 import addressService from "../services/addressService";
 import { createOrder } from "../services/orderService";
 
+import {
+  createPaymentOrder,
+  verifyPayment,
+} from "../services/paymentService";
+
 const CheckoutContext = createContext();
 
 export const CheckoutProvider = ({ children }) => {
@@ -122,7 +127,7 @@ export const CheckoutProvider = ({ children }) => {
     } catch (error) {
       toast.error(
         error.response?.data?.message ||
-          "Failed to update address."
+          "Failed to update default address."
       );
     } finally {
       setLoading(false);
@@ -198,7 +203,7 @@ export const CheckoutProvider = ({ children }) => {
   };
 
   // =====================================
-  // Place Order
+  // COD / NORMAL ORDER
   // =====================================
 
   const placeOrder = async ({
@@ -215,7 +220,6 @@ export const CheckoutProvider = ({ children }) => {
         paymentMethod,
         couponCode,
 
-        // Only sent for Buy Now
         ...(buyNowItem
           ? {
               buyNowItem,
@@ -237,6 +241,70 @@ export const CheckoutProvider = ({ children }) => {
   };
 
   // =====================================
+  // CREATE RAZORPAY ORDER
+  // =====================================
+
+  const createRazorpayPayment = async ({
+    addressId,
+    couponCode,
+    buyNowItem,
+  }) => {
+    try {
+      setLoading(true);
+
+      const response =
+        await createPaymentOrder({
+          addressId,
+          couponCode,
+          buyNowItem,
+        });
+
+      return response;
+    } catch (error) {
+      console.error(
+        "Create Razorpay Payment Error:",
+        error
+      );
+
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // =====================================
+  // VERIFY RAZORPAY PAYMENT
+  // =====================================
+
+  const verifyRazorpayPayment = async ({
+    razorpayOrderId,
+    razorpayPaymentId,
+    razorpaySignature,
+  }) => {
+    try {
+      setLoading(true);
+
+      const response =
+        await verifyPayment({
+          razorpayOrderId,
+          razorpayPaymentId,
+          razorpaySignature,
+        });
+
+      return response;
+    } catch (error) {
+      console.error(
+        "Verify Razorpay Payment Error:",
+        error
+      );
+
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // =====================================
   // Load Addresses
   // =====================================
 
@@ -244,20 +312,21 @@ export const CheckoutProvider = ({ children }) => {
     fetchAddresses();
   }, []);
 
+  // =====================================
+  // PROVIDER
+  // =====================================
+
   return (
     <CheckoutContext.Provider
       value={{
+        // Loading
         loading,
 
+        // Address
         addresses,
         selectedAddress,
 
-        paymentMethod,
-        couponCode,
-
         setSelectedAddress,
-        setPaymentMethod,
-        setCouponCode,
 
         fetchAddresses,
         addNewAddress,
@@ -265,13 +334,30 @@ export const CheckoutProvider = ({ children }) => {
         removeAddress,
         makeDefaultAddress,
 
+        // Payment
+        paymentMethod,
+        setPaymentMethod,
+
+        // Coupon
+        couponCode,
+        setCouponCode,
+
+        // COD / Normal Order
         placeOrder,
+
+        // Razorpay
+        createRazorpayPayment,
+        verifyRazorpayPayment,
       }}
     >
       {children}
     </CheckoutContext.Provider>
   );
 };
+
+// =====================================
+// HOOK
+// =====================================
 
 export const useCheckout = () =>
   useContext(CheckoutContext);

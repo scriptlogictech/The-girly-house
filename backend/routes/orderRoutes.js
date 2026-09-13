@@ -1,12 +1,15 @@
 const express = require("express");
+
 const router = express.Router();
 
 const orderController = require("../controllers/orderController");
+
 const protect = require("../middleware/authMiddleware");
+
 const authorize = require("../middleware/authorize");
 
 // =====================================
-// customer Routes
+// Customer Routes
 // =====================================
 
 // Place Order
@@ -17,6 +20,7 @@ router.post(
   orderController.createOrder
 );
 
+// Get My Orders
 router.get(
   "/my-orders",
   protect,
@@ -24,6 +28,7 @@ router.get(
   orderController.getMyOrders
 );
 
+// Get Single Order
 router.get(
   "/:id",
   protect,
@@ -31,6 +36,7 @@ router.get(
   orderController.getOrderById
 );
 
+// Cancel Order
 router.patch(
   "/:id/cancel",
   protect,

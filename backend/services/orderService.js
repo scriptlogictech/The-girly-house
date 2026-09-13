@@ -4,21 +4,20 @@ const Product = require("../models/Product");
 const Coupon = require("../models/Coupon");
 const User = require("../models/User");
 
-// =====================================
-// Create Order
-// =====================================
+// =====================================================
+// BUILD ORDER DATA
+// =====================================================
 
-const createOrder = async (userId, orderData) => {
+const buildOrderData = async (userId, orderData) => {
   const {
     addressId,
     couponCode,
-    paymentMethod,
     buyNowItem,
   } = orderData;
 
-  // ===========================
-  // Find User
-  // ===========================
+  // ===================================================
+  // FIND USER
+  // ===================================================
 
   const user = await User.findById(userId);
 
@@ -26,9 +25,9 @@ const createOrder = async (userId, orderData) => {
     throw new Error("User not found.");
   }
 
-  // ===========================
-  // Find Address
-  // ===========================
+  // ===================================================
+  // FIND ADDRESS
+  // ===================================================
 
   const address = user.addresses.id(addressId);
 
@@ -36,19 +35,17 @@ const createOrder = async (userId, orderData) => {
     throw new Error("Address not found.");
   }
 
-  // =====================================================
+  // ===================================================
   // BUILD ORDER ITEMS
-  // =====================================================
+  // ===================================================
 
   const orderItems = [];
 
   let subtotal = 0;
 
-  /*
-  =====================================================
-  BUY NOW
-  =====================================================
-  */
+  // ===================================================
+  // BUY NOW
+  // ===================================================
 
   if (buyNowItem) {
     const {
@@ -59,48 +56,33 @@ const createOrder = async (userId, orderData) => {
     } = buyNowItem;
 
     if (!productId) {
-      throw new Error(
-        "Product is required."
-      );
+      throw new Error("Product is required.");
     }
 
     if (!selectedColor) {
-      throw new Error(
-        "Color is required."
-      );
+      throw new Error("Color is required.");
     }
 
     if (!selectedSize) {
-      throw new Error(
-        "Size is required."
-      );
+      throw new Error("Size is required.");
     }
 
     if (!quantity || quantity <= 0) {
-      throw new Error(
-        "Invalid quantity."
-      );
+      throw new Error("Invalid quantity.");
     }
-
-    // ===========================
-    // Find Product
-    // ===========================
 
     const product =
       await Product.findById(productId);
 
-    if (
-      !product ||
-      !product.isActive
-    ) {
+    if (!product || !product.isActive) {
       throw new Error(
         "Product not available."
       );
     }
 
-    // ===========================
-    // Find Color
-    // ===========================
+    // ===============================================
+    // FIND COLOR
+    // ===============================================
 
     const color =
       product.colors.find(
@@ -114,9 +96,9 @@ const createOrder = async (userId, orderData) => {
       );
     }
 
-    // ===========================
-    // Find Size
-    // ===========================
+    // ===============================================
+    // FIND SIZE
+    // ===============================================
 
     const size =
       color.sizes.find(
@@ -130,9 +112,9 @@ const createOrder = async (userId, orderData) => {
       );
     }
 
-    // ===========================
-    // Stock
-    // ===========================
+    // ===============================================
+    // STOCK
+    // ===============================================
 
     if (size.stock < quantity) {
       throw new Error(
@@ -140,9 +122,9 @@ const createOrder = async (userId, orderData) => {
       );
     }
 
-    // ===========================
-    // Price
-    // ===========================
+    // ===============================================
+    // PRICE
+    // ===============================================
 
     const price =
       size.price || 0;
@@ -152,15 +134,16 @@ const createOrder = async (userId, orderData) => {
         ? size.discountPrice
         : price;
 
-    subtotal +=
+    subtotal =
       discountPrice * quantity;
 
-    // ===========================
-    // Order Item
-    // ===========================
+    // ===============================================
+    // ORDER ITEM
+    // ===============================================
 
     orderItems.push({
-      product: product._id,
+      product:
+        product._id,
 
       productName:
         product.name,
@@ -168,9 +151,11 @@ const createOrder = async (userId, orderData) => {
       image:
         color.images[0]?.url || "",
 
-      color: selectedColor,
+      color:
+        selectedColor,
 
-      size: selectedSize,
+      size:
+        selectedSize,
 
       quantity,
 
@@ -180,11 +165,9 @@ const createOrder = async (userId, orderData) => {
     });
   }
 
-  /*
-  =====================================================
-  NORMAL CART CHECKOUT
-  =====================================================
-  */
+  // ===================================================
+  // NORMAL CART CHECKOUT
+  // ===================================================
 
   else {
     const cart =
@@ -203,7 +186,9 @@ const createOrder = async (userId, orderData) => {
       );
     }
 
-    for (const item of cart.items) {
+    for (
+      const item of cart.items
+    ) {
       const product =
         item.product;
 
@@ -216,9 +201,9 @@ const createOrder = async (userId, orderData) => {
         );
       }
 
-      // ===========================
-      // Find Color
-      // ===========================
+      // =============================================
+      // FIND COLOR
+      // =============================================
 
       const color =
         product.colors.find(
@@ -232,9 +217,9 @@ const createOrder = async (userId, orderData) => {
         );
       }
 
-      // ===========================
-      // Find Size
-      // ===========================
+      // =============================================
+      // FIND SIZE
+      // =============================================
 
       const size =
         color.sizes.find(
@@ -248,9 +233,9 @@ const createOrder = async (userId, orderData) => {
         );
       }
 
-      // ===========================
-      // Stock
-      // ===========================
+      // =============================================
+      // STOCK
+      // =============================================
 
       if (
         size.stock <
@@ -261,24 +246,25 @@ const createOrder = async (userId, orderData) => {
         );
       }
 
-      // ===========================
-      // Price
-      // ===========================
+      // =============================================
+      // CURRENT PRODUCT PRICE
+      // =============================================
 
       const itemPrice =
-        item.price || 0;
+        size.price || 0;
 
       const itemDiscountPrice =
-        item.discountPrice ||
-        itemPrice;
+        size.discountPrice > 0
+          ? size.discountPrice
+          : itemPrice;
 
       subtotal +=
         itemDiscountPrice *
         item.quantity;
 
-      // ===========================
-      // Order Item
-      // ===========================
+      // =============================================
+      // ORDER ITEM
+      // =============================================
 
       orderItems.push({
         product:
@@ -291,9 +277,11 @@ const createOrder = async (userId, orderData) => {
           color.images[0]?.url ||
           "",
 
-        color: item.color,
+        color:
+          item.color,
 
-        size: item.size,
+        size:
+          item.size,
 
         quantity:
           item.quantity,
@@ -307,11 +295,12 @@ const createOrder = async (userId, orderData) => {
     }
   }
 
-  // =====================================================
+  // ===================================================
   // COUPON
-  // =====================================================
+  // ===================================================
 
   let discount = 0;
+
   let coupon = null;
 
   if (couponCode) {
@@ -330,8 +319,9 @@ const createOrder = async (userId, orderData) => {
     }
 
     if (
+      coupon.expiryDate &&
       coupon.expiryDate <
-      new Date()
+        new Date()
     ) {
       throw new Error(
         "Coupon expired."
@@ -368,45 +358,331 @@ const createOrder = async (userId, orderData) => {
       discount =
         coupon.discountValue;
     }
+
+    // Prevent negative total.
+    if (discount > subtotal) {
+      discount = subtotal;
+    }
   }
 
-  // =====================================================
+  // ===================================================
   // SHIPPING
-  // =====================================================
+  // ===================================================
 
   const shippingCharge =
     subtotal >= 999
       ? 0
       : 99;
 
+  // ===================================================
+  // TOTAL
+  // ===================================================
+
   const totalAmount =
     subtotal -
     discount +
     shippingCharge;
 
-  // =====================================================
-  // ORDER NUMBER
-  // =====================================================
+  // ===================================================
+  // RETURN CALCULATION
+  // ===================================================
 
-  const orderNumber =
+  return {
+    user,
+
+    address,
+
+    orderItems,
+
+    subtotal,
+
+    discount,
+
+    shippingCharge,
+
+    totalAmount,
+
+    coupon,
+
+    isBuyNow:
+      Boolean(buyNowItem),
+  };
+};
+
+// =====================================================
+// GET ORDER CALCULATION
+// =====================================================
+
+const getOrderCalculation = async (
+  userId,
+  orderData
+) => {
+  const {
+    subtotal,
+    discount,
+    shippingCharge,
+    totalAmount,
+  } = await buildOrderData(
+    userId,
+    orderData
+  );
+
+  return {
+    subtotal,
+    discount,
+    shippingCharge,
+    totalAmount,
+  };
+};
+
+// =====================================================
+// GENERATE ORDER NUMBER
+// =====================================================
+
+const generateOrderNumber = () => {
+  return (
     "GH" +
     Date.now() +
     Math.floor(
       1000 +
         Math.random() * 9000
+    )
+  );
+};
+
+// =====================================================
+// REDUCE STOCK
+// =====================================================
+
+const reduceStock = async (
+  orderItems
+) => {
+  for (
+    const item of orderItems
+  ) {
+    const product =
+      await Product.findById(
+        item.product
+      );
+
+    if (!product) {
+      throw new Error(
+        `${item.productName} is no longer available.`
+      );
+    }
+
+    const color =
+      product.colors.find(
+        (c) =>
+          c.name === item.color
+      );
+
+    if (!color) {
+      throw new Error(
+        `Color ${item.color} not found.`
+      );
+    }
+
+    const size =
+      color.sizes.find(
+        (s) =>
+          s.size === item.size
+      );
+
+    if (!size) {
+      throw new Error(
+        `Size ${item.size} not found.`
+      );
+    }
+
+    // Re-check stock.
+    if (
+      size.stock <
+      item.quantity
+    ) {
+      throw new Error(
+        `${item.productName} is out of stock.`
+      );
+    }
+
+    size.stock -=
+      item.quantity;
+
+    product.totalStock =
+      Math.max(
+        0,
+        (product.totalStock || 0) -
+          item.quantity
+      );
+
+    await product.save();
+  }
+};
+
+// =====================================================
+// RESTORE STOCK
+// =====================================================
+
+const restoreStock = async (
+  orderItems
+) => {
+  for (
+    const item of orderItems
+  ) {
+    const product =
+      await Product.findById(
+        item.product
+      );
+
+    if (!product) {
+      continue;
+    }
+
+    const color =
+      product.colors.find(
+        (c) =>
+          c.name === item.color
+      );
+
+    if (!color) {
+      continue;
+    }
+
+    const size =
+      color.sizes.find(
+        (s) =>
+          s.size === item.size
+      );
+
+    if (!size) {
+      continue;
+    }
+
+    size.stock +=
+      item.quantity;
+
+    product.totalStock =
+      (product.totalStock || 0) +
+      item.quantity;
+
+    await product.save();
+  }
+};
+
+// =====================================================
+// CLEAR CART
+// =====================================================
+
+const clearUserCart = async (
+  userId
+) => {
+  const cart =
+    await Cart.findOne({
+      user: userId,
+    });
+
+  if (!cart) {
+    return;
+  }
+
+  cart.items = [];
+
+  cart.subtotal = 0;
+
+  cart.totalDiscount = 0;
+
+  cart.totalAmount = 0;
+
+  cart.totalItems = 0;
+
+  await cart.save();
+};
+
+// =====================================================
+// INCREASE COUPON USAGE
+// =====================================================
+
+const increaseCouponUsage = async (
+  coupon
+) => {
+  if (!coupon) {
+    return;
+  }
+
+  coupon.usedCount =
+    (coupon.usedCount || 0) +
+    1;
+
+  await coupon.save();
+};
+
+// =====================================================
+// DECREASE COUPON USAGE
+// =====================================================
+
+const decreaseCouponUsage = async (
+  couponId
+) => {
+  if (!couponId) {
+    return;
+  }
+
+  const coupon =
+    await Coupon.findById(
+      couponId
     );
 
-  // =====================================================
+  if (
+    coupon &&
+    coupon.usedCount > 0
+  ) {
+    coupon.usedCount -= 1;
+
+    await coupon.save();
+  }
+};
+
+// =====================================================
+// CREATE FINAL ORDER
+// =====================================================
+
+const createFinalOrder = async ({
+  userId,
+  orderData,
+  paymentStatus = "Pending",
+  paymentId = "",
+  razorpayOrderId = "",
+  orderStatus = "Pending",
+}) => {
+  const {
+    address,
+    orderItems,
+    subtotal,
+    discount,
+    shippingCharge,
+    totalAmount,
+    coupon,
+    isBuyNow,
+  } = await buildOrderData(
+    userId,
+    orderData
+  );
+
+  // ===================================================
   // CREATE ORDER
-  // =====================================================
+  // ===================================================
 
   const order =
     await Order.create({
       user: userId,
 
-      orderNumber,
+      orderNumber:
+        generateOrderNumber(),
 
-      items: orderItems,
+      items:
+        orderItems,
+
+      isBuyNow,
 
       shippingAddress:
         address,
@@ -422,84 +698,43 @@ const createOrder = async (userId, orderData) => {
 
       totalAmount,
 
-      paymentMethod,
+      paymentMethod:
+        orderData.paymentMethod,
+
+      paymentStatus,
+
+      paymentId,
+
+      razorpayOrderId,
+
+      orderStatus,
     });
 
-  // =====================================================
+  // ===================================================
   // REDUCE STOCK
-  // =====================================================
+  // ===================================================
 
-  for (const item of orderItems) {
-    const product =
-      await Product.findById(
-        item.product
-      );
+  await reduceStock(
+    orderItems
+  );
 
-    if (!product) continue;
-
-    const color =
-      product.colors.find(
-        (c) =>
-          c.name === item.color
-      );
-
-    if (!color) continue;
-
-    const size =
-      color.sizes.find(
-        (s) =>
-          s.size === item.size
-      );
-
-    if (!size) continue;
-
-    size.stock -=
-      item.quantity;
-
-    product.totalStock -=
-      item.quantity;
-
-    await product.save();
-  }
-
-  // =====================================================
+  // ===================================================
   // COUPON USAGE
-  // =====================================================
+  // ===================================================
 
-  if (coupon) {
-    coupon.usedCount += 1;
+  await increaseCouponUsage(
+    coupon
+  );
 
-    await coupon.save();
+  // ===================================================
+  // CLEAR CART
+  // ===================================================
+
+  if (!isBuyNow) {
+    await clearUserCart(
+      userId
+    );
   }
-
-  // =====================================================
-  // CLEAR CART ONLY FOR NORMAL CHECKOUT
-  // =====================================================
-
-  if (!buyNowItem) {
-    const cart =
-      await Cart.findOne({
-        user: userId,
-      });
-
-    if (cart) {
-      cart.items = [];
-
-      cart.subtotal = 0;
-
-      cart.totalDiscount = 0;
-
-      cart.totalAmount = 0;
-
-      cart.totalItems = 0;
-
-      await cart.save();
-    }
-  }
-
-  // =====================================================
-  // RESPONSE
-  // =====================================================
 
   return {
     success: true,
@@ -511,11 +746,370 @@ const createOrder = async (userId, orderData) => {
   };
 };
 
-// =====================================
-// Get My Orders
-// =====================================
+// =====================================================
+// CREATE COD ORDER
+// =====================================================
 
-const getMyOrders = async (userId) => {
+const createOrder = async (
+  userId,
+  orderData
+) => {
+  const paymentMethod =
+    orderData.paymentMethod ||
+    "COD";
+
+  if (
+    paymentMethod === "COD"
+  ) {
+    return createFinalOrder({
+      userId,
+
+      orderData,
+
+      paymentStatus:
+        "Pending",
+
+      paymentId: "",
+
+      razorpayOrderId: "",
+
+      orderStatus:
+        "Confirmed",
+    });
+  }
+
+  if (
+    paymentMethod ===
+    "RAZORPAY"
+  ) {
+    throw new Error(
+      "For Razorpay orders, payment must be completed first."
+    );
+  }
+
+  throw new Error(
+    "Invalid payment method."
+  );
+};
+
+// =====================================================
+// CREATE PENDING RAZORPAY ORDER
+// =====================================================
+
+const createPendingRazorpayOrder =
+  async ({
+    userId,
+    orderData,
+    razorpayOrderId,
+  }) => {
+    if (!razorpayOrderId) {
+      throw new Error(
+        "Razorpay order ID is required."
+      );
+    }
+
+    const {
+      address,
+      orderItems,
+      subtotal,
+      discount,
+      shippingCharge,
+      totalAmount,
+      coupon,
+      isBuyNow,
+    } = await buildOrderData(
+      userId,
+      orderData
+    );
+
+    // ===============================================
+    // CREATE PENDING ORDER
+    // ===============================================
+
+    const order =
+      await Order.create({
+        user: userId,
+
+        orderNumber:
+          generateOrderNumber(),
+
+        items:
+          orderItems,
+
+        isBuyNow,
+
+        shippingAddress:
+          address,
+
+        coupon:
+          coupon?._id || null,
+
+        subtotal,
+
+        discount,
+
+        shippingCharge,
+
+        totalAmount,
+
+        paymentMethod:
+          "RAZORPAY",
+
+        paymentStatus:
+          "Pending",
+
+        paymentId: "",
+
+        razorpayOrderId,
+
+        orderStatus:
+          "Pending",
+      });
+
+    return {
+      success: true,
+
+      message:
+        "Pending Razorpay order created.",
+
+      data: order,
+    };
+  };
+
+// =====================================================
+// GET PENDING RAZORPAY ORDER
+// =====================================================
+
+const getRazorpayPendingOrder =
+  async ({
+    userId,
+    razorpayOrderId,
+  }) => {
+    if (!razorpayOrderId) {
+      throw new Error(
+        "Razorpay order ID is required."
+      );
+    }
+
+    const order =
+      await Order.findOne({
+        user: userId,
+
+        razorpayOrderId,
+
+        paymentMethod:
+          "RAZORPAY",
+
+        paymentStatus:
+          "Pending",
+      });
+
+    if (!order) {
+      throw new Error(
+        "Pending Razorpay order not found."
+      );
+    }
+
+    return {
+      success: true,
+
+      data: order,
+    };
+  };
+
+// =====================================================
+// COMPLETE RAZORPAY ORDER
+// =====================================================
+
+const completeRazorpayOrder =
+  async ({
+    userId,
+    razorpayOrderId,
+    razorpayPaymentId,
+  }) => {
+    if (!razorpayOrderId) {
+      throw new Error(
+        "Razorpay order ID is required."
+      );
+    }
+
+    if (!razorpayPaymentId) {
+      throw new Error(
+        "Razorpay payment ID is required."
+      );
+    }
+
+    // ===============================================
+    // FIND PENDING ORDER
+    // ===============================================
+
+    const order =
+      await Order.findOne({
+        user: userId,
+
+        razorpayOrderId,
+
+        paymentMethod:
+          "RAZORPAY",
+      });
+
+    if (!order) {
+      throw new Error(
+        "Razorpay order not found."
+      );
+    }
+
+    // ===============================================
+    // DUPLICATE PAYMENT
+    // ===============================================
+
+    if (
+      order.paymentStatus ===
+      "Paid"
+    ) {
+      return {
+        success: true,
+
+        message:
+          "Payment was already completed.",
+
+        data: order,
+      };
+    }
+
+    if (
+      order.paymentStatus ===
+      "Refunded"
+    ) {
+      throw new Error(
+        "This order has already been refunded."
+      );
+    }
+
+    // ===============================================
+    // STOCK CHECK
+    // ===============================================
+
+    for (
+      const item of order.items
+    ) {
+      const product =
+        await Product.findById(
+          item.product
+        );
+
+      if (
+        !product ||
+        !product.isActive
+      ) {
+        throw new Error(
+          `${item.productName} is no longer available.`
+        );
+      }
+
+      const color =
+        product.colors.find(
+          (c) =>
+            c.name === item.color
+        );
+
+      if (!color) {
+        throw new Error(
+          `Color ${item.color} is no longer available.`
+        );
+      }
+
+      const size =
+        color.sizes.find(
+          (s) =>
+            s.size === item.size
+        );
+
+      if (!size) {
+        throw new Error(
+          `Size ${item.size} is no longer available.`
+        );
+      }
+
+      if (
+        size.stock <
+        item.quantity
+      ) {
+        throw new Error(
+          `${item.productName} is out of stock.`
+        );
+      }
+    }
+
+    // ===============================================
+    // REDUCE STOCK
+    // ===============================================
+
+    await reduceStock(
+      order.items
+    );
+
+    // ===============================================
+    // COUPON USAGE
+    // ===============================================
+
+    if (order.coupon) {
+      const coupon =
+        await Coupon.findById(
+          order.coupon
+        );
+
+      if (coupon) {
+        coupon.usedCount =
+          (coupon.usedCount || 0) +
+          1;
+
+        await coupon.save();
+      }
+    }
+
+    // ===============================================
+    // CLEAR CART
+    // ===============================================
+
+    if (!order.isBuyNow) {
+      await clearUserCart(
+        userId
+      );
+    }
+
+    // ===============================================
+    // UPDATE PAYMENT
+    // ===============================================
+
+    order.paymentStatus =
+      "Paid";
+
+    order.paymentId =
+      razorpayPaymentId;
+
+    order.orderStatus =
+      "Confirmed";
+
+    await order.save();
+
+    return {
+      success: true,
+
+      message:
+        "Payment verified and order confirmed.",
+
+      data: order,
+    };
+  };
+
+// =====================================================
+// GET MY ORDERS
+// =====================================================
+
+const getMyOrders = async (
+  userId
+) => {
   const orders =
     await Order.find({
       user: userId,
@@ -530,14 +1124,17 @@ const getMyOrders = async (userId) => {
 
   return {
     success: true,
-    total: orders.length,
+
+    total:
+      orders.length,
+
     data: orders,
   };
 };
 
-// =====================================
-// Get Order By ID
-// =====================================
+// =====================================================
+// GET ORDER BY ID
+// =====================================================
 
 const getOrderById = async (
   orderId,
@@ -546,6 +1143,7 @@ const getOrderById = async (
   const order =
     await Order.findOne({
       _id: orderId,
+
       user: userId,
     })
       .populate(
@@ -565,13 +1163,14 @@ const getOrderById = async (
 
   return {
     success: true,
+
     data: order,
   };
 };
 
-// =====================================
-// Cancel Order
-// =====================================
+// =====================================================
+// CANCEL ORDER
+// =====================================================
 
 const cancelOrder = async (
   orderId,
@@ -580,6 +1179,7 @@ const cancelOrder = async (
   const order =
     await Order.findOne({
       _id: orderId,
+
       user: userId,
     });
 
@@ -603,63 +1203,36 @@ const cancelOrder = async (
     );
   }
 
-  // Restore Stock
+  // ===============================================
+  // RESTORE STOCK
+  // ===============================================
 
-  for (const item of order.items) {
-    const product =
-      await Product.findById(
-        item.product
-      );
+  await restoreStock(
+    order.items
+  );
 
-    if (!product) continue;
+  // ===============================================
+  // RESTORE COUPON
+  // ===============================================
 
-    const color =
-      product.colors.find(
-        (c) =>
-          c.name === item.color
-      );
+  await decreaseCouponUsage(
+    order.coupon
+  );
 
-    if (!color) continue;
-
-    const size =
-      color.sizes.find(
-        (s) =>
-          s.size === item.size
-      );
-
-    if (!size) continue;
-
-    size.stock +=
-      item.quantity;
-
-    product.totalStock +=
-      item.quantity;
-
-    await product.save();
-  }
-
-  // Restore Coupon
-
-  if (order.coupon) {
-    const coupon =
-      await Coupon.findById(
-        order.coupon
-      );
-
-    if (
-      coupon &&
-      coupon.usedCount > 0
-    ) {
-      coupon.usedCount -= 1;
-
-      await coupon.save();
-    }
-  }
+  // ===============================================
+  // UPDATE ORDER
+  // ===============================================
 
   order.orderStatus =
     "Cancelled";
 
-  order.isCancelled = true;
+  order.isCancelled =
+    true;
+
+  /*
+   * Razorpay refund logic will be
+   * added separately later.
+   */
 
   await order.save();
 
@@ -671,9 +1244,9 @@ const cancelOrder = async (
   };
 };
 
-// =====================================
-// Admin - Get All Orders
-// =====================================
+// =====================================================
+// ADMIN - GET ALL ORDERS
+// =====================================================
 
 const getAllOrders = async () => {
   const orders =
@@ -692,76 +1265,107 @@ const getAllOrders = async () => {
 
   return {
     success: true,
-    total: orders.length,
+
+    total:
+      orders.length,
+
     data: orders,
   };
 };
 
-// =====================================
-// Admin - Update Order Status
-// =====================================
+// =====================================================
+// ADMIN - UPDATE ORDER STATUS
+// =====================================================
 
-const updateOrderStatus = async (
-  orderId,
-  status
-) => {
-  const allowedStatus = [
-    "Pending",
-    "Confirmed",
-    "Processing",
-    "Shipped",
-    "Delivered",
-    "Cancelled",
-  ];
+const updateOrderStatus =
+  async (
+    orderId,
+    status
+  ) => {
+    const allowedStatus = [
+      "Pending",
+      "Confirmed",
+      "Processing",
+      "Shipped",
+      "Delivered",
+      "Cancelled",
+    ];
 
-  if (
-    !allowedStatus.includes(
-      status
-    )
-  ) {
-    throw new Error(
-      "Invalid order status."
-    );
-  }
+    if (
+      !allowedStatus.includes(
+        status
+      )
+    ) {
+      throw new Error(
+        "Invalid order status."
+      );
+    }
 
-  const order =
-    await Order.findById(
-      orderId
-    );
+    const order =
+      await Order.findById(
+        orderId
+      );
 
-  if (!order) {
-    throw new Error(
-      "Order not found."
-    );
-  }
+    if (!order) {
+      throw new Error(
+        "Order not found."
+      );
+    }
 
-  order.orderStatus =
-    status;
+    order.orderStatus =
+      status;
 
-  if (
-    status === "Delivered"
-  ) {
-    order.paymentStatus =
-      "Paid";
-  }
+    // COD becomes paid when delivered.
+    //
+    // Razorpay orders are already paid
+    // after successful payment verification.
 
-  await order.save();
+    if (
+      status === "Delivered" &&
+      order.paymentMethod ===
+        "COD"
+    ) {
+      order.paymentStatus =
+        "Paid";
+    }
 
-  return {
-    success: true,
+    await order.save();
 
-    message:
-      "Order status updated successfully.",
+    return {
+      success: true,
 
-    data: order,
+      message:
+        "Order status updated successfully.",
+
+      data: order,
+    };
   };
-};
+
+// =====================================================
+// EXPORTS
+// =====================================================
 
 module.exports = {
   createOrder,
+
+  createPendingRazorpayOrder,
+
+  getRazorpayPendingOrder,
+
+  completeRazorpayOrder,
+
+  getOrderCalculation,
+
+  finalizeRazorpayOrder:
+    completeRazorpayOrder,
+
   getMyOrders,
+
   getOrderById,
+
   cancelOrder,
+
   getAllOrders,
+
   updateOrderStatus,
 };

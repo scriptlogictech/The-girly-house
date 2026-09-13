@@ -24,55 +24,34 @@ const CheckoutSummary = () => {
     selectedAddress,
     paymentMethod,
     placeOrder,
+    createRazorpayPayment,
+    verifyRazorpayPayment,
     loading,
   } = useCheckout();
 
   const [couponCode, setCouponCode] =
     useState("");
 
-  /*
-  =====================================================
-  DIRECT CHECKOUT DISPLAY
-  =====================================================
-  */
+  const [paymentProcessing, setPaymentProcessing] =
+    useState(false);
+
+  // ==========================================
+  // DIRECT CHECKOUT
+  // ==========================================
 
   const isDirectCheckout =
     !!directCheckout;
 
-  /*
-  =====================================================
-  CALCULATE SUMMARY
-  =====================================================
-  */
+  // ==========================================
+  // CART SUMMARY
+  // ==========================================
 
   let itemsCount = 0;
   let subtotal = 0;
   let discount = 0;
   let totalAmount = 0;
 
-  if (isDirectCheckout) {
-    /*
-      Prices are displayed here for the UI.
-      Backend will calculate the final price
-      again for security.
-    */
-
-    itemsCount =
-      directCheckout.quantity || 0;
-
-    /*
-      Buy Now page only stores IDs/variant details.
-      Therefore use 0 here until backend order
-      calculation.
-
-      We will improve this by fetching the
-      product data if needed.
-    */
-
-    subtotal = 0;
-    discount = 0;
-    totalAmount = 0;
-  } else {
+  if (!isDirectCheckout) {
     itemsCount =
       cart?.totalItems || 0;
 
@@ -84,15 +63,317 @@ const CheckoutSummary = () => {
 
     totalAmount =
       cart?.totalAmount || 0;
+  } else {
+    itemsCount =
+      directCheckout?.quantity || 0;
   }
 
-  /*
-  =====================================================
-  PLACE ORDER
-  =====================================================
-  */
+  // ==========================================
+  // COMPLETE ORDER SUCCESS
+  // ==========================================
+
+  const handleOrderSuccess = (response) => {
+    if (isDirectCheckout) {
+      clearDirectCheckout();
+    }
+
+    navigate("/order-success", {
+      state: {
+        order:
+          response?.data ||
+          response,
+      },
+    });
+  };
+
+  // ==========================================
+  // COD ORDER
+  // ==========================================
+
+  const handleCODOrder = async () => {
+    try {
+      const response = await placeOrder({
+        addressId: selectedAddress._id,
+        paymentMethod: "COD",
+        couponCode,
+
+        buyNowItem: isDirectCheckout
+          ? directCheckout
+          : undefined,
+      });
+
+      toast.success(
+        response?.message ||
+          "Order Placed Successfully!"
+      );
+
+      handleOrderSuccess(response);
+    } catch (error) {
+      console.error(
+        "COD Order Error:",
+        error
+      );
+
+      toast.error(
+        error?.response?.data?.message ||
+          error?.message ||
+          "Unable to place order."
+      );
+    }
+  };
+
+  // ==========================================
+  // RAZORPAY PAYMENT
+  // ==========================================
+
+  const handleRazorpayPayment = async () => {
+    try {
+      setPaymentProcessing(true);
+
+      /*
+      ==========================================
+      STEP 1
+      Create Razorpay order on backend
+      ==========================================
+      */
+
+      const response =
+        await createRazorpayPayment({
+          addressId:
+            selectedAddress._id,
+
+          couponCode,
+
+          buyNowItem: isDirectCheckout
+            ? directCheckout
+            : undefined,
+        });
+
+      if (!response?.success) {
+        throw new Error(
+          response?.message ||
+            "Unable to create payment order."
+        );
+      }
+
+      const paymentData =
+        response.data;
+
+      /*
+      ==========================================
+      CHECK RAZORPAY SCRIPT
+      ==========================================
+      */
+
+      if (
+        !window.Razorpay
+      ) {
+        toast.error(
+          "Razorpay is not loaded. Please refresh the page and try again."
+        );
+
+        return;
+      }
+
+      /*
+      ==========================================
+      STEP 2
+      Razorpay Checkout Options
+      ==========================================
+      */
+
+      const options = {
+        key:
+          paymentData.keyId,
+
+        amount:
+          paymentData.amount,
+
+        currency:
+          paymentData.currency || "INR",
+
+        name:
+          "The Girly House",
+
+        description:
+          "Fashion Order",
+
+        order_id:
+          paymentData.razorpayOrderId,
+
+        handler:
+          async function (
+            razorpayResponse
+          ) {
+            try {
+              setPaymentProcessing(true);
+
+              /*
+              ==================================
+              STEP 3
+              Verify Payment On Backend
+              ==================================
+              */
+
+              const verificationResponse =
+                await verifyRazorpayPayment({
+                  razorpayOrderId:
+                    razorpayResponse.razorpay_order_id,
+
+                  razorpayPaymentId:
+                    razorpayResponse.razorpay_payment_id,
+
+                  razorpaySignature:
+                    razorpayResponse.razorpay_signature,
+                });
+
+              if (
+                !verificationResponse?.success
+              ) {
+                throw new Error(
+                  verificationResponse?.message ||
+                    "Payment verification failed."
+                );
+              }
+
+              toast.success(
+                "Payment successful! Your order has been placed."
+              );
+
+              handleOrderSuccess(
+                verificationResponse
+              );
+            } catch (error) {
+              console.error(
+                "Payment Verification Error:",
+                error
+              );
+
+              toast.error(
+                error?.response?.data?.message ||
+                  error?.message ||
+                  "Payment verification failed."
+              );
+            } finally {
+              setPaymentProcessing(false);
+            }
+          },
+
+        /*
+        ========================================
+        CUSTOMER INFORMATION
+        ========================================
+        */
+
+        prefill: {
+          name:
+            selectedAddress?.fullName ||
+            "",
+
+          contact:
+            selectedAddress?.phone ||
+            "",
+        },
+
+        /*
+        ========================================
+        BRANDING
+        ========================================
+        */
+
+        theme: {
+          color: "#6B1028",
+        },
+
+        /*
+        ========================================
+        MODAL
+        ========================================
+        */
+
+        modal: {
+          ondismiss: function () {
+            setPaymentProcessing(false);
+
+            toast.info(
+              "Payment was cancelled."
+            );
+          },
+        },
+      };
+
+      /*
+      ==========================================
+      STEP 4
+      Open Razorpay
+      ==========================================
+      */
+
+      const razorpay =
+        new window.Razorpay(
+          options
+        );
+
+      /*
+      ==========================================
+      PAYMENT FAILURE
+      ==========================================
+      */
+
+      razorpay.on(
+        "payment.failed",
+        function (response) {
+          console.error(
+            "Razorpay Payment Failed:",
+            response
+          );
+
+          setPaymentProcessing(false);
+
+          toast.error(
+            response?.error?.description ||
+              "Payment failed. Please try again."
+          );
+        }
+      );
+
+      razorpay.open();
+    } catch (error) {
+      console.error(
+        "Razorpay Order Error:",
+        error
+      );
+
+      toast.error(
+        error?.response?.data?.message ||
+          error?.message ||
+          "Unable to start Razorpay payment."
+      );
+    } finally {
+      /*
+        We don't immediately consider the whole
+        process finished here because the Razorpay
+        popup may still be open.
+
+        The handler / modal callbacks will update
+        paymentProcessing.
+      */
+
+      setPaymentProcessing(false);
+    }
+  };
+
+  // ==========================================
+  // PLACE ORDER
+  // ==========================================
 
   const handlePlaceOrder = async () => {
+    /*
+    ==========================================
+    ADDRESS VALIDATION
+    ==========================================
+    */
+
     if (!selectedAddress) {
       toast.error(
         "Please select a shipping address."
@@ -101,6 +382,12 @@ const CheckoutSummary = () => {
       return;
     }
 
+    /*
+    ==========================================
+    PAYMENT METHOD VALIDATION
+    ==========================================
+    */
+
     if (!paymentMethod) {
       toast.error(
         "Please select a payment method."
@@ -108,6 +395,12 @@ const CheckoutSummary = () => {
 
       return;
     }
+
+    /*
+    ==========================================
+    BUY NOW VALIDATION
+    ==========================================
+    */
 
     if (
       isDirectCheckout &&
@@ -127,56 +420,83 @@ const CheckoutSummary = () => {
       return;
     }
 
-    try {
-      const response = await placeOrder({
-        addressId: selectedAddress._id,
-        paymentMethod,
-        couponCode,
+    /*
+    ==========================================
+    PAYMENT METHOD
+    ==========================================
+    */
 
-        buyNowItem: isDirectCheckout
-          ? directCheckout
-          : undefined,
-      });
+    if (
+      paymentMethod === "RAZORPAY"
+    ) {
+      await handleRazorpayPayment();
 
-      toast.success(
-        response?.message ||
-          "Order Placed Successfully!"
-      );
-
-      /*
-        Clear direct checkout after successful
-        order creation.
-      */
-
-      if (isDirectCheckout) {
-        clearDirectCheckout();
-      }
-
-      navigate("/order-success", {
-        state: {
-          order:
-            response?.data ||
-            response,
-        },
-      });
-    } catch (error) {
-      console.error(
-        "Order error:",
-        error
-      );
-
-      toast.error(
-        error?.response?.data?.message ||
-          error?.message ||
-          "Unable to place order."
-      );
+      return;
     }
+
+    /*
+    ==========================================
+    COD
+    ==========================================
+    */
+
+    if (
+      paymentMethod === "COD"
+    ) {
+      await handleCODOrder();
+
+      return;
+    }
+
+    /*
+    ==========================================
+    OTHER METHODS
+    ==========================================
+    */
+
+    toast.info(
+      "This payment method is not available yet."
+    );
   };
+
+  // ==========================================
+  // BUTTON TEXT
+  // ==========================================
+
+  const isProcessing =
+    loading ||
+    paymentProcessing;
+
+  const getButtonText = () => {
+    if (paymentProcessing) {
+      return paymentMethod === "RAZORPAY"
+        ? "Opening Payment..."
+        : "Processing...";
+    }
+
+    if (loading) {
+      return "Processing...";
+    }
+
+    if (
+      paymentMethod === "RAZORPAY"
+    ) {
+      return "Pay with Razorpay";
+    }
+
+    return "Place Order";
+  };
+
+  // ==========================================
+  // UI
+  // ==========================================
 
   return (
     <div className="sticky top-24 rounded-2xl bg-white shadow-md p-6">
 
-      {/* HEADER */}
+      {/* ======================================
+          HEADER
+      ====================================== */}
 
       <div className="flex items-center gap-3 mb-6">
 
@@ -191,7 +511,9 @@ const CheckoutSummary = () => {
 
       </div>
 
-      {/* BUY NOW INDICATOR */}
+      {/* ======================================
+          BUY NOW INDICATOR
+      ====================================== */}
 
       {isDirectCheckout && (
         <div className="mb-5 rounded-xl bg-[#F9F4EC] border border-[#EADFD8] p-4">
@@ -208,34 +530,48 @@ const CheckoutSummary = () => {
         </div>
       )}
 
-      {/* SUMMARY */}
+      {/* ======================================
+          SUMMARY
+      ====================================== */}
 
       <div className="space-y-4">
 
         <div className="flex justify-between">
-          <span>Items</span>
+
+          <span>
+            Items
+          </span>
 
           <span>
             {itemsCount}
           </span>
+
         </div>
 
         {!isDirectCheckout && (
           <>
             <div className="flex justify-between">
-              <span>Subtotal</span>
+
+              <span>
+                Subtotal
+              </span>
 
               <span>
                 ₹{subtotal}
               </span>
+
             </div>
 
             <div className="flex justify-between text-green-600">
-              <span>Discount</span>
+
+              <span>
+                Discount
+              </span>
 
               <span>
                 - ₹{discount}
               </span>
+
             </div>
 
             <div className="flex justify-between">
@@ -265,6 +601,10 @@ const CheckoutSummary = () => {
             </div>
           </>
         )}
+
+        {/* ====================================
+            BUY NOW PRODUCT INFO
+        ==================================== */}
 
         {isDirectCheckout && (
           <div className="rounded-xl bg-gray-50 p-4">
@@ -304,8 +644,7 @@ const CheckoutSummary = () => {
 
             <p className="text-xs text-gray-500 mt-4">
               Final price and shipping will be
-              calculated securely when placing the
-              order.
+              calculated securely by the server.
             </p>
 
           </div>
@@ -313,7 +652,9 @@ const CheckoutSummary = () => {
 
       </div>
 
-      {/* COUPON */}
+      {/* ======================================
+          COUPON
+      ====================================== */}
 
       <div className="mt-8">
 
@@ -336,12 +677,14 @@ const CheckoutSummary = () => {
                 e.target.value
               )
             }
-            className="flex-1 rounded-xl border px-4 py-3 outline-none focus:border-[#6B1028]"
+            disabled={isProcessing}
+            className="flex-1 rounded-xl border px-4 py-3 outline-none focus:border-[#6B1028] disabled:bg-gray-100"
           />
 
           <button
             type="button"
-            className="rounded-xl border border-[#6B1028] px-5 text-[#6B1028] hover:bg-[#6B1028] hover:text-white transition"
+            disabled={isProcessing}
+            className="rounded-xl border border-[#6B1028] px-5 text-[#6B1028] hover:bg-[#6B1028] hover:text-white transition disabled:opacity-50"
           >
             Apply
           </button>
@@ -350,17 +693,17 @@ const CheckoutSummary = () => {
 
       </div>
 
-      {/* PLACE ORDER */}
+      {/* ======================================
+          PAYMENT BUTTON
+      ====================================== */}
 
       <button
         type="button"
         onClick={handlePlaceOrder}
-        disabled={loading}
-        className="mt-8 w-full rounded-xl bg-[#6B1028] py-4 text-white font-semibold hover:bg-[#54101f] transition disabled:opacity-60"
+        disabled={isProcessing}
+        className="mt-8 w-full rounded-xl bg-[#6B1028] py-4 text-white font-semibold hover:bg-[#54101f] transition disabled:opacity-60 disabled:cursor-not-allowed"
       >
-        {loading
-          ? "Placing Order..."
-          : "Place Order"}
+        {getButtonText()}
       </button>
 
     </div>

@@ -39,194 +39,200 @@ import Orders from "../pages/admin/Orders";
 import Customers from "../pages/admin/Customers";
 import Coupons from "../pages/admin/Coupons";
 import Settings from "../pages/admin/Settings";
+import ScrollToTop from "./ScrollToTop";
 
 const AppRoutes = () => {
   return (
-    <Routes>
+    <>
+      <ScrollToTop />
 
-      {/* =====================================================
+      <Routes>
+
+        {/* =====================================================
           ADMIN ROUTES
       ===================================================== */}
 
-      <Route element={<AdminRoute />}>
+        <Route element={<AdminRoute />}>
 
-        <Route
-          path="/admin/dashboard"
-          element={<Dashboard />}
-        />
-
-        <Route
-          path="/admin/categories"
-          element={<Categories />}
-        />
-
-        <Route
-          path="/admin/products"
-          element={<Products />}
-        />
-
-        <Route
-          path="/admin/products/add"
-          element={<AddProduct />}
-        />
-
-        <Route
-          path="/admin/products/edit/:id"
-          element={<EditProduct />}
-        />
-
-        <Route
-          path="/admin/orders"
-          element={<Orders />}
-        />
-
-        <Route
-          path="/admin/customers"
-          element={<Customers />}
-        />
-
-        <Route
-          path="/admin/coupons"
-          element={<Coupons />}
-        />
-
-        <Route
-          path="/admin/settings"
-          element={<Settings />}
-        />
-
-      </Route>
-
-
-      {/* =====================================================
-          PUBLIC ROUTES
-      ===================================================== */}
-
-      <Route element={<MainLayout />}>
-
-        {/* Home */}
-        <Route
-          path="/"
-          element={<Home />}
-        />
-
-        {/* All Products */}
-        <Route
-          path="/shop"
-          element={<Shop />}
-        />
-
-        {/* Products By Category */}
-        <Route
-          path="/shop/category/:slug"
-          element={<Shop />}
-        />
-
-        {/* Product Details */}
-        <Route
-          path="/product/:slug"
-          element={<ProductDetails />}
-        />
-
-        {/* About */}
-        <Route
-          path="/about"
-          element={<About />}
-        />
-
-        {/* Contact */}
-        <Route
-          path="/contact"
-          element={<Contact />}
-        />
-
-        {/* Verify OTP */}
-        <Route
-          path="/verify-otp"
-          element={<VerifyOtp />}
-        />
-
-      </Route>
-
-
-      {/* =====================================================
-          GUEST ROUTES
-      ===================================================== */}
-
-      <Route element={<GuestRoute />}>
-
-        <Route
-          path="/login"
-          element={<Login />}
-        />
-
-        <Route
-          path="/register"
-          element={<Register />}
-        />
-
-      </Route>
-
-
-      {/* =====================================================
-          PROTECTED ROUTES
-      ===================================================== */}
-
-      <Route element={<ProtectedRoute />}>
-
-        <Route element={<MainLayout />}>
-
-          {/* Cart */}
           <Route
-            path="/cart"
-            element={<Cart />}
+            path="/admin/dashboard"
+            element={<Dashboard />}
           />
 
-          {/* Wishlist */}
           <Route
-            path="/wishlist"
-            element={<Wishlist />}
+            path="/admin/categories"
+            element={<Categories />}
           />
 
-          {/* Checkout */}
           <Route
-            path="/checkout"
-            element={<Checkout />}
+            path="/admin/products"
+            element={<Products />}
           />
 
-          {/* Orders */}
           <Route
-            path="/orders"
-            element={<MyOrders />}
+            path="/admin/products/add"
+            element={<AddProduct />}
           />
 
-          {/* Profile */}
           <Route
-            path="/profile"
-            element={<Profile />}
+            path="/admin/products/edit/:id"
+            element={<EditProduct />}
           />
 
-          {/* Order Success */}
           <Route
-            path="/order-success"
-            element={<OrderSuccess />}
+            path="/admin/orders"
+            element={<Orders />}
+          />
+
+          <Route
+            path="/admin/customers"
+            element={<Customers />}
+          />
+
+          <Route
+            path="/admin/coupons"
+            element={<Coupons />}
+          />
+
+          <Route
+            path="/admin/settings"
+            element={<Settings />}
           />
 
         </Route>
 
-      </Route>
+
+        {/* =====================================================
+          PUBLIC ROUTES
+      ===================================================== */}
+
+        <Route element={<MainLayout />}>
+
+          {/* Home */}
+          <Route
+            path="/"
+            element={<Home />}
+          />
+
+          {/* All Products */}
+          <Route
+            path="/shop"
+            element={<Shop />}
+          />
+
+          {/* Products By Category */}
+          <Route
+            path="/shop/category/:slug"
+            element={<Shop />}
+          />
+
+          {/* Product Details */}
+          <Route
+            path="/product/:slug"
+            element={<ProductDetails />}
+          />
+
+          {/* About */}
+          <Route
+            path="/about"
+            element={<About />}
+          />
+
+          {/* Contact */}
+          <Route
+            path="/contact"
+            element={<Contact />}
+          />
+
+          {/* Verify OTP */}
+          <Route
+            path="/verify-otp"
+            element={<VerifyOtp />}
+          />
+
+        </Route>
 
 
-      {/* =====================================================
+        {/* =====================================================
+          GUEST ROUTES
+      ===================================================== */}
+
+        <Route element={<GuestRoute />}>
+
+          <Route
+            path="/login"
+            element={<Login />}
+          />
+
+          <Route
+            path="/register"
+            element={<Register />}
+          />
+
+        </Route>
+
+
+        {/* =====================================================
+          PROTECTED ROUTES
+      ===================================================== */}
+
+        <Route element={<ProtectedRoute />}>
+
+          <Route element={<MainLayout />}>
+
+            {/* Cart */}
+            <Route
+              path="/cart"
+              element={<Cart />}
+            />
+
+            {/* Wishlist */}
+            <Route
+              path="/wishlist"
+              element={<Wishlist />}
+            />
+
+            {/* Checkout */}
+            <Route
+              path="/checkout"
+              element={<Checkout />}
+            />
+
+            {/* Orders */}
+            <Route
+              path="/orders"
+              element={<MyOrders />}
+            />
+
+            {/* Profile */}
+            <Route
+              path="/profile"
+              element={<Profile />}
+            />
+
+            {/* Order Success */}
+            <Route
+              path="/order-success"
+              element={<OrderSuccess />}
+            />
+
+          </Route>
+
+        </Route>
+
+
+        {/* =====================================================
           404 - PAGE NOT FOUND
       ===================================================== */}
 
-      <Route
-        path="*"
-        element={<NotFound />}
-      />
+        <Route
+          path="*"
+          element={<NotFound />}
+        />
 
-    </Routes>
+      </Routes>
+
+    </>
   );
 };
 

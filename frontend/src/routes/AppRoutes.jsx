@@ -21,6 +21,7 @@ import Cart from "../pages/Cart";
 import Wishlist from "../pages/Wishlist";
 import Checkout from "../pages/Checkout";
 import MyOrders from "../pages/MyOrders";
+import OrderDetails from "../pages/OrderDetails";
 import Profile from "../pages/Profile";
 import OrderSuccess from "../pages/OrderSuccess";
 
@@ -39,6 +40,7 @@ import Orders from "../pages/admin/Orders";
 import Customers from "../pages/admin/Customers";
 import Coupons from "../pages/admin/Coupons";
 import Settings from "../pages/admin/Settings";
+
 import ScrollToTop from "./ScrollToTop";
 
 const AppRoutes = () => {
@@ -49,8 +51,8 @@ const AppRoutes = () => {
       <Routes>
 
         {/* =====================================================
-          ADMIN ROUTES
-      ===================================================== */}
+            ADMIN ROUTES
+        ===================================================== */}
 
         <Route element={<AdminRoute />}>
 
@@ -101,10 +103,9 @@ const AppRoutes = () => {
 
         </Route>
 
-
         {/* =====================================================
-          PUBLIC ROUTES
-      ===================================================== */}
+            PUBLIC ROUTES
+        ===================================================== */}
 
         <Route element={<MainLayout />}>
 
@@ -152,10 +153,9 @@ const AppRoutes = () => {
 
         </Route>
 
-
         {/* =====================================================
-          GUEST ROUTES
-      ===================================================== */}
+            GUEST ROUTES
+        ===================================================== */}
 
         <Route element={<GuestRoute />}>
 
@@ -171,10 +171,9 @@ const AppRoutes = () => {
 
         </Route>
 
-
         {/* =====================================================
-          PROTECTED ROUTES
-      ===================================================== */}
+            PROTECTED ROUTES
+        ===================================================== */}
 
         <Route element={<ProtectedRoute />}>
 
@@ -198,10 +197,16 @@ const AppRoutes = () => {
               element={<Checkout />}
             />
 
-            {/* Orders */}
+            {/* My Orders */}
             <Route
               path="/orders"
               element={<MyOrders />}
+            />
+
+            {/* Order Details */}
+            <Route
+              path="/orders/:id"
+              element={<OrderDetails />}
             />
 
             {/* Profile */}
@@ -220,10 +225,9 @@ const AppRoutes = () => {
 
         </Route>
 
-
         {/* =====================================================
-          404 - PAGE NOT FOUND
-      ===================================================== */}
+            404 - PAGE NOT FOUND
+        ===================================================== */}
 
         <Route
           path="*"
@@ -231,7 +235,6 @@ const AppRoutes = () => {
         />
 
       </Routes>
-
     </>
   );
 };

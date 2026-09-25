@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { FaShoppingBag, FaEye } from "react-icons/fa";
+import {
+  FaShoppingBag,
+  FaEye,
+} from "react-icons/fa";
+
 import { toast } from "react-toastify";
 
 import { getMyOrders } from "../services/orderService";
@@ -166,9 +170,9 @@ const MyOrders = () => {
               className="bg-white rounded-2xl shadow-md p-6 border border-gray-100"
             >
 
-              <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-6">
+              {/* ORDER HEADER */}
 
-                {/* ORDER INFO */}
+              <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
 
                 <div>
 
@@ -176,7 +180,7 @@ const MyOrders = () => {
                     Order #{order.orderNumber}
                   </h2>
 
-                  <p className="text-gray-500 mt-2">
+                  <p className="text-gray-500 mt-1">
                     Placed on{" "}
                     {new Date(
                       order.createdAt
@@ -190,61 +194,9 @@ const MyOrders = () => {
                     )}
                   </p>
 
-                  <p className="text-gray-500">
-                    {order.items?.length || 0}{" "}
-                    Item
-                    {order.items?.length !== 1
-                      ? "s"
-                      : ""}
-                  </p>
-
                 </div>
 
-                {/* TOTAL */}
-
-                <div>
-
-                  <p className="text-gray-500">
-                    Order Total
-                  </p>
-
-                  <h3 className="text-2xl font-bold text-[#6B1028]">
-                    ₹
-                    {Number(
-                      order.totalAmount || 0
-                    ).toLocaleString("en-IN")}
-                  </h3>
-
-                </div>
-
-                {/* PAYMENT */}
-
-                <div>
-
-                  <p className="text-xs text-gray-400 mb-1">
-                    Payment
-                  </p>
-
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      order.paymentStatus ===
-                      "Paid"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-yellow-100 text-yellow-700"
-                    }`}
-                  >
-                    {order.paymentStatus}
-                  </span>
-
-                </div>
-
-                {/* STATUS */}
-
-                <div>
-
-                  <p className="text-xs text-gray-400 mb-1">
-                    Status
-                  </p>
+                <div className="flex items-center gap-3">
 
                   <span
                     className={`px-4 py-2 rounded-full text-sm font-medium ${
@@ -265,20 +217,186 @@ const MyOrders = () => {
 
                 </div>
 
-                {/* VIEW DETAILS */}
+              </div>
+
+              {/* ==================================
+                  PRODUCTS
+              ================================== */}
+
+              <div className="space-y-4">
+
+                {order.items?.map(
+                  (item, index) => (
+
+                    <div
+                      key={`${order._id}-${index}`}
+                      className="flex flex-col sm:flex-row gap-4 p-4 rounded-xl bg-[#FFFDFC] border border-gray-100"
+                    >
+
+                      {/* PRODUCT IMAGE */}
+
+                      <div className="w-full sm:w-28 h-32 sm:h-28 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
+
+                        {item.image ? (
+                          <img
+                            src={item.image}
+                            alt={
+                              item.productName ||
+                              "Product"
+                            }
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.currentTarget.src =
+                                "https://placehold.co/300x300?text=Product";
+                            }}
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-gray-400">
+                            <FaShoppingBag
+                              size={30}
+                            />
+                          </div>
+                        )}
+
+                      </div>
+
+                      {/* PRODUCT INFO */}
+
+                      <div className="flex-1">
+
+                        <h3 className="text-lg font-semibold text-gray-800">
+                          {item.productName}
+                        </h3>
+
+                        <div className="mt-2 text-sm text-gray-500 space-y-1">
+
+                          <p>
+                            Color:{" "}
+                            <span className="font-medium text-gray-700">
+                              {item.color}
+                            </span>
+                          </p>
+
+                          <p>
+                            Size:{" "}
+                            <span className="font-medium text-gray-700">
+                              {item.size}
+                            </span>
+                          </p>
+
+                          <p>
+                            Quantity:{" "}
+                            <span className="font-medium text-gray-700">
+                              {item.quantity}
+                            </span>
+                          </p>
+
+                        </div>
+
+                      </div>
+
+                      {/* PRODUCT PRICE */}
+
+                      <div className="sm:text-right">
+
+                        <p className="text-sm text-gray-500">
+                          Price
+                        </p>
+
+                        <p className="text-lg font-bold text-[#6B1028]">
+                          ₹
+                          {Number(
+                            item.discountPrice ||
+                              item.price ||
+                              0
+                          ).toLocaleString(
+                            "en-IN"
+                          )}
+                        </p>
+
+                        {item.price >
+                          item.discountPrice && (
+                          <p className="text-sm text-gray-400 line-through">
+                            ₹
+                            {Number(
+                              item.price
+                            ).toLocaleString(
+                              "en-IN"
+                            )}
+                          </p>
+                        )}
+
+                      </div>
+
+                    </div>
+
+                  )
+                )}
+
+              </div>
+
+              {/* ==================================
+                  ORDER FOOTER
+              ================================== */}
+
+              <div className="mt-6 pt-6 border-t border-gray-100 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+
+                {/* ITEMS */}
 
                 <div>
 
-                  <Link
-                    to={`/orders/${order._id}`}
-                    className="inline-flex items-center gap-2 bg-[#6B1028] hover:bg-[#541020] text-white px-6 py-3 rounded-lg transition"
-                  >
-                    <FaEye />
+                  <p className="text-sm text-gray-500">
+                    {order.items?.length || 0}{" "}
+                    {order.items?.length === 1
+                      ? "Item"
+                      : "Items"}
+                  </p>
 
-                    View Details
-                  </Link>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Payment:{" "}
+                    <span
+                      className={`font-medium ${
+                        order.paymentStatus ===
+                        "Paid"
+                          ? "text-green-600"
+                          : "text-yellow-600"
+                      }`}
+                    >
+                      {order.paymentStatus}
+                    </span>
+                  </p>
 
                 </div>
+
+                {/* TOTAL */}
+
+                <div>
+
+                  <p className="text-sm text-gray-500">
+                    Order Total
+                  </p>
+
+                  <h3 className="text-2xl font-bold text-[#6B1028]">
+                    ₹
+                    {Number(
+                      order.totalAmount || 0
+                    ).toLocaleString(
+                      "en-IN"
+                    )}
+                  </h3>
+
+                </div>
+
+                {/* VIEW DETAILS */}
+
+                <Link
+                  to={`/orders/${order._id}`}
+                  className="inline-flex items-center justify-center gap-2 bg-[#6B1028] hover:bg-[#541020] text-white px-6 py-3 rounded-lg transition"
+                >
+                  <FaEye />
+
+                  View Details
+                </Link>
 
               </div>
 

@@ -3,6 +3,7 @@ import {
   FaHeadset,
   FaUndoAlt,
   FaLock,
+  FaGem,
 } from "react-icons/fa";
 
 const features = [
@@ -18,12 +19,12 @@ const features = [
     description:
       "Our customer support team is available around the clock.",
   },
-  {
-    icon: <FaUndoAlt />,
-    title: "Return Available",
-    description:
-      "Making it easy to return any items if you're not satisfied.",
-  },
+ {
+  icon: <FaGem />,
+  title: "Premium Quality",
+  description:
+    "Carefully selected fabrics and quality craftsmanship made for lasting comfort and style.",
+},
   {
     icon: <FaLock />,
     title: "Secure Payment",

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaArrowRight } from "react-icons/fa";
 import "./FashionBanner.css";
-import banner from "../../assets/fashionbanner2.jpg";
+import banner from "../../assets/fashionbanner2.png";
 
 const FashionBanner = () => {
   return (

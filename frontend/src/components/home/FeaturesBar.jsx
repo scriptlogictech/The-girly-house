@@ -23,7 +23,7 @@ const features = [
   icon: <FaGem />,
   title: "Premium Quality",
   description:
-    "Carefully selected fabrics and quality craftsmanship made for lasting comfort and style.",
+    "Carefully selected fabrics made for lasting comfort and style.",
 },
   {
     icon: <FaLock />,

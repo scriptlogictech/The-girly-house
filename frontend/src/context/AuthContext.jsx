@@ -1,10 +1,16 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+
 import { toast } from "react-toastify";
 
 import {
   login as loginService,
   register as registerService,
-  verifyPhoneOtp,
+  verifyEmailOtp,
   getProfile,
 } from "../services/authService";
 
@@ -66,7 +72,7 @@ export const AuthProvider = ({ children }) => {
 
       toast.success(
         data.message ||
-          "Registration Successful. Please verify your phone number."
+          "Registration Successful. Please verify your email address."
       );
 
       return data;
@@ -79,18 +85,18 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // ================= Verify OTP =================
+  // ================= Verify Email OTP =================
 
   const verifyOtp = async (payload) => {
     try {
-      const data = await verifyPhoneOtp(payload);
+      const data = await verifyEmailOtp(payload);
 
       localStorage.setItem("token", data.token);
 
       const loggedInUser = await fetchProfile();
 
       toast.success(
-        data.message || "Phone Verified Successfully"
+        data.message || "Email Verified Successfully"
       );
 
       return {

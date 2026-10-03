@@ -1,5 +1,9 @@
 const authService = require("../services/authService");
 
+// ==========================================
+// REGISTER USER
+// ==========================================
+
 const register = async (req, res) => {
   try {
     const result = await authService.registerUser(req.body);
@@ -13,8 +17,9 @@ const register = async (req, res) => {
   }
 };
 
-
-
+// ==========================================
+// LOGIN USER
+// ==========================================
 
 const login = async (req, res) => {
   try {
@@ -29,11 +34,13 @@ const login = async (req, res) => {
   }
 };
 
+// ==========================================
+// VERIFY EMAIL OTP
+// ==========================================
 
-
-const verifyPhoneOtp = async (req, res) => {
+const verifyEmailOtp = async (req, res) => {
   try {
-    const result = await authService.verifyPhoneOtp(req.body);
+    const result = await authService.verifyEmailOtp(req.body);
 
     res.status(200).json(result);
   } catch (error) {
@@ -44,6 +51,9 @@ const verifyPhoneOtp = async (req, res) => {
   }
 };
 
+// ==========================================
+// GET CURRENT USER
+// ==========================================
 
 const getMe = async (req, res) => {
   res.status(200).json({
@@ -52,8 +62,13 @@ const getMe = async (req, res) => {
   });
 };
 
-
+// ==========================================
+// EXPORTS
+// ==========================================
 
 module.exports = {
-  register, login, verifyPhoneOtp, getMe,
+  register,
+  login,
+  verifyEmailOtp,
+  getMe,
 };

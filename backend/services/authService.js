@@ -2,6 +2,11 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const generateToken = require("../utils/generateToken");
 const generateOTP = require("../utils/generateOTP");
+const { sendOtpEmail } = require("./emailService");
+
+// ==========================================
+// REGISTER USER
+// ==========================================
 
 const registerUser = async (userData) => {
   const { name, email, phone, password } = userData;
@@ -26,10 +31,10 @@ const registerUser = async (userData) => {
   // Generate OTP
   const otp = generateOTP();
 
-  // Hash OTP
+  // Hash OTP before storing in database
   const hashedOtp = await bcrypt.hash(otp, 10);
 
-  // OTP Expiry (5 Minutes)
+  // OTP Expiry - 5 Minutes
   const otpExpiry = new Date(Date.now() + 5 * 60 * 1000);
 
   // Create User
@@ -38,28 +43,40 @@ const registerUser = async (userData) => {
     email,
     phone,
     password: hashedPassword,
-    phoneOtp: hashedOtp,
-    phoneOtpExpiry: otpExpiry,
+
+    // Email OTP
+    emailOtp: hashedOtp,
+    emailOtpExpiry: otpExpiry,
+
+    isEmailVerified: false,
   });
 
-  // Development Only
-  console.log("=================================");
-  console.log(`OTP for ${phone} : ${otp}`);
-  console.log("=================================");
+  // Send OTP to user's email
+  await sendOtpEmail({
+    email,
+    name,
+    otp,
+  });
 
   return {
     success: true,
-    message: "User registered successfully. Please verify your phone number using the OTP.",
+    message:
+      "User registered successfully. Please verify your email address using the OTP.",
+
     data: {
       id: user._id,
       name: user.name,
       email: user.email,
       phone: user.phone,
       role: user.role,
-      isPhoneVerified: user.isPhoneVerified,
+      isEmailVerified: user.isEmailVerified,
     },
   };
 };
+
+// ==========================================
+// LOGIN USER
+// ==========================================
 
 const loginUser = async (userData) => {
   const { email, password } = userData;
@@ -81,9 +98,11 @@ const loginUser = async (userData) => {
     throw new Error("Invalid email or password");
   }
 
-  // Check Phone Verification
-  if (!user.isPhoneVerified) {
-    throw new Error("Please verify your phone number first.");
+  // Check Email Verification
+  if (!user.isEmailVerified) {
+    throw new Error(
+      "Please verify your email address first."
+    );
   }
 
   // Generate JWT
@@ -92,7 +111,9 @@ const loginUser = async (userData) => {
   return {
     success: true,
     message: "Login successful",
+
     token,
+
     user: {
       id: user._id,
       name: user.name,
@@ -103,42 +124,51 @@ const loginUser = async (userData) => {
   };
 };
 
-const verifyPhoneOtp = async (userData) => {
-  const { phone, otp } = userData;
+// ==========================================
+// VERIFY EMAIL OTP
+// ==========================================
+
+const verifyEmailOtp = async (userData) => {
+  const { email, otp } = userData;
 
   // Find User
-  const user = await User.findOne({ phone });
+  const user = await User.findOne({
+    email: email.toLowerCase().trim(),
+  });
 
   if (!user) {
     throw new Error("User not found");
   }
 
   // Check OTP Exists
-  if (!user.phoneOtp) {
+  if (!user.emailOtp) {
     throw new Error("OTP not found");
   }
 
   // Check OTP Expiry
-  if (user.phoneOtpExpiry < new Date()) {
+  if (
+    !user.emailOtpExpiry ||
+    user.emailOtpExpiry < new Date()
+  ) {
     throw new Error("OTP has expired");
   }
 
   // Compare OTP
   const isOtpMatched = await bcrypt.compare(
     otp,
-    user.phoneOtp
+    user.emailOtp
   );
 
   if (!isOtpMatched) {
     throw new Error("Invalid OTP");
   }
 
-  // Mark Phone Verified
-  user.isPhoneVerified = true;
+  // Mark Email Verified
+  user.isEmailVerified = true;
 
-  // Clear OTP
-  user.phoneOtp = null;
-  user.phoneOtpExpiry = null;
+  // Clear OTP after successful verification
+  user.emailOtp = null;
+  user.emailOtpExpiry = null;
 
   await user.save();
 
@@ -147,8 +177,10 @@ const verifyPhoneOtp = async (userData) => {
 
   return {
     success: true,
-    message: "Phone verified successfully",
+    message: "Email verified successfully",
+
     token,
+
     user: {
       id: user._id,
       name: user.name,
@@ -162,5 +194,5 @@ const verifyPhoneOtp = async (userData) => {
 module.exports = {
   registerUser,
   loginUser,
-  verifyPhoneOtp,
+  verifyEmailOtp,
 };

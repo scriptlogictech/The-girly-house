@@ -5,30 +5,30 @@ import { motion } from "framer-motion";
 import { useCheckout } from "../../context/CheckoutContext";
 
 const methods = [
-  {
-    id: "COD",
-    title: "Cash on Delivery",
-    icon: <FaMoneyBillWave size={22} />,
-    description: "Pay when your order arrives",
-  },
+  // {
+  //   id: "COD",
+  //   title: "Cash on Delivery",
+  //   icon: <FaMoneyBillWave size={22} />,
+  //   description: "Pay when your order arrives",
+  // },
   {
     id: "RAZORPAY",
     title: "Razorpay",
     icon: <FaCreditCard size={22} />,
     description: "Cards, UPI, Net Banking",
   },
-  {
-    id: "UPI",
-    title: "UPI",
-    icon: <SiPhonepe size={22} />,
-    description: "Google Pay, PhonePe, Paytm",
-  },
-  {
-    id: "BANK",
-    title: "Bank Transfer",
-    icon: <FaUniversity size={22} />,
-    description: "Direct Bank Transfer",
-  },
+  // {
+  //   id: "UPI",
+  //   title: "UPI",
+  //   icon: <SiPhonepe size={22} />,
+  //   description: "Google Pay, PhonePe, Paytm",
+  // },
+  // {
+  //   id: "BANK",
+  //   title: "Bank Transfer",
+  //   icon: <FaUniversity size={22} />,
+  //   description: "Direct Bank Transfer",
+  // },
 ];
 
 const PaymentMethod = () => {

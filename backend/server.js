@@ -52,6 +52,7 @@ const addressRoutes = require("./routes/addressRoutes");
 const couponRoutes = require("./routes/couponRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
+const customerRoutes = require("./routes/customerRoutes");
 
 // =======================
 // API Routes
@@ -66,6 +67,8 @@ app.use("/api/address", addressRoutes);
 app.use("/api/coupons", couponRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/payment", paymentRoutes);
+app.use("/api/customers",customerRoutes);
+
 
 // =======================
 // Default Route

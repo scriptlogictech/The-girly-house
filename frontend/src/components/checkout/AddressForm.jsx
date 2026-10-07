@@ -4,6 +4,8 @@ import { toast } from "react-toastify";
 
 import { useCheckout } from "../../context/CheckoutContext";
 
+import "./AddressForm.css";
+
 const initialState = {
   fullName: "",
   phone: "",
@@ -29,7 +31,12 @@ const AddressForm = ({
     loading,
   } = useCheckout();
 
-  const [formData, setFormData] = useState(initialState);
+  const [formData, setFormData] =
+    useState(initialState);
+
+  // ==========================================
+  // LOAD EDIT DATA
+  // ==========================================
 
   useEffect(() => {
     if (editAddress) {
@@ -43,52 +50,80 @@ const AddressForm = ({
         state: editAddress.state || "",
         pincode: editAddress.pincode || "",
         country: editAddress.country || "India",
-        addressType: editAddress.addressType || "home",
-        isDefault: editAddress.isDefault || false,
+        addressType:
+          editAddress.addressType || "home",
+        isDefault:
+          editAddress.isDefault || false,
       });
     } else {
       setFormData(initialState);
     }
   }, [editAddress, show]);
 
+  // ==========================================
+  // INPUT CHANGE
+  // ==========================================
+
   const handleChange = (e) => {
-    const { name, value, type, checked } =
-      e.target;
+    const {
+      name,
+      value,
+      type,
+      checked,
+    } = e.target;
 
     setFormData((prev) => ({
       ...prev,
       [name]:
-        type === "checkbox" ? checked : value,
+        type === "checkbox"
+          ? checked
+          : value,
     }));
   };
 
+  // ==========================================
+  // VALIDATION
+  // ==========================================
+
   const validate = () => {
-  if (!formData.fullName.trim())
-    return "Full Name is required.";
+    if (!formData.fullName.trim()) {
+      return "Full Name is required.";
+    }
 
-  if (!formData.phone.trim())
-    return "Phone number is required.";
+    if (!formData.phone.trim()) {
+      return "Phone number is required.";
+    }
 
-  if (!/^[6-9]\d{9}$/.test(formData.phone))
-    return "Enter a valid phone number.";
+    if (!/^[6-9]\d{9}$/.test(formData.phone)) {
+      return "Enter a valid phone number.";
+    }
 
-  if (!formData.house.trim())
-    return "House / Flat is required.";
+    if (!formData.house.trim()) {
+      return "House / Flat is required.";
+    }
 
-  if (!formData.street.trim())
-    return "Street is required.";
+    if (!formData.street.trim()) {
+      return "Street is required.";
+    }
 
-  if (!formData.city.trim())
-    return "City is required.";
+    if (!formData.city.trim()) {
+      return "City is required.";
+    }
 
-  if (!formData.state.trim())
-    return "State is required.";
+    if (!formData.state.trim()) {
+      return "State is required.";
+    }
 
-  if (!/^\d{6}$/.test(formData.pincode))
-    return "Enter a valid pincode.";
+    if (!/^\d{6}$/.test(formData.pincode)) {
+      return "Enter a valid pincode.";
+    }
 
-  return null;
-};
+    return null;
+  };
+
+  // ==========================================
+  // SUBMIT
+  // ==========================================
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -100,63 +135,98 @@ const AddressForm = ({
       return;
     }
 
-    if (editAddress) {
-      await updateExistingAddress(
-        editAddress._id,
-        formData
-      );
-      toast.success("Address Updated");
-    } else {
-      await addNewAddress(formData);
-      toast.success("Address Added");
-    }
+    try {
+      if (editAddress) {
+        await updateExistingAddress(
+          editAddress._id,
+          formData
+        );
 
-    handleClose();
+        toast.success("Address Updated");
+      } else {
+        await addNewAddress(formData);
+
+        toast.success("Address Added");
+      }
+
+      handleClose();
+    } catch (error) {
+      console.error(
+        "Address Submit Error:",
+        error
+      );
+    }
   };
 
-  if (!show) return null;
+  // ==========================================
+  // CLOSE
+  // ==========================================
+
+  if (!show) {
+    return null;
+  }
 
   return (
     <AnimatePresence>
-
       <motion.div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+        className="address-modal-overlay"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
-
         <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.9, opacity: 0 }}
-          transition={{ duration: 0.25 }}
-          className="w-full max-w-4xl rounded-2xl bg-white shadow-2xl"
+          initial={{
+            scale: 0.95,
+            opacity: 0,
+          }}
+          animate={{
+            scale: 1,
+            opacity: 1,
+          }}
+          exit={{
+            scale: 0.95,
+            opacity: 0,
+          }}
+          transition={{
+            duration: 0.25,
+          }}
+          className="address-modal"
         >
+          {/* =====================================
+              HEADER
+          ===================================== */}
 
-          {/* Header */}
-
-          <div className="flex items-center justify-between border-b px-6 py-4">
-
-            <h2 className="text-2xl font-semibold text-[#6B1028]">
-              {editAddress ? "Edit Address" : "Add Address"}
+          <div className="address-modal-header">
+            <h2>
+              {editAddress
+                ? "Edit Address"
+                : "Add Address"}
             </h2>
 
             <button
+              type="button"
               onClick={handleClose}
-              className="text-3xl leading-none text-gray-500 hover:text-black"
+              className="address-modal-close"
+              aria-label="Close"
             >
               ×
             </button>
-
           </div>
 
-          <form onSubmit={handleSubmit}>
+          {/* =====================================
+              FORM
+          ===================================== */}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 p-6">
+          <form
+            onSubmit={handleSubmit}
+            className="address-form"
+          >
+            <div className="address-form-body">
 
-              <div>
-                <label className="block mb-2 font-medium">
+              {/* Full Name */}
+
+              <div className="address-field">
+                <label>
                   Full Name
                 </label>
 
@@ -165,26 +235,32 @@ const AddressForm = ({
                   name="fullName"
                   value={formData.fullName}
                   onChange={handleChange}
-                  className="w-full rounded-xl border p-3 outline-none focus:border-[#6B1028]"
+                  autoComplete="name"
                 />
               </div>
 
-              <div>
-                <label className="block mb-2 font-medium">
+              {/* Phone */}
+
+              <div className="address-field">
+                <label>
                   Phone
                 </label>
 
                 <input
-                  type="text"
+                  type="tel"
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full rounded-xl border p-3 outline-none focus:border-[#6B1028]"
+                  inputMode="numeric"
+                  maxLength={10}
+                  autoComplete="tel"
                 />
               </div>
 
-              <div>
-                <label className="block mb-2 font-medium">
+              {/* House */}
+
+              <div className="address-field">
+                <label>
                   House / Flat
                 </label>
 
@@ -193,12 +269,14 @@ const AddressForm = ({
                   name="house"
                   value={formData.house}
                   onChange={handleChange}
-                  className="w-full rounded-xl border p-3 outline-none focus:border-[#6B1028]"
+                  autoComplete="address-line1"
                 />
               </div>
 
-              <div>
-                <label className="block mb-2 font-medium">
+              {/* Street */}
+
+              <div className="address-field">
+                <label>
                   Street
                 </label>
 
@@ -207,12 +285,14 @@ const AddressForm = ({
                   name="street"
                   value={formData.street}
                   onChange={handleChange}
-                  className="w-full rounded-xl border p-3 outline-none focus:border-[#6B1028]"
+                  autoComplete="address-line2"
                 />
               </div>
 
-              <div className="md:col-span-2">
-                <label className="block mb-2 font-medium">
+              {/* Landmark */}
+
+              <div className="address-field address-field-full">
+                <label>
                   Landmark
                 </label>
 
@@ -221,12 +301,13 @@ const AddressForm = ({
                   name="landmark"
                   value={formData.landmark}
                   onChange={handleChange}
-                  className="w-full rounded-xl border p-3 outline-none focus:border-[#6B1028]"
                 />
               </div>
 
-                            <div>
-                <label className="block mb-2 font-medium">
+              {/* City */}
+
+              <div className="address-field">
+                <label>
                   City
                 </label>
 
@@ -235,12 +316,14 @@ const AddressForm = ({
                   name="city"
                   value={formData.city}
                   onChange={handleChange}
-                  className="w-full rounded-xl border p-3 outline-none focus:border-[#6B1028]"
+                  autoComplete="address-level2"
                 />
               </div>
 
-              <div>
-                <label className="block mb-2 font-medium">
+              {/* State */}
+
+              <div className="address-field">
+                <label>
                   State
                 </label>
 
@@ -249,12 +332,14 @@ const AddressForm = ({
                   name="state"
                   value={formData.state}
                   onChange={handleChange}
-                  className="w-full rounded-xl border p-3 outline-none focus:border-[#6B1028]"
+                  autoComplete="address-level1"
                 />
               </div>
 
-              <div>
-                <label className="block mb-2 font-medium">
+              {/* Pincode */}
+
+              <div className="address-field">
+                <label>
                   Pincode
                 </label>
 
@@ -263,12 +348,16 @@ const AddressForm = ({
                   name="pincode"
                   value={formData.pincode}
                   onChange={handleChange}
-                  className="w-full rounded-xl border p-3 outline-none focus:border-[#6B1028]"
+                  inputMode="numeric"
+                  maxLength={6}
+                  autoComplete="postal-code"
                 />
               </div>
 
-              <div>
-                <label className="block mb-2 font-medium">
+              {/* Country */}
+
+              <div className="address-field">
+                <label>
                   Country
                 </label>
 
@@ -277,12 +366,14 @@ const AddressForm = ({
                   name="country"
                   value={formData.country}
                   onChange={handleChange}
-                  className="w-full rounded-xl border p-3 outline-none focus:border-[#6B1028]"
+                  autoComplete="country-name"
                 />
               </div>
 
-              <div>
-                <label className="block mb-2 font-medium">
+              {/* Address Type */}
+
+              <div className="address-field">
+                <label>
                   Address Type
                 </label>
 
@@ -290,42 +381,48 @@ const AddressForm = ({
                   name="addressType"
                   value={formData.addressType}
                   onChange={handleChange}
-                  className="w-full rounded-xl border p-3 outline-none focus:border-[#6B1028]"
                 >
-                  <option value="home">Home</option>
-                  <option value="work">Work</option>
-                  <option value="other">Other</option>
+                  <option value="home">
+                    Home
+                  </option>
+
+                  <option value="work">
+                    Work
+                  </option>
+
+                  <option value="other">
+                    Other
+                  </option>
                 </select>
               </div>
 
-              <div className="flex items-center mt-8">
-                <label className="flex items-center gap-3 cursor-pointer">
+              {/* Default Address */}
 
+              <div className="address-default">
+                <label>
                   <input
                     type="checkbox"
                     name="isDefault"
                     checked={formData.isDefault}
                     onChange={handleChange}
-                    className="h-5 w-5 accent-[#6B1028]"
                   />
 
-                  <span className="font-medium">
+                  <span>
                     Set as Default Address
                   </span>
-
                 </label>
               </div>
-
             </div>
 
-            {/* Footer */}
+            {/* =====================================
+                FOOTER
+            ===================================== */}
 
-            <div className="flex justify-end gap-4 border-t px-6 py-5">
-
+            <div className="address-modal-footer">
               <button
                 type="button"
                 onClick={handleClose}
-                className="rounded-xl border border-gray-300 px-6 py-3 font-medium hover:bg-gray-100 transition"
+                className="address-cancel-btn"
               >
                 Cancel
               </button>
@@ -333,7 +430,7 @@ const AddressForm = ({
               <button
                 type="submit"
                 disabled={loading}
-                className="rounded-xl bg-[#6B1028] px-8 py-3 font-medium text-white hover:bg-[#54101f] transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="address-save-btn"
               >
                 {loading
                   ? "Saving..."
@@ -341,15 +438,10 @@ const AddressForm = ({
                   ? "Update Address"
                   : "Save Address"}
               </button>
-
             </div>
-
           </form>
-
         </motion.div>
-
       </motion.div>
-
     </AnimatePresence>
   );
 };

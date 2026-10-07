@@ -372,7 +372,7 @@ const buildOrderData = async (userId, orderData) => {
   const shippingCharge =
     subtotal >= 999
       ? 0
-      : 99;
+      : 0;
 
   // ===================================================
   // TOTAL

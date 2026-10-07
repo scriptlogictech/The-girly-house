@@ -89,12 +89,14 @@ const Footer = () => {
             <ul className="space-y-4">
 
               {[
-                "New Arrivals",
-                "Trending",
-                "Dresses",
-                "Tops",
-                "Accessories",
-              ].map((item) => (
+  "NEW ARRIVALS",
+  "BRIDAL FARSHI",
+  "WEDDING EDIT",
+  "FESTIVE FARSHI",
+  "PARTY WEAR",
+  "EMBROIDERED FARSHI",
+  "LUXURY FARSHI",
+].map((item) => (
 
                 <li key={item}>
 

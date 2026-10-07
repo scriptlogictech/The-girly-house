@@ -3,13 +3,13 @@ import "./MarqueeBanner.css";
 
 const items = [
   "NEW ARRIVALS",
-  "DRESSES",
-  "TOPS",
-  "CO-ORD SETS",
-  "KURTIS",
-  "JEANS",
-  "SALWAR SUITS",
-];
+  "BRIDAL FARSHI",
+  "WEDDING EDIT",
+  "FESTIVE FARSHI",
+  "PARTY WEAR",
+  "EMBROIDERED FARSHI",
+  "LUXURY FARSHI",
+]
 
 const WaveDecoration = ({ position }) => {
   return (

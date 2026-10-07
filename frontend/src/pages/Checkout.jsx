@@ -8,6 +8,8 @@ import AddressSection from "../components/checkout/AddressSection";
 import PaymentMethod from "../components/checkout/PaymentMethod";
 import CheckoutSummary from "../components/checkout/CheckoutSummary";
 
+import "./Checkout.css";
+
 const Checkout = () => {
   const { user } = useAuth();
 
@@ -53,11 +55,13 @@ const Checkout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#FFFDFC] py-10">
+    <div className="checkout-page">
 
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="checkout-container">
 
-        {/* Heading */}
+        {/* =====================================
+            HEADING
+        ===================================== */}
 
         <motion.div
           initial={{
@@ -71,24 +75,28 @@ const Checkout = () => {
           transition={{
             duration: 0.4,
           }}
-          className="mb-10"
+          className="checkout-header"
         >
-          <h1 className="text-4xl font-bold text-[#6B1028]">
+          <h1>
             Checkout
           </h1>
 
-          <p className="text-gray-500 mt-2">
+          <p>
             Complete your purchase securely.
           </p>
         </motion.div>
 
-        {/* Main Layout */}
+        {/* =====================================
+            MAIN LAYOUT
+        ===================================== */}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="checkout-layout">
 
-          {/* Left Side */}
+          {/* =====================================
+              LEFT SIDE
+          ===================================== */}
 
-          <div className="lg:col-span-2 space-y-6">
+          <div className="checkout-left">
 
             <motion.div
               initial={{
@@ -124,11 +132,13 @@ const Checkout = () => {
 
           </div>
 
-          {/* Right Side */}
+          {/* =====================================
+              RIGHT SIDE
+          ===================================== */}
 
-          <div>
+          <div className="checkout-right">
 
-            <div className="sticky top-24">
+            <div className="checkout-summary-wrapper">
 
               <motion.div
                 initial={{

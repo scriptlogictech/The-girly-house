@@ -1,0 +1,189 @@
+/* ==========================================
+   CHECKOUT PAGE
+========================================== */
+
+.checkout-page {
+  min-height: 100vh;
+  background: #fffdfc;
+  padding: 40px 0 70px;
+}
+
+.checkout-container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.checkout-header {
+  margin-bottom: 40px;
+}
+
+.checkout-header h1 {
+  margin: 0;
+  color: #6b1028;
+  font-size: 40px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.checkout-header p {
+  margin: 10px 0 0;
+  color: #6b7280;
+  font-size: 16px;
+}
+
+/* ==========================================
+   MAIN LAYOUT
+========================================== */
+
+.checkout-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr);
+  gap: 32px;
+  align-items: start;
+}
+
+.checkout-left {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.checkout-right {
+  min-width: 0;
+}
+
+.checkout-summary-wrapper {
+  position: sticky;
+  top: 100px;
+}
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 1024px) {
+  .checkout-page {
+    padding: 32px 0 60px;
+  }
+
+  .checkout-container {
+    padding: 0 18px;
+  }
+
+  .checkout-layout {
+    grid-template-columns: minmax(0, 1.6fr) minmax(290px, 1fr);
+    gap: 24px;
+  }
+
+  .checkout-header {
+    margin-bottom: 30px;
+  }
+
+  .checkout-header h1 {
+    font-size: 36px;
+  }
+
+  .checkout-summary-wrapper {
+    top: 90px;
+  }
+}
+
+/* ==========================================
+   MOBILE / TABLET
+========================================== */
+
+@media (max-width: 768px) {
+  .checkout-page {
+    padding: 25px 0 45px;
+  }
+
+  .checkout-container {
+    padding: 0 15px;
+  }
+
+  .checkout-header {
+    margin-bottom: 25px;
+  }
+
+  .checkout-header h1 {
+    font-size: 32px;
+  }
+
+  .checkout-header p {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .checkout-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .checkout-left {
+    gap: 20px;
+  }
+
+  .checkout-summary-wrapper {
+    position: static;
+  }
+}
+
+/* ==========================================
+   SMALL MOBILE
+========================================== */
+
+@media (max-width: 480px) {
+  .checkout-page {
+    padding: 20px 0 35px;
+  }
+
+  .checkout-container {
+    padding: 0 12px;
+  }
+
+  .checkout-header {
+    margin-bottom: 20px;
+  }
+
+  .checkout-header h1 {
+    font-size: 28px;
+  }
+
+  .checkout-header p {
+    margin-top: 7px;
+    font-size: 13px;
+  }
+
+  .checkout-layout {
+    gap: 18px;
+  }
+
+  .checkout-left {
+    gap: 18px;
+  }
+}
+
+/* ==========================================
+   EXTRA SMALL DEVICES
+========================================== */
+
+@media (max-width: 360px) {
+  .checkout-container {
+    padding: 0 10px;
+  }
+
+  .checkout-header h1 {
+    font-size: 25px;
+  }
+
+  .checkout-header p {
+    font-size: 12px;
+  }
+}

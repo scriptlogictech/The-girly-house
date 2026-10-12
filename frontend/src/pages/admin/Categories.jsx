@@ -1,10 +1,11 @@
+
 import { useEffect, useMemo, useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaSearch } from "react-icons/fa";
 
-
-import AdminLayout from "../../components/layout/AdminLayout" 
+import AdminLayout from "../../components/layout/AdminLayout";
 import CategoryTable from "./CategoryTable";
 import CategoryModal from "./CategoryModal";
+import DeleteCategoryModal from "./DeleteCategoryModal";
 
 import {
   getCategories,
@@ -12,13 +13,10 @@ import {
   updateCategory,
   deleteCategory,
 } from "../../services/categoryService";
-import DeleteCategoryModal from "./DeleteCategoryModal";
-
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const [search, setSearch] = useState("");
 
   const [showModal, setShowModal] = useState(false);
@@ -30,9 +28,7 @@ const Categories = () => {
   const loadCategories = async () => {
     try {
       setLoading(true);
-
       const response = await getCategories();
-
       setCategories(response.data || []);
     } catch (error) {
       console.error(error);
@@ -48,7 +44,7 @@ const Categories = () => {
 
   const filteredCategories = useMemo(() => {
     return categories.filter((category) =>
-      category.name.toLowerCase().includes(search.toLowerCase())
+      category.name.toLowerCase().includes(search.toLowerCase().trim())
     );
   }, [categories, search]);
 
@@ -77,21 +73,21 @@ const Categories = () => {
 
       setShowModal(false);
       setEditingCategory(null);
-
-      loadCategories();
+      await loadCategories();
     } catch (error) {
       alert(error.response?.data?.message || "Operation failed.");
     }
   };
 
   const confirmDelete = async () => {
+    if (!selectedCategory) return;
+
     try {
       await deleteCategory(selectedCategory._id);
 
       setShowDeleteModal(false);
       setSelectedCategory(null);
-
-      loadCategories();
+      await loadCategories();
     } catch (error) {
       alert(error.response?.data?.message || "Delete failed.");
     }
@@ -99,51 +95,79 @@ const Categories = () => {
 
   return (
     <AdminLayout>
-      <div className="p-6">
+      <div className="min-w-0 space-y-5 sm:space-y-6">
+        {/* Page Header */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-800 sm:text-3xl">
+              Categories
+            </h1>
 
-        {/* Header */}
-
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
-
-          <h1 className="text-3xl font-bold text-gray-800">
-            Categories
-          </h1>
+            <p className="mt-1 text-sm text-gray-500">
+              Manage your store categories
+            </p>
+          </div>
 
           <button
+            type="button"
             onClick={handleAddCategory}
-            className="flex items-center gap-2 bg-pink-600 hover:bg-pink-700 text-white px-5 py-2 rounded-lg transition"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#6B1028] px-5 py-3 font-medium text-white transition hover:bg-[#8B1538] sm:w-auto sm:py-2.5"
           >
             <FaPlus />
-            Add Category
+            <span>Add Category</span>
           </button>
-
         </div>
 
         {/* Search */}
+        <div className="w-full sm:max-w-md">
+          <label htmlFor="category-search" className="sr-only">
+            Search categories
+          </label>
 
-        <div className="mb-6">
+          <div className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white px-4 py-3 shadow-sm transition focus-within:border-[#6B1028] focus-within:ring-2 focus-within:ring-[#6B1028]/10">
+            <FaSearch className="shrink-0 text-gray-400" />
 
-          <input
-            type="text"
-            placeholder="Search categories..."
-            className="w-full md:w-96 border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+            <input
+              id="category-search"
+              type="search"
+              placeholder="Search categories..."
+              className="w-full min-w-0 bg-transparent text-sm outline-none"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+            />
 
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch("")}
+                className="shrink-0 text-sm text-gray-500 hover:text-[#6B1028]"
+                aria-label="Clear search"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+
+          {!loading && (
+            <p className="mt-2 text-xs text-gray-500">
+              {filteredCategories.length}{" "}
+              {filteredCategories.length === 1 ? "category" : "categories"}
+              {search.trim() ? " found" : ""}
+            </p>
+          )}
         </div>
 
-        {/* Table */}
-
-        <CategoryTable
-          loading={loading}
-          categories={filteredCategories}
-          onEdit={handleEditCategory}
-          onDelete={handleDeleteCategory}
-        />
+        {/* Categories Table */}
+        <div className="min-w-0">
+          <CategoryTable
+            loading={loading}
+            categories={filteredCategories}
+            onEdit={handleEditCategory}
+            onDelete={handleDeleteCategory}
+          />
+        </div>
 
         {/* Add / Edit Modal */}
-
         <CategoryModal
           open={showModal}
           onClose={() => {
@@ -156,7 +180,6 @@ const Categories = () => {
         />
 
         {/* Delete Modal */}
-
         <DeleteCategoryModal
           open={showDeleteModal}
           category={selectedCategory}
@@ -166,7 +189,6 @@ const Categories = () => {
           }}
           onConfirm={confirmDelete}
         />
-
       </div>
     </AdminLayout>
   );

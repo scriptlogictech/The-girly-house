@@ -4,20 +4,18 @@ import AdminNavbar from "../admin/AdminNavbar";
 
 const AdminLayout = ({ children }) => {
   return (
-    <div className="flex bg-gray-100 min-h-screen">
-
+    <div className="min-h-screen bg-gray-100 md:flex">
+      {/* Sidebar */}
       <AdminSidebar />
 
-      <div className="flex-1 ml-64">
-
+      {/* Main Content */}
+      <div className="min-w-0 flex-1 pt-16 md:ml-64 md:pt-0">
         <AdminNavbar />
 
-        <main className="p-6">
+        <main className="min-w-0 p-4 sm:p-5 md:p-6">
           {children}
         </main>
-
       </div>
-
     </div>
   );
 };

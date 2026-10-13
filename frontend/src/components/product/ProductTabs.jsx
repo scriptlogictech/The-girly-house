@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 
 const ProductTabs = ({ product }) => {
@@ -10,69 +11,105 @@ const ProductTabs = ({ product }) => {
 
   const [activeTab, setActiveTab] = useState("Description");
 
+  const headingClass =
+    "mb-3 text-xl font-semibold text-[#6B1028] sm:mb-4 sm:text-2xl";
+
+  const listClass =
+    "list-disc space-y-2 pl-5 text-sm leading-6 sm:pl-6 sm:text-base sm:leading-8";
+
   return (
-    <div className="mt-12">
-      {/* Tabs */}
-      <div className="flex flex-wrap gap-4 border-b border-gray-200">
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`pb-3 px-2 text-lg font-medium transition ${
-              activeTab === tab
-                ? "border-b-2 border-[#6B1028] text-[#6B1028]"
-                : "text-gray-500 hover:text-[#6B1028]"
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
+    <section className="mt-6 w-full min-w-0 sm:mt-10 lg:mt-12">
+
+      {/* Tabs Navigation */}
+
+      <div
+        className="w-full min-w-0 overflow-x-auto border-b border-gray-200"
+        role="tablist"
+        aria-label="Product information"
+      >
+        <div className="flex min-w-max gap-2 sm:gap-4">
+          {tabs.map((tab) => {
+            const isActive = activeTab === tab;
+            const tabId = `product-tab-${tab.toLowerCase()}`;
+            const panelId = `product-panel-${tab.toLowerCase()}`;
+
+            return (
+              <button
+                key={tab}
+                id={tabId}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                aria-controls={panelId}
+                onClick={() => setActiveTab(tab)}
+                className={`shrink-0 border-b-2 px-3 pb-3 pt-2 text-sm font-medium transition-colors sm:px-4 sm:text-base md:text-lg ${
+                  isActive
+                    ? "border-[#6B1028] text-[#6B1028]"
+                    : "border-transparent text-gray-500 hover:text-[#6B1028]"
+                }`}
+              >
+                {tab}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Tab Content */}
-      <div className="mt-8 bg-white rounded-xl border border-gray-200 p-6 leading-8 text-gray-700">
+
+      <div
+        id={`product-panel-${activeTab.toLowerCase()}`}
+        role="tabpanel"
+        aria-labelledby={`product-tab-${activeTab.toLowerCase()}`}
+        className="mt-4 w-full min-w-0 overflow-wrap-anywhere rounded-xl border border-gray-200 bg-white p-4 text-gray-700 sm:mt-6 sm:p-6 lg:mt-8 lg:p-7"
+      >
+        {/* Description */}
 
         {activeTab === "Description" && (
           <div>
-            <h3 className="text-2xl font-semibold mb-4 text-[#6B1028]">
+            <h3 className={headingClass}>
               Product Description
             </h3>
 
-            <p>
+            <p className="break-words text-sm leading-7 sm:text-base sm:leading-8">
               {product?.description ||
                 "No description available for this product."}
             </p>
           </div>
         )}
 
+        {/* Details */}
+
         {activeTab === "Details" && (
           <div>
-            <h3 className="text-2xl font-semibold mb-4 text-[#6B1028]">
+            <h3 className={headingClass}>
               Product Details
             </h3>
 
-            <ul className="list-disc ml-6 space-y-2">
-              <li>
+            <ul className={listClass}>
+              <li className="break-words">
                 <strong>Category:</strong>{" "}
-                {product?.category?.name || product?.category || "Women's Fashion"}
+                {product?.category?.name ||
+                  product?.category ||
+                  "Women's Fashion"}
               </li>
 
-              <li>
+              <li className="break-words">
                 <strong>Brand:</strong>{" "}
                 {product?.brand || "The Girly House"}
               </li>
 
-              <li>
+              <li className="break-words">
                 <strong>Material:</strong>{" "}
                 {product?.material || "Premium Fabric"}
               </li>
 
-              <li>
+              <li className="break-words">
                 <strong>Fit:</strong>{" "}
                 {product?.fit || "Regular Fit"}
               </li>
 
-              <li>
+              <li className="break-words">
                 <strong>SKU:</strong>{" "}
                 {product?.sku || product?._id}
               </li>
@@ -80,13 +117,15 @@ const ProductTabs = ({ product }) => {
           </div>
         )}
 
+        {/* Care */}
+
         {activeTab === "Care" && (
           <div>
-            <h3 className="text-2xl font-semibold mb-4 text-[#6B1028]">
+            <h3 className={headingClass}>
               Care Instructions
             </h3>
 
-            <ul className="list-disc ml-6 space-y-2">
+            <ul className={listClass}>
               <li>Machine wash cold.</li>
               <li>Do not bleach.</li>
               <li>Dry in shade.</li>
@@ -96,22 +135,24 @@ const ProductTabs = ({ product }) => {
           </div>
         )}
 
+        {/* Shipping */}
+
         {activeTab === "Shipping" && (
           <div>
-            <h3 className="text-2xl font-semibold mb-4 text-[#6B1028]">
-              Shipping & Returns
+            <h3 className={headingClass}>
+              Shipping &amp; Returns
             </h3>
 
-            <ul className="list-disc ml-6 space-y-2">
+            <ul className={listClass}>
               <li>Free shipping on orders above ₹999.</li>
               <li>Estimated delivery: 3–7 business days.</li>
-              <li>Easy 7-day return & exchange.</li>
+              <li>Easy 7-day return &amp; exchange.</li>
               <li>Secure packaging for all products.</li>
             </ul>
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 };
 

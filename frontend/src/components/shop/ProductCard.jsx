@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { FaHeart, FaStar, FaShoppingBag } from "react-icons/fa";
 import { motion } from "framer-motion";
@@ -73,110 +74,134 @@ const ProductCard = ({ product }) => {
     }
   };
 
+  const isWishlisted = isInWishlist(product._id);
+
   return (
     <motion.div
-      whileHover={{ y: -6 }}
+      whileHover={{ y: -4 }}
       transition={{ duration: 0.3 }}
-      className="group bg-white rounded-2xl shadow-sm hover:shadow-xl overflow-hidden border border-gray-100"
+      className="group flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm transition-shadow duration-300 hover:shadow-lg sm:rounded-2xl sm:hover:shadow-xl"
     >
-      {/* Image */}
-      <div className="relative overflow-hidden">
-        <Link to={`/product/${product.slug}`}>
+      {/* Product Image */}
+      <div className="relative shrink-0 overflow-hidden bg-[#faf7f2]">
+        <Link
+          to={`/product/${product.slug}`}
+          className="block"
+          aria-label={`View ${product.name}`}
+        >
           <img
             src={image}
-            alt={product.name}
-            className="w-full h-80 object-cover group-hover:scale-105 transition duration-500"
+            alt={product.name || "Clothing product"}
+            loading="lazy"
+            className="aspect-[3/4] w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         </Link>
 
+        {/* Featured Badge */}
         {product.isFeatured && (
-          <span className="absolute top-3 left-3 bg-[#6B1028] text-white text-xs px-3 py-1 rounded-full">
+          <span className="absolute left-1.5 top-1.5 max-w-[70%] truncate rounded-full bg-[#6B1028] px-2 py-1 text-[9px] font-medium text-white sm:left-3 sm:top-3 sm:px-3 sm:text-xs">
             Featured
           </span>
         )}
 
+        {/* Discount Badge */}
         {discount > 0 && (
-          <span className="absolute top-3 right-3 bg-red-500 text-white text-xs px-3 py-1 rounded-full">
+          <span className="absolute right-1.5 top-1.5 rounded-full bg-red-500 px-2 py-1 text-[9px] font-semibold text-white sm:right-3 sm:top-3 sm:px-3 sm:text-xs">
             {discount}% OFF
           </span>
         )}
 
+        {/* Wishlist Button */}
         <button
+          type="button"
           onClick={handleWishlist}
-          className={`absolute bottom-3 right-3 w-10 h-10 rounded-full shadow flex items-center justify-center transition ${
-            isInWishlist(product._id)
+          aria-label={
+            isWishlisted
+              ? "Remove from wishlist"
+              : "Add to wishlist"
+          }
+          aria-pressed={isWishlisted}
+          className={`absolute bottom-2 right-2 flex h-8 w-8 items-center justify-center rounded-full shadow-md transition-colors duration-200 sm:bottom-3 sm:right-3 sm:h-10 sm:w-10 ${
+            isWishlisted
               ? "bg-pink-500 text-white"
-              : "bg-white hover:bg-[#6B1028] hover:text-white"
+              : "bg-white text-gray-700 hover:bg-[#6B1028] hover:text-white"
           }`}
         >
-          <FaHeart />
+          <FaHeart className="text-xs sm:text-sm" />
         </button>
       </div>
 
-      {/* Content */}
-      <div className="p-4">
-        <p className="text-sm text-gray-500">
-          {product.category?.name}
+      {/* Product Details */}
+      <div className="flex min-w-0 flex-1 flex-col p-2.5 sm:p-4">
+        {/* Category */}
+        <p className="truncate text-[10px] text-gray-500 sm:text-xs md:text-sm">
+          {product.category?.name || "Collection"}
         </p>
 
-        <Link to={`/product/${product.slug}`}>
-          <h3 className="font-semibold text-lg mt-1 text-gray-800 line-clamp-2 hover:text-[#6B1028] transition">
+        {/* Product Name */}
+        <Link
+          to={`/product/${product.slug}`}
+          className="mt-1 block"
+        >
+          <h3 className="line-clamp-2 min-h-[2.5rem] text-xs font-semibold leading-5 text-gray-800 transition-colors hover:text-[#6B1028] sm:min-h-[3.25rem] sm:text-sm sm:leading-6 md:text-base">
             {product.name}
           </h3>
         </Link>
 
-        <div className="flex items-center gap-2 mt-2">
-          <FaStar className="text-yellow-500" />
+        {/* Rating */}
+        <div className="mt-1.5 flex min-w-0 items-center gap-1 sm:mt-2 sm:gap-1.5">
+          <FaStar className="shrink-0 text-[10px] text-yellow-500 sm:text-xs" />
 
-          <span className="text-sm">
+          <span className="text-[10px] font-medium text-gray-700 sm:text-xs">
             {product.averageRating || 0}
           </span>
 
-          <span className="text-gray-400 text-sm">
-            ({product.totalReviews || 0})
+          <span className="truncate text-[10px] text-gray-400 sm:text-xs">
+            ({product.totalReviews || 0} reviews)
           </span>
         </div>
 
         {/* Price */}
-        <div className="flex items-center gap-3 mt-3">
-          <span className="text-xl font-bold text-[#6B1028]">
+        <div className="mt-2 flex min-w-0 flex-wrap items-baseline gap-x-1.5 gap-y-1 sm:mt-3 sm:gap-x-2">
+          <span className="text-sm font-bold text-[#6B1028] sm:text-lg md:text-xl">
             ₹{discountPrice}
           </span>
 
           {price > discountPrice && (
             <>
-              <span className="line-through text-gray-400">
+              <span className="text-[10px] text-gray-400 line-through sm:text-sm">
                 ₹{price}
               </span>
 
-              <span className="text-green-600 text-sm font-medium">
+              <span className="text-[9px] font-medium text-green-600 sm:text-xs">
                 {discount}% OFF
               </span>
             </>
           )}
         </div>
 
-        {/* Stock */}
+        {/* Stock Status */}
         <p
-          className={`text-sm mt-2 ${
+          className={`mt-1.5 text-[10px] sm:mt-2 sm:text-xs ${
             stock > 0 ? "text-green-600" : "text-red-500"
           }`}
         >
           {stock > 0 ? `${stock} in stock` : "Out of Stock"}
         </p>
 
-        {/* Add To Cart */}
+        {/* Add to Cart */}
         <button
+          type="button"
           onClick={addToCart}
           disabled={stock === 0}
-          className={`mt-5 w-full py-3 rounded-xl flex items-center justify-center gap-2 transition ${
+          className={`mt-auto flex min-h-9 w-full items-center justify-center gap-1.5 rounded-lg px-1.5 py-2 text-[10px] font-medium transition-colors duration-200 sm:mt-4 sm:min-h-11 sm:gap-2 sm:rounded-xl sm:px-3 sm:py-3 sm:text-sm ${
             stock > 0
-              ? "bg-[#6B1028] hover:bg-[#52101f] text-white"
-              : "bg-gray-200 text-gray-500 cursor-not-allowed"
+              ? "bg-[#6B1028] text-white hover:bg-[#52101f]"
+              : "cursor-not-allowed bg-gray-200 text-gray-500"
           }`}
         >
-          <FaShoppingBag />
-          Add to Cart
+          <FaShoppingBag className="shrink-0 text-[10px] sm:text-sm" />
+          <span>{stock > 0 ? "Add to Cart" : "Out of Stock"}</span>
         </button>
       </div>
     </motion.div>

@@ -1,3 +1,5 @@
+
+
 import { useEffect, useState } from "react";
 import { FaFilter, FaTimes } from "react-icons/fa";
 import { getAllCategories } from "../../services/categoryService";
@@ -15,7 +17,6 @@ const FilterSidebar = ({
       setLoading(true);
 
       const res = await getAllCategories();
-
       setCategories(res.data || []);
     } catch (error) {
       console.error("Category Error:", error);
@@ -29,75 +30,69 @@ const FilterSidebar = ({
   }, []);
 
   return (
-    <aside className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sticky top-24">
+    <aside className="w-full min-w-0 rounded-xl border border-[#eee4dc] bg-white p-4 shadow-sm sm:rounded-2xl sm:p-5 lg:p-6">
 
       {/* Heading */}
 
-      <div className="flex items-center justify-between mb-6">
-
+      <div className="mb-5 flex flex-wrap items-center justify-between gap-3 sm:mb-6">
         <div className="flex items-center gap-2">
+          <FaFilter className="shrink-0 text-[#6B1028]" />
 
-          <FaFilter className="text-[#6B1028]" />
-
-          <h2 className="text-xl font-semibold text-[#6B1028]">
+          <h2 className="text-lg font-semibold text-[#6B1028] sm:text-xl">
             Filters
           </h2>
-
         </div>
 
         <button
+          type="button"
           onClick={clearFilters}
-          className="text-sm text-[#6B1028] hover:underline flex items-center gap-1"
+          className="inline-flex min-h-9 items-center justify-center gap-1.5 rounded-full px-2 text-xs font-medium text-[#6B1028] transition-colors hover:bg-[#faf7f2] hover:underline sm:text-sm"
         >
           <FaTimes size={12} />
-          Clear
+          Clear Filters
         </button>
-
       </div>
 
       {/* Categories */}
 
-      <div>
-
-        <h3 className="font-medium text-gray-700 mb-3">
+      <div className="min-w-0">
+        <label
+          htmlFor="shop-category-filter"
+          className="mb-2 block text-sm font-medium text-gray-700 sm:mb-3"
+        >
           Categories
-        </h3>
+        </label>
 
         {loading ? (
-          <p className="text-sm text-gray-500">
+          <p className="py-2 text-sm text-gray-500">
             Loading categories...
           </p>
         ) : (
           <select
+            id="shop-category-filter"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#6B1028]"
+            className="min-h-11 w-full min-w-0 rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-700 outline-none transition focus:border-[#6B1028] focus:ring-2 focus:ring-[#6B1028]/15 sm:px-4"
           >
             <option value="">
               All Categories ({categories.length})
             </option>
 
             {categories.map((item) => (
-              <option
-                key={item._id}
-                value={item._id}
-              >
+              <option key={item._id} value={item._id}>
                 {item.name}
               </option>
             ))}
           </select>
         )}
-
       </div>
 
       {/* Future Filters */}
 
-      <div className="mt-8 border-t pt-6">
-
-        <p className="text-sm text-gray-400">
+      <div className="mt-5 border-t border-gray-200 pt-4 sm:mt-7 sm:pt-5">
+        <p className="text-xs leading-relaxed text-gray-400 sm:text-sm">
           More filters like Price, Size, Color, and Brand will be available soon.
         </p>
-
       </div>
 
     </aside>

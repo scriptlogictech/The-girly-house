@@ -1,11 +1,20 @@
+
 /* =========================================================
-   THE GIRLY HOUSE — SHOP PAGE
+   THE GIRLY HOUSE — RESPONSIVE SHOP PAGE
 ========================================================= */
 
 .shop-page {
+  width: 100%;
   min-height: 100vh;
   padding: 40px 0 70px;
   background: #fffdfc;
+  overflow-x: clip;
+}
+
+.shop-page *,
+.shop-page *::before,
+.shop-page *::after {
+  box-sizing: border-box;
 }
 
 .shop-container {
@@ -20,20 +29,18 @@
 
 .shop-breadcrumb {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-
-  margin-bottom: 12px;
-
-  font-family: "Poppins", sans-serif;
-  font-size: 14px;
+  margin-bottom: 14px;
   color: #777;
+  font-family: "Poppins", sans-serif;
+  font-size: 13px;
 }
 
 .shop-breadcrumb a {
   color: #777;
   text-decoration: none;
-
   transition: color 0.25s ease;
 }
 
@@ -44,6 +51,7 @@
 .shop-breadcrumb__current {
   color: #6b1028;
   font-weight: 500;
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -56,27 +64,22 @@
 
 .shop-title {
   margin: 0;
-
   color: #6b1028;
-
   font-family: "Playfair Display", serif;
-  font-size: clamp(38px, 4vw, 58px);
+  font-size: clamp(36px, 4vw, 58px);
   font-weight: 700;
-
-  line-height: 1.1;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
 }
 
 .shop-description {
   max-width: 650px;
-
-  margin-top: 10px;
-
+  margin-top: 12px;
   color: #777;
-
   font-family: "Poppins", sans-serif;
   font-size: 15px;
-
-  line-height: 1.7;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
 }
 
 /* =========================================================
@@ -85,39 +88,25 @@
 
 .shop-layout {
   display: grid;
-
-  grid-template-columns: 260px minmax(0, 1fr);
-
-  gap: 35px;
-
+  grid-template-columns: 250px minmax(0, 1fr);
   align-items: start;
+  gap: 30px;
 }
-
-/* =========================================================
-   SIDEBAR
-========================================================= */
 
 .shop-sidebar {
   position: sticky;
   top: 100px;
-
   width: 100%;
-
+  min-width: 0;
   padding: 22px;
-
   background: #fff;
-
   border: 1px solid #eee4dc;
   border-radius: 18px;
-
   box-shadow: 0 6px 25px rgba(70, 30, 40, 0.05);
 }
 
-/* =========================================================
-   PRODUCTS SECTION
-========================================================= */
-
 .shop-products {
+  width: 100%;
   min-width: 0;
 }
 
@@ -126,24 +115,31 @@
 ========================================================= */
 
 .shop-toolbar {
+  width: 100%;
+  min-width: 0;
   margin-bottom: 25px;
-
   padding: 15px 18px;
-
   background: #fff;
-
   border: 1px solid #eee4dc;
   border-radius: 16px;
-
   box-shadow: 0 5px 20px rgba(70, 30, 40, 0.04);
 }
 
 /* =========================================================
-   PRODUCT GRID
+   PRODUCT GRID WRAPPER
 ========================================================= */
 
 .shop-product-grid {
   width: 100%;
+  min-width: 0;
+}
+
+/* Prevent child components from forcing page overflow */
+
+.shop-products > *,
+.shop-product-grid > * {
+  min-width: 0;
+  max-width: 100%;
 }
 
 /* =========================================================
@@ -153,18 +149,20 @@
 .shop-pagination {
   display: flex;
   justify-content: center;
-
-  margin-top: 45px;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 100%;
+  margin-top: 42px;
 }
 
 /* =========================================================
-   TABLET
+   DESKTOP / SMALL LAPTOP
 ========================================================= */
 
 @media (max-width: 1100px) {
-
   .shop-page {
-    padding-top: 30px;
+    padding-top: 32px;
   }
 
   .shop-container {
@@ -173,36 +171,53 @@
 
   .shop-layout {
     grid-template-columns: 220px minmax(0, 1fr);
-
-    gap: 25px;
+    gap: 22px;
   }
 
   .shop-sidebar {
-    padding: 18px;
+    padding: 17px;
   }
 
   .shop-header {
     margin-bottom: 28px;
   }
+
+  .shop-toolbar {
+    padding: 13px;
+  }
 }
 
 /* =========================================================
-   SMALL TABLET
+   TABLET
 ========================================================= */
 
 @media (max-width: 900px) {
-
   .shop-layout {
-    grid-template-columns: 1fr;
-    gap: 25px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
   }
 
   .shop-sidebar {
     position: static;
+    top: auto;
+    padding: 18px;
+    border-radius: 15px;
   }
 
   .shop-products {
     width: 100%;
+  }
+
+  .shop-header {
+    margin-bottom: 24px;
+  }
+
+  .shop-toolbar {
+    margin-bottom: 20px;
+  }
+
+  .shop-pagination {
+    margin-top: 32px;
   }
 }
 
@@ -211,9 +226,8 @@
 ========================================================= */
 
 @media (max-width: 768px) {
-
   .shop-page {
-    padding: 25px 0 50px;
+    padding: 25px 0 48px;
   }
 
   .shop-container {
@@ -221,45 +235,43 @@
   }
 
   .shop-breadcrumb {
-    font-size: 12px;
+    gap: 6px;
     margin-bottom: 10px;
+    font-size: 12px;
   }
 
   .shop-header {
-    margin-bottom: 22px;
+    margin-bottom: 20px;
   }
 
   .shop-title {
-    font-size: 38px;
+    font-size: clamp(31px, 6vw, 38px);
   }
 
   .shop-description {
-    margin-top: 7px;
-
+    margin-top: 8px;
     font-size: 13px;
-    line-height: 1.6;
+    line-height: 1.65;
   }
 
   .shop-layout {
-    gap: 18px;
+    gap: 16px;
   }
 
   .shop-sidebar {
-    padding: 16px;
-
+    padding: 14px;
     border-radius: 14px;
   }
 
   .shop-toolbar {
+    margin-bottom: 16px;
     padding: 12px;
-
-    margin-bottom: 18px;
-
-    border-radius: 14px;
+    border-radius: 13px;
   }
 
   .shop-pagination {
-    margin-top: 30px;
+    gap: 6px;
+    margin-top: 28px;
   }
 }
 
@@ -268,13 +280,12 @@
 ========================================================= */
 
 @media (max-width: 480px) {
-
   .shop-page {
-    padding: 20px 0 40px;
+    padding: 20px 0 38px;
   }
 
   .shop-container {
-    width: 92%;
+    width: 93%;
   }
 
   .shop-breadcrumb {
@@ -282,31 +293,33 @@
   }
 
   .shop-title {
-    font-size: 32px;
+    font-size: 31px;
   }
 
   .shop-description {
     font-size: 12px;
+    line-height: 1.7;
   }
 
   .shop-header {
-    margin-bottom: 18px;
+    margin-bottom: 17px;
   }
 
   .shop-layout {
-    gap: 15px;
+    gap: 13px;
   }
 
   .shop-sidebar {
-    padding: 13px;
+    padding: 12px;
   }
 
   .shop-toolbar {
     padding: 10px;
+    margin-bottom: 14px;
   }
 
   .shop-pagination {
-    margin-top: 25px;
+    margin-top: 24px;
   }
 }
 
@@ -315,16 +328,27 @@
 ========================================================= */
 
 @media (max-width: 360px) {
+  .shop-container {
+    width: 94%;
+  }
 
   .shop-title {
-    font-size: 29px;
+    font-size: 28px;
   }
 
   .shop-description {
     font-size: 11px;
   }
 
-  .shop-container {
-    width: 94%;
+  .shop-sidebar {
+    padding: 10px;
+  }
+
+  .shop-toolbar {
+    padding: 8px;
+  }
+
+  .shop-pagination {
+    gap: 4px;
   }
 }

@@ -1,5 +1,6 @@
 const Wishlist = require("../models/Wishlist");
 const Product = require("../models/Product");
+const Notification = require("../models/Notification");
 
 // Add Product
 const addToWishlist = async (userId, productId) => {
@@ -29,6 +30,26 @@ const addToWishlist = async (userId, productId) => {
   wishlist.products.push(productId);
 
   await wishlist.save();
+
+  // Create Admin Notification
+  // Notification errors should not interrupt wishlist functionality.
+  try {
+    const user = await require("../models/User").findById(userId).select("name");
+
+    await Notification.create({
+      type: "wishlist",
+      title: "Product Added to Wishlist",
+      message: `${user?.name || "A customer"} added "${product.name}" to their wishlist.`,
+      user: userId,
+      product: product._id,
+      isRead: false,
+    });
+  } catch (notificationError) {
+    console.error(
+      "Failed to create wishlist notification:",
+      notificationError.message
+    );
+  }
 
   return {
     success: true,

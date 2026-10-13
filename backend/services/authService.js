@@ -1,4 +1,6 @@
+
 const User = require("../models/User");
+const Notification = require("../models/Notification");
 const bcrypt = require("bcrypt");
 const generateToken = require("../utils/generateToken");
 const generateOTP = require("../utils/generateOTP");
@@ -43,11 +45,8 @@ const registerUser = async (userData) => {
     email,
     phone,
     password: hashedPassword,
-
-    // Email OTP
     emailOtp: hashedOtp,
     emailOtpExpiry: otpExpiry,
-
     isEmailVerified: false,
   });
 
@@ -62,7 +61,6 @@ const registerUser = async (userData) => {
     success: true,
     message:
       "User registered successfully. Please verify your email address using the OTP.",
-
     data: {
       id: user._id,
       name: user.name,
@@ -100,9 +98,7 @@ const loginUser = async (userData) => {
 
   // Check Email Verification
   if (!user.isEmailVerified) {
-    throw new Error(
-      "Please verify your email address first."
-    );
+    throw new Error("Please verify your email address first.");
   }
 
   // Generate JWT
@@ -111,9 +107,7 @@ const loginUser = async (userData) => {
   return {
     success: true,
     message: "Login successful",
-
     token,
-
     user: {
       id: user._id,
       name: user.name,
@@ -146,10 +140,7 @@ const verifyEmailOtp = async (userData) => {
   }
 
   // Check OTP Expiry
-  if (
-    !user.emailOtpExpiry ||
-    user.emailOtpExpiry < new Date()
-  ) {
+  if (!user.emailOtpExpiry || user.emailOtpExpiry < new Date()) {
     throw new Error("OTP has expired");
   }
 
@@ -172,15 +163,30 @@ const verifyEmailOtp = async (userData) => {
 
   await user.save();
 
+  // Create Admin Notification
+  // Notification failure should not prevent successful verification.
+  try {
+    await Notification.create({
+      type: "new_account",
+      title: "New Customer Registered",
+      message: `${user.name} has verified their email and created an account.`,
+      user: user._id,
+      isRead: false,
+    });
+  } catch (notificationError) {
+    console.error(
+      "Failed to create customer notification:",
+      notificationError.message
+    );
+  }
+
   // Generate JWT
   const token = generateToken(user);
 
   return {
     success: true,
     message: "Email verified successfully",
-
     token,
-
     user: {
       id: user._id,
       name: user.name,

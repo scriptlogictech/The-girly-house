@@ -1,5 +1,7 @@
 const Cart = require("../models/Cart");
 const Product = require("../models/Product");
+const User = require("../models/User");
+const Notification = require("../models/Notification");
 
 const addToCart = async (userId, body) => {
   const { productId, color, size, quantity } = body;
@@ -82,6 +84,26 @@ const addToCart = async (userId, body) => {
 
   await cart.save();
 
+  // Create Admin Notification
+  // Notification failure should not interrupt cart functionality.
+  try {
+    const user = await User.findById(userId).select("name");
+
+    await Notification.create({
+      type: "cart",
+      title: "Product Added to Cart",
+      message: `${user?.name || "A customer"} added "${product.name}" (${color}, ${size}) to their cart.`,
+      user: userId,
+      product: product._id,
+      isRead: false,
+    });
+  } catch (notificationError) {
+    console.error(
+      "Failed to create cart notification:",
+      notificationError.message
+    );
+  }
+
   await cart.populate("items.product");
 
   return {
@@ -90,7 +112,6 @@ const addToCart = async (userId, body) => {
     data: cart,
   };
 };
-
 
 const getCart = async (userId) => {
   const cart = await Cart.findOne({ user: userId })
@@ -114,7 +135,6 @@ const getCart = async (userId) => {
     data: cart,
   };
 };
-
 
 const updateCartItem = async (userId, itemId, quantity) => {
   const cart = await Cart.findOne({ user: userId });
@@ -165,7 +185,8 @@ const updateCartItem = async (userId, itemId, quantity) => {
     subtotal += cartItem.price * cartItem.quantity;
 
     totalDiscount +=
-      (cartItem.price - cartItem.discountPrice) * cartItem.quantity;
+      (cartItem.price - cartItem.discountPrice) *
+      cartItem.quantity;
 
     totalItems += cartItem.quantity;
   });
@@ -176,7 +197,6 @@ const updateCartItem = async (userId, itemId, quantity) => {
   cart.totalItems = totalItems;
 
   await cart.save();
-
   await cart.populate("items.product");
 
   return {
@@ -185,7 +205,6 @@ const updateCartItem = async (userId, itemId, quantity) => {
     data: cart,
   };
 };
-
 
 const removeCartItem = async (userId, itemId) => {
   const cart = await Cart.findOne({ user: userId });
@@ -210,7 +229,8 @@ const removeCartItem = async (userId, itemId) => {
     subtotal += cartItem.price * cartItem.quantity;
 
     totalDiscount +=
-      (cartItem.price - cartItem.discountPrice) * cartItem.quantity;
+      (cartItem.price - cartItem.discountPrice) *
+      cartItem.quantity;
 
     totalItems += cartItem.quantity;
   });
@@ -222,15 +242,12 @@ const removeCartItem = async (userId, itemId) => {
 
   await cart.save();
 
-  
-
   return {
     success: true,
     message: "Item removed from cart.",
     data: cart,
   };
 };
-
 
 const clearCart = async (userId) => {
   const cart = await Cart.findOne({ user: userId });

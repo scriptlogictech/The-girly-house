@@ -54,6 +54,7 @@ const orderRoutes = require("./routes/orderRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const customerRoutes = require("./routes/customerRoutes");
 const settingsRoutes = require("./routes/settingsRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
 
 // =======================
 // API Routes
@@ -70,6 +71,8 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/customers",customerRoutes);
 app.use("/api/settings", settingsRoutes);
+app.use("/api/notifications", notificationRoutes);
+
 
 
 // =======================

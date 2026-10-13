@@ -254,7 +254,7 @@ const AdminNavbar = () => {
             aria-label="Notifications"
             aria-expanded={isOpen}
             onClick={() => {
-              console.log("Notification bell clicked");
+              alert("Notification button is working!");
               setIsOpen((previous) => !previous);
             }}
             className="relative z-50 cursor-pointer rounded-full p-2 text-gray-600 transition hover:bg-gray-100 hover:text-[#6B1028]"
@@ -349,8 +349,8 @@ const AdminNavbar = () => {
                         key={notification._id}
                         onClick={() => handleMarkAsRead(notification)}
                         className={`flex w-full items-start gap-3 border-b border-gray-100 px-4 py-4 text-left transition hover:bg-gray-50 ${notification.isRead
-                            ? "bg-white"
-                            : "bg-[#FCF5F6]"
+                          ? "bg-white"
+                          : "bg-[#FCF5F6]"
                           }`}
                       >
                         <span className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#6B1028]/10 text-[#6B1028]">

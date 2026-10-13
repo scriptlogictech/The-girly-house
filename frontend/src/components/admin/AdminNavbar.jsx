@@ -1,5 +1,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
+
 import {
   FaBell,
   FaSearch,
@@ -12,6 +13,7 @@ import {
   FaBoxOpen,
   FaTimes,
 } from "react-icons/fa";
+
 import API from "../services/api";
 
 const notificationIcons = {
@@ -26,7 +28,13 @@ const AdminNavbar = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const dropdownRef = useRef(null);
+
+  // ==========================================
+  // FETCH NOTIFICATIONS
+  // ==========================================
 
   const fetchNotifications = useCallback(async () => {
     try {
@@ -34,25 +42,54 @@ const AdminNavbar = () => {
       const result = response.data;
 
       if (result.success) {
-        setNotifications(result.data || []);
-        setUnreadCount(result.unreadCount || 0);
+        setNotifications(
+          Array.isArray(result.data) ? result.data : []
+        );
+
+        setUnreadCount(
+          Number.isFinite(result.unreadCount)
+            ? result.unreadCount
+            : 0
+        );
+
+        setErrorMessage("");
+      } else {
+        setErrorMessage(
+          result.message || "Unable to load notifications."
+        );
       }
     } catch (error) {
       console.error(
         "Unable to fetch notifications:",
         error.response?.data?.message || error.message
       );
+
+      setErrorMessage(
+        error.response?.status === 401 ||
+          error.response?.status === 403
+          ? "Please log in with an authorized admin account."
+          : "Unable to load notifications. Please try again."
+      );
     }
   }, []);
+
+  // ==========================================
+  // INITIAL FETCH AND AUTOMATIC REFRESH
+  // ==========================================
 
   useEffect(() => {
     fetchNotifications();
 
-    // Refresh the unread count and list periodically.
-    const interval = setInterval(fetchNotifications, 30000);
+    const interval = setInterval(() => {
+      fetchNotifications();
+    }, 30000);
 
     return () => clearInterval(interval);
   }, [fetchNotifications]);
+
+  // ==========================================
+  // CLOSE DROPDOWN WHEN CLICKING OUTSIDE
+  // ==========================================
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -67,25 +104,50 @@ const AdminNavbar = () => {
     document.addEventListener("mousedown", handleOutsideClick);
 
     return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener(
+        "mousedown",
+        handleOutsideClick
+      );
     };
   }, []);
+
+  // ==========================================
+  // TOGGLE NOTIFICATION DROPDOWN
+  // ==========================================
+
+  const handleToggleNotifications = () => {
+    const nextState = !isOpen;
+
+    setIsOpen(nextState);
+
+    if (nextState) {
+      fetchNotifications();
+    }
+  };
+
+  // ==========================================
+  // MARK ONE NOTIFICATION AS READ
+  // ==========================================
 
   const handleMarkAsRead = async (notification) => {
     if (notification.isRead) return;
 
     try {
-      await API.patch(`/notifications/${notification._id}/read`);
-
-      setNotifications((previous) =>
-        previous.map((item) =>
-          item._id === notification._id
-            ? { ...item, isRead: true }
-            : item
-        )
+      const response = await API.patch(
+        `/notifications/${notification._id}/read`
       );
 
-      setUnreadCount((previous) => Math.max(0, previous - 1));
+      if (response.data.success) {
+        setNotifications((previous) =>
+          previous.map((item) =>
+            item._id === notification._id
+              ? { ...item, isRead: true }
+              : item
+          )
+        );
+
+        setUnreadCount((previous) => Math.max(0, previous - 1));
+      }
     } catch (error) {
       console.error(
         "Unable to mark notification as read:",
@@ -94,19 +156,28 @@ const AdminNavbar = () => {
     }
   };
 
+  // ==========================================
+  // MARK ALL NOTIFICATIONS AS READ
+  // ==========================================
+
   const handleMarkAllAsRead = async () => {
-    if (unreadCount === 0) return;
+    if (unreadCount === 0 || loading) return;
 
     setLoading(true);
 
     try {
-      await API.patch("/notifications/read-all");
+      const response = await API.patch("/notifications/read-all");
 
-      setNotifications((previous) =>
-        previous.map((item) => ({ ...item, isRead: true }))
-      );
+      if (response.data.success) {
+        setNotifications((previous) =>
+          previous.map((item) => ({
+            ...item,
+            isRead: true,
+          }))
+        );
 
-      setUnreadCount(0);
+        setUnreadCount(0);
+      }
     } catch (error) {
       console.error(
         "Unable to mark all notifications as read:",
@@ -116,6 +187,10 @@ const AdminNavbar = () => {
       setLoading(false);
     }
   };
+
+  // ==========================================
+  // FORMAT NOTIFICATION TIME
+  // ==========================================
 
   const formatTime = (date) => {
     if (!date) return "";
@@ -131,13 +206,19 @@ const AdminNavbar = () => {
     if (minutes < 60) return `${minutes}m ago`;
 
     const hours = Math.floor(minutes / 60);
+
     if (hours < 24) return `${hours}h ago`;
 
     const days = Math.floor(hours / 24);
+
     if (days < 7) return `${days}d ago`;
 
     return new Date(date).toLocaleDateString();
   };
+
+  // ==========================================
+  // RENDER
+  // ==========================================
 
   return (
     <header className="relative z-30 flex min-h-20 flex-wrap items-center justify-between gap-3 border-b bg-white px-4 py-3 shadow-sm sm:px-6 md:px-8">
@@ -172,11 +253,9 @@ const AdminNavbar = () => {
             type="button"
             aria-label={`Notifications, ${unreadCount} unread`}
             aria-expanded={isOpen}
-            onClick={() => {
-              setIsOpen((previous) => !previous);
-              if (!isOpen) fetchNotifications();
-            }}
-            className="relative rounded-full p-2 text-gray-600 transition hover:bg-gray-100 hover:text-[#6B1028]"
+            aria-haspopup="true"
+            onClick={handleToggleNotifications}
+            className="relative rounded-full p-2 text-gray-600 transition hover:bg-gray-100 hover:text-[#6B1028] focus:outline-none focus:ring-2 focus:ring-[#6B1028]/30"
           >
             <FaBell size={20} />
 
@@ -187,10 +266,10 @@ const AdminNavbar = () => {
             )}
           </button>
 
-          {/* Dropdown */}
+          {/* Notification Dropdown */}
           {isOpen && (
             <div className="fixed left-3 right-3 top-20 z-50 mt-1 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-xl sm:absolute sm:left-auto sm:right-0 sm:top-full sm:mt-3 sm:w-96">
-              {/* Dropdown header */}
+              {/* Dropdown Header */}
               <div className="flex items-center justify-between border-b px-4 py-3">
                 <div>
                   <h3 className="font-semibold text-gray-800">
@@ -211,6 +290,7 @@ const AdminNavbar = () => {
                       className="flex items-center gap-1 text-xs font-medium text-[#6B1028] hover:underline disabled:opacity-50"
                     >
                       <FaCheckDouble />
+
                       {loading ? "Updating..." : "Mark all read"}
                     </button>
                   )}
@@ -226,9 +306,25 @@ const AdminNavbar = () => {
                 </div>
               </div>
 
-              {/* Notification list */}
+              {/* Notification List */}
               <div className="max-h-[min(65vh,420px)] overflow-y-auto">
-                {notifications.length === 0 ? (
+                {errorMessage ? (
+                  <div className="px-5 py-8 text-center">
+                    <FaBell className="mx-auto mb-3 text-2xl text-gray-300" />
+
+                    <p className="text-sm text-red-600">
+                      {errorMessage}
+                    </p>
+
+                    <button
+                      type="button"
+                      onClick={fetchNotifications}
+                      className="mt-3 text-sm font-medium text-[#6B1028] hover:underline"
+                    >
+                      Try again
+                    </button>
+                  </div>
+                ) : notifications.length === 0 ? (
                   <div className="px-5 py-10 text-center">
                     <FaBell className="mx-auto mb-3 text-2xl text-gray-300" />
 
@@ -251,7 +347,9 @@ const AdminNavbar = () => {
                         key={notification._id}
                         onClick={() => handleMarkAsRead(notification)}
                         className={`flex w-full items-start gap-3 border-b border-gray-100 px-4 py-4 text-left transition hover:bg-gray-50 ${
-                          notification.isRead ? "bg-white" : "bg-[#FCF5F6]"
+                          notification.isRead
+                            ? "bg-white"
+                            : "bg-[#FCF5F6]"
                         }`}
                       >
                         <span className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#6B1028]/10 text-[#6B1028]">
@@ -290,7 +388,7 @@ const AdminNavbar = () => {
                 )}
               </div>
 
-              {/* Dropdown footer */}
+              {/* Dropdown Footer */}
               <div className="border-t bg-gray-50 px-4 py-3 text-center">
                 <span className="text-xs text-gray-500">
                   Showing the latest {notifications.length} notifications
@@ -300,7 +398,7 @@ const AdminNavbar = () => {
           )}
         </div>
 
-        {/* Profile */}
+        {/* Admin Profile */}
         <div className="flex items-center gap-2 sm:gap-3">
           <FaUserCircle
             size={34}
@@ -309,6 +407,7 @@ const AdminNavbar = () => {
 
           <div className="hidden lg:block">
             <h4 className="font-semibold text-gray-800">Admin</h4>
+
             <p className="text-xs text-gray-500">Administrator</p>
           </div>
         </div>

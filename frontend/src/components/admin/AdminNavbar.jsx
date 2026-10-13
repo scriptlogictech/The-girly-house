@@ -251,11 +251,13 @@ const AdminNavbar = () => {
         <div className="relative" ref={dropdownRef}>
           <button
             type="button"
-            aria-label={`Notifications, ${unreadCount} unread`}
+            aria-label="Notifications"
             aria-expanded={isOpen}
-            aria-haspopup="true"
-            onClick={handleToggleNotifications}
-            className="relative rounded-full p-2 text-gray-600 transition hover:bg-gray-100 hover:text-[#6B1028] focus:outline-none focus:ring-2 focus:ring-[#6B1028]/30"
+            onClick={() => {
+              console.log("Notification bell clicked");
+              setIsOpen((previous) => !previous);
+            }}
+            className="relative z-50 cursor-pointer rounded-full p-2 text-gray-600 transition hover:bg-gray-100 hover:text-[#6B1028]"
           >
             <FaBell size={20} />
 
@@ -346,11 +348,10 @@ const AdminNavbar = () => {
                         type="button"
                         key={notification._id}
                         onClick={() => handleMarkAsRead(notification)}
-                        className={`flex w-full items-start gap-3 border-b border-gray-100 px-4 py-4 text-left transition hover:bg-gray-50 ${
-                          notification.isRead
+                        className={`flex w-full items-start gap-3 border-b border-gray-100 px-4 py-4 text-left transition hover:bg-gray-50 ${notification.isRead
                             ? "bg-white"
                             : "bg-[#FCF5F6]"
-                        }`}
+                          }`}
                       >
                         <span className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#6B1028]/10 text-[#6B1028]">
                           <Icon />

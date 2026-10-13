@@ -12,6 +12,7 @@ import {
   register as registerService,
   verifyEmailOtp,
   getProfile,
+  updateProfile as updateProfileService,
 } from "../services/authService";
 
 const AuthContext = createContext();
@@ -121,6 +122,31 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setIsAuthenticated(false);
   };
+
+
+
+  
+const updateProfile = async (payload) => {
+  try {
+    const data = await updateProfileService(payload);
+
+    if (data.user) {
+      setUser(data.user);
+    }
+
+    toast.success(data.message || "Profile updated successfully");
+
+    return data.user;
+  } catch (error) {
+    toast.error(
+      error.response?.data?.message ||
+        "Failed to update profile"
+    );
+
+    throw error;
+  }
+};
+
 
   // ================= Auto Login =================
 

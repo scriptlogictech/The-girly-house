@@ -24,5 +24,6 @@ router.post(
 
 // Get Logged-in User
 router.get("/me", protect, authController.getMe);
+router.put("/me", protect, authController.updateMe);
 
 module.exports = router;

@@ -197,8 +197,133 @@ const verifyEmailOtp = async (userData) => {
   };
 };
 
+
+
+
+/**
+ * Update the authenticated user's profile.
+ * Add this function to server/services/authService.js
+ */
+const updateUserProfile = async (userId, profileData) => {
+  const { name, phone, address } = profileData;
+
+  const user = await User.findById(userId);
+
+  if (!user || user.status !== "active") {
+    throw new Error("User account not found or inactive");
+  }
+
+  // Update name
+  if (typeof name === "string") {
+    if (!name.trim()) {
+      throw new Error("Name is required");
+    }
+
+    user.name = name.trim();
+  }
+
+  // Update phone only if it is different
+  if (typeof phone === "string") {
+    const normalizedPhone = phone.trim();
+
+    if (!normalizedPhone) {
+      throw new Error("Phone number is required");
+    }
+
+    if (normalizedPhone !== user.phone) {
+      const existingPhone = await User.findOne({
+        phone: normalizedPhone,
+        _id: { $ne: user._id },
+      });
+
+      if (existingPhone) {
+        throw new Error("Phone number already exists");
+      }
+
+      user.phone = normalizedPhone;
+    }
+  }
+
+  // Update the default address only when all required fields are provided.
+  if (address !== undefined) {
+    const requiredFields = [
+      "fullName",
+      "phone",
+      "house",
+      "street",
+      "city",
+      "state",
+      "pincode",
+    ];
+
+    if (
+      !address ||
+      typeof address !== "object" ||
+      Array.isArray(address) ||
+      requiredFields.some(
+        (field) =>
+          typeof address[field] !== "string" ||
+          !address[field].trim()
+      )
+    ) {
+      throw new Error(
+        "Please provide the full address: name, phone, house, street, city, state and pincode."
+      );
+    }
+
+    const addressData = {
+      fullName: address.fullName.trim(),
+      phone: address.phone.trim(),
+      house: address.house.trim(),
+      street: address.street.trim(),
+      landmark: (address.landmark || "").trim(),
+      city: address.city.trim(),
+      state: address.state.trim(),
+      pincode: address.pincode.trim(),
+      country: (address.country || "India").trim(),
+      addressType: ["home", "work", "other"].includes(
+        address.addressType
+      )
+        ? address.addressType
+        : "home",
+      isDefault: true,
+    };
+
+    const defaultAddress = user.addresses.find(
+      (item) => item.isDefault
+    );
+
+    if (defaultAddress) {
+      Object.assign(defaultAddress, addressData);
+    } else {
+      user.addresses.push(addressData);
+    }
+  }
+
+  await user.save();
+
+  return {
+    success: true,
+    message: "Profile updated successfully",
+    user: {
+      id: user._id,
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      role: user.role,
+      profileImage: user.profileImage,
+      gender: user.gender,
+      dateOfBirth: user.dateOfBirth,
+      addresses: user.addresses,
+    },
+  };
+};
+
+
 module.exports = {
   registerUser,
   loginUser,
   verifyEmailOtp,
+  updateUserProfile,
 };

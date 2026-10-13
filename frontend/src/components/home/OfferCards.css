@@ -1,106 +1,124 @@
+
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap");
 
-/* =========================================================
+/* ==========================
    OFFER SECTION
-========================================================= */
+========================== */
 
 .offer-section {
-  padding: 20px 0;
+  width: 100%;
+  padding: 30px 0;
   background: #faf7f2;
+  overflow: hidden;
+  font-family: "Poppins", sans-serif;
+}
+
+.offer-section *,
+.offer-section *::before,
+.offer-section *::after {
+  box-sizing: border-box;
 }
 
 .offer-container {
   width: 90%;
   max-width: 1400px;
-  margin: auto;
-
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 30px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
 }
 
-/* =========================================================
+/* ==========================
    OFFER CARD
-========================================================= */
+========================== */
 
 .offer-card {
   position: relative;
-  overflow: hidden;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  border: 2px solid #1f2238;
-  border-radius: 28px;
-
-  padding: 20px 20px 0;
-
+  min-width: 0;
   min-height: 320px;
-
+  padding: 24px 20px 0;
+  overflow: hidden;
+  isolation: isolate;
+  border: 2px solid #1f2238;
+  border-radius: 26px;
   background: #fffdf8;
 }
 
-/* =========================================================
-   CONTENT
-========================================================= */
+/* ==========================
+   OFFER CONTENT
+========================== */
 
 .offer-content {
-  width: 45%;
+  position: relative;
   z-index: 2;
+  width: 52%;
+  min-width: 0;
+  padding-bottom: 22px;
 }
 
 .offer-small {
+  display: inline-block;
   color: #636878;
-  font-size: 18px;
-  font-weight: 500;
-  letter-spacing: 1px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
 }
 
 .offer-content h2 {
-  font-size: 82px;
-  line-height: 1;
-
+  margin: 8px 0 16px;
   color: #181c34;
-
   font-family: "Playfair Display", serif;
-
-  margin: 10px 0 30px;
+  font-size: clamp(48px, 5vw, 76px);
+  font-weight: 700;
+  line-height: 1;
 }
 
 .offer-content h3 {
-  font-family: "Playfair Display", serif;
-
-  font-size: 30px;
-  line-height: 1.3;
-
+  margin: 0 0 22px;
   color: #5f6475;
-
-  margin-bottom: 40px;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(19px, 2vw, 27px);
+  font-weight: 700;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
 }
 
-/* =========================================================
-   BUTTON
-========================================================= */
+.offer-content p {
+  margin: 0 0 22px;
+  color: #636878;
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+/* ==========================
+   SHOP BUTTON
+========================== */
 
 .offer-btn {
+  position: relative;
+  z-index: 4;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
-  width: 180px;
-  height: 60px;
-
+  width: 155px;
+  min-height: 48px;
+  padding: 12px 18px;
+  border: 1px solid transparent;
   border-radius: 50px;
-
   background: #171c34;
   color: #fff;
-
-  text-decoration: none;
-
+  font-size: 14px;
   font-weight: 600;
-
-  transition: 0.3s ease;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
 }
 
 .offer-btn:hover {
@@ -108,165 +126,184 @@
   transform: translateY(-2px);
 }
 
-/* =========================================================
-   IMAGE
-========================================================= */
+/* ==========================
+   OFFER IMAGE
+========================== */
 
 .offer-image {
-  width: 52%;
-  height: 100%;
-
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-
-  z-index: 1;
+  align-self: stretch;
+  width: 48%;
+  min-width: 0;
+  min-height: 0;
 }
 
 .offer-image img {
-  width: 100%;
-  max-height: 420px;
-
-  object-fit: contain;
-
   display: block;
+  width: 100%;
+  height: 100%;
+  max-height: 350px;
+  object-fit: contain;
+  object-position: bottom center;
 }
 
-/* =========================================================
+/* ==========================
    DECORATIVE CIRCLES
-========================================================= */
+========================== */
 
 .offer-circle {
   position: absolute;
-
+  z-index: 0;
   border: 2px dashed #a6acb8;
   border-radius: 50%;
-
   pointer-events: none;
 }
 
 .offer-circle.top {
-  width: 260px;
-  height: 260px;
-
-  top: -120px;
-  right: -120px;
+  top: -115px;
+  right: -100px;
+  width: 230px;
+  height: 230px;
 }
 
 .offer-circle.bottom {
-  width: 240px;
-  height: 240px;
-
-  left: 40%;
-  bottom: -150px;
+  bottom: -145px;
+  left: 38%;
+  width: 220px;
+  height: 220px;
 }
 
-/* =========================================================
-   BADGE
-========================================================= */
+/* ==========================
+   DISCOUNT BADGE
+========================== */
 
 .offer-badge {
   position: absolute;
-
-  top: 55px;
+  z-index: 3;
+  top: 32px;
   left: 50%;
-
-  transform: translateX(-50%);
-
-  width: 75px;
-  height: 75px;
-
-  border: 4px solid #676d7b;
-  border-radius: 50%;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
-  font-size: 34px;
-
+  width: 62px;
+  height: 62px;
+  border: 3px solid #676d7b;
+  border-radius: 50%;
   color: #676d7b;
-  font-weight: bold;
-
-  z-index: 3;
+  font-size: 28px;
+  font-weight: 700;
+  transform: translateX(-50%);
+  pointer-events: none;
 }
 
-/* =========================================================
-   TABLET
-========================================================= */
+/* ==========================
+   SMALL DESKTOP / LAPTOP
+========================== */
 
-@media (max-width: 1100px) {
-
+@media (max-width: 1200px) {
   .offer-container {
+    width: 92%;
     gap: 20px;
   }
 
   .offer-card {
     min-height: 290px;
-    padding: 18px 15px 0;
+    padding: 20px 15px 0;
+    border-radius: 23px;
   }
 
-  .offer-small {
-    font-size: 15px;
+  .offer-content {
+    width: 53%;
+  }
+
+  .offer-image {
+    width: 47%;
   }
 
   .offer-content h2 {
-    font-size: 65px;
-    margin: 8px 0 20px;
+    font-size: clamp(44px, 5vw, 62px);
   }
 
   .offer-content h3 {
-    font-size: 23px;
-    margin-bottom: 25px;
+    font-size: 22px;
   }
 
   .offer-btn {
-    width: 150px;
-    height: 50px;
-    font-size: 14px;
+    width: 135px;
+    min-height: 44px;
+    font-size: 13px;
   }
 
   .offer-badge {
-    width: 60px;
-    height: 60px;
-    font-size: 27px;
-    border-width: 3px;
-    top: 40px;
+    top: 25px;
+    width: 52px;
+    height: 52px;
+    font-size: 23px;
   }
 }
 
-/* =========================================================
-   TABLET / SMALL LAPTOP
-========================================================= */
+/* ==========================
+   TABLET
+========================== */
 
 @media (max-width: 992px) {
+  .offer-section {
+    padding: 25px 0;
+  }
 
   .offer-container {
+    width: 90%;
     grid-template-columns: 1fr;
     gap: 24px;
   }
 
   .offer-card {
     min-height: 300px;
+    padding: 22px 24px 0;
+    border-radius: 25px;
   }
 
   .offer-content {
-    width: 48%;
+    width: 53%;
+    padding-bottom: 25px;
   }
 
   .offer-image {
-    width: 48%;
+    width: 47%;
+  }
+
+  .offer-image img {
+    max-height: 330px;
+  }
+
+  .offer-content h2 {
+    font-size: clamp(55px, 8vw, 72px);
+  }
+
+  .offer-content h3 {
+    max-width: 340px;
+    font-size: 25px;
+  }
+
+  .offer-badge {
+    top: 30px;
+    width: 60px;
+    height: 60px;
+    font-size: 27px;
   }
 }
 
-/* =========================================================
+/* ==========================
    MOBILE
-========================================================= */
+========================== */
 
 @media (max-width: 768px) {
-
   .offer-section {
-    padding: 15px 0;
+    padding: 20px 0;
   }
 
   .offer-container {
@@ -275,62 +312,51 @@
   }
 
   .offer-card {
-    min-height: 240px;
-
-    padding: 15px 10px 0 18px;
-
+    min-height: 235px;
+    padding: 15px 12px 0 18px;
     border-radius: 20px;
-
-    align-items: center;
   }
 
   .offer-content {
-    width: 52%;
-
-    text-align: left;
-  }
-
-  .offer-image {
-    width: 48%;
-    height: 240px;
-  }
-
-  .offer-image img {
-    width: 100%;
-    height: 100%;
-
-    object-fit: contain;
-    object-position: bottom center;
+    width: 56%;
+    padding-bottom: 18px;
   }
 
   .offer-small {
-    font-size: 12px;
-    letter-spacing: 0.7px;
+    font-size: 11px;
+    letter-spacing: 1px;
   }
 
   .offer-content h2 {
-    font-size: 48px;
-
-    margin: 6px 0 10px;
+    margin: 7px 0 10px;
+    font-size: clamp(42px, 8vw, 55px);
   }
 
   .offer-content h3 {
-    font-size: 17px;
+    margin-bottom: 14px;
+    font-size: clamp(16px, 3vw, 20px);
+    line-height: 1.3;
+  }
 
-    line-height: 1.25;
+  .offer-content p {
+    margin-bottom: 14px;
+    font-size: 12px;
+  }
 
-    margin-bottom: 15px;
+  .offer-image {
+    width: 44%;
+  }
 
-    max-width: 170px;
+  .offer-image img {
+    max-height: 235px;
   }
 
   .offer-btn {
-    width: 115px;
-    height: 38px;
-
+    width: auto;
+    min-width: 105px;
+    min-height: 37px;
+    padding: 9px 16px;
     font-size: 12px;
-
-    border-radius: 30px;
   }
 
   .offer-badge {
@@ -338,120 +364,161 @@
   }
 
   .offer-circle.top {
-    width: 150px;
-    height: 150px;
-
-    top: -80px;
-    right: -75px;
+    top: -75px;
+    right: -65px;
+    width: 145px;
+    height: 145px;
   }
 
   .offer-circle.bottom {
-    width: 140px;
-    height: 140px;
-
-    left: 45%;
-    bottom: -100px;
+    bottom: -95px;
+    left: 43%;
+    width: 135px;
+    height: 135px;
   }
 }
 
-/* =========================================================
+/* ==========================
    SMALL MOBILE
-========================================================= */
+========================== */
 
 @media (max-width: 480px) {
+  .offer-section {
+    padding: 16px 0;
+  }
 
   .offer-container {
     width: 94%;
+    gap: 15px;
   }
 
   .offer-card {
-    min-height: 205px;
-
-    padding: 12px 6px 0 14px;
-
-    border-radius: 18px;
+    min-height: 200px;
+    padding: 13px 7px 0 13px;
+    border-radius: 17px;
+    border-width: 1px;
   }
 
   .offer-content {
-    width: 54%;
-  }
-
-  .offer-image {
-    width: 46%;
-    height: 205px;
+    width: 58%;
+    padding-bottom: 15px;
   }
 
   .offer-small {
-    font-size: 10px;
+    font-size: 9px;
+    letter-spacing: 0.8px;
   }
 
   .offer-content h2 {
-    font-size: 40px;
-
-    margin: 5px 0 8px;
+    margin: 6px 0 9px;
+    font-size: clamp(34px, 9vw, 43px);
   }
 
   .offer-content h3 {
-    font-size: 14px;
-
-    line-height: 1.25;
-
     margin-bottom: 12px;
-
-    max-width: 145px;
+    font-size: clamp(13px, 3.5vw, 16px);
+    line-height: 1.3;
   }
 
-  .offer-btn {
-    width: 100px;
-    height: 34px;
-
-    font-size: 11px;
-  }
-
-  .offer-circle.top {
-    width: 120px;
-    height: 120px;
-
-    top: -65px;
-    right: -60px;
-  }
-
-  .offer-circle.bottom {
-    width: 110px;
-    height: 110px;
-
-    bottom: -75px;
-  }
-}
-
-/* =========================================================
-   VERY SMALL DEVICES
-========================================================= */
-
-@media (max-width: 360px) {
-
-  .offer-card {
-    min-height: 185px;
-    padding-left: 12px;
+  .offer-content p {
+    margin-bottom: 12px;
+    font-size: 10px;
+    line-height: 1.5;
   }
 
   .offer-image {
-    height: 185px;
+    width: 42%;
   }
 
-  .offer-content h2 {
-    font-size: 34px;
-  }
-
-  .offer-content h3 {
-    font-size: 12px;
-    max-width: 125px;
+  .offer-image img {
+    max-height: 200px;
   }
 
   .offer-btn {
-    width: 90px;
-    height: 31px;
-
+    min-width: 88px;
+    min-height: 33px;
+    padding: 8px 12px;
     font-size: 10px;
+  }
+
+  .offer-circle.top {
+    top: -55px;
+    right: -55px;
+    width: 110px;
+    height: 110px;
+  }
+
+  .offer-circle.bottom {
+    bottom: -75px;
+    left: 45%;
+    width: 100px;
+    height: 100px;
+  }
+}
+
+/* ==========================
+   EXTRA SMALL MOBILE
+========================== */
+
+@media (max-width: 360px) {
+  .offer-container {
+    width: 95%;
+    gap: 12px;
+  }
+
+  .offer-card {
+    min-height: 180px;
+    padding-left: 10px;
+    padding-right: 4px;
+  }
+
+  .offer-content {
+    width: 59%;
+  }
+
+  .offer-small {
+    font-size: 8px;
+  }
+
+  .offer-content h2 {
+    font-size: 32px;
+  }
+
+  .offer-content h3 {
+    margin-bottom: 9px;
+    font-size: 12px;
+  }
+
+  .offer-content p {
+    font-size: 9px;
+  }
+
+  .offer-image {
+    width: 40%;
+  }
+
+  .offer-image img {
+    max-height: 180px;
+  }
+
+  .offer-btn {
+    min-width: 80px;
+    min-height: 30px;
+    padding: 7px 10px;
+    font-size: 9px;
+  }
+}
+
+/* ==========================
+   REDUCED MOTION
+========================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .offer-btn {
+    transition: none;
+  }
+
+  .offer-btn:hover {
+    transform: none;
   }
 }

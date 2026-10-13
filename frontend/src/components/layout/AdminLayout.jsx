@@ -5,17 +5,17 @@ import AdminNavbar from "../admin/AdminNavbar";
 const AdminLayout = ({ children }) => {
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Sidebar */}
+      {/* Sidebar and mobile hamburger header */}
       <AdminSidebar />
 
-      {/* Main Content */}
-      <div className="min-w-0 md:ml-64">
-        {/* Navbar */}
-        <div className="sticky top-0 z-30">
+      {/* Main content area */}
+      <div className="min-w-0 pt-16 md:ml-64 md:pt-0">
+        {/* White admin navbar */}
+        <div className="relative z-30">
           <AdminNavbar />
         </div>
 
-        {/* Page Content */}
+        {/* Current page */}
         <main className="min-w-0 p-4 sm:p-5 md:p-6">
           {children}
         </main>

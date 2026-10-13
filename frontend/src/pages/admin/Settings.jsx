@@ -1,4 +1,5 @@
 
+
 import { useCallback, useEffect, useState } from "react";
 import {
   FaStore,
@@ -42,6 +43,7 @@ const Settings = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
+  // Fetch settings from the backend
   const fetchSettings = useCallback(async () => {
     try {
       setLoading(true);
@@ -70,6 +72,7 @@ const Settings = () => {
     fetchSettings();
   }, [fetchSettings]);
 
+  // Handle form inputs
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -79,6 +82,7 @@ const Settings = () => {
     }));
   };
 
+  // Save settings
   const handleSave = async (e) => {
     e.preventDefault();
 
@@ -108,6 +112,10 @@ const Settings = () => {
           response.data.message ||
             "Settings updated successfully."
         );
+      } else {
+        toast.error(
+          response.data?.message || "Unable to update settings."
+        );
       }
     } catch (error) {
       console.error("Update Settings Error:", error);
@@ -121,6 +129,7 @@ const Settings = () => {
     }
   };
 
+  // Reload saved settings from the backend
   const handleReset = () => {
     if (!saving) {
       fetchSettings();
@@ -142,7 +151,7 @@ const Settings = () => {
             </h1>
 
             <p className="mt-2 text-sm leading-6 text-gray-500 sm:text-base">
-              Manage your store information, shipping, payments,
+              Manage your store information, shipping, payments
               and order settings.
             </p>
           </div>
@@ -172,6 +181,7 @@ const Settings = () => {
                 <Field label="Store Name" htmlFor="storeName">
                   <input
                     id="storeName"
+                    type="text"
                     name="storeName"
                     value={settings.storeName}
                     onChange={handleChange}
@@ -392,13 +402,13 @@ const Settings = () => {
               </div>
             </SettingsSection>
 
-            {/* Actions */}
+            {/* Save and Reset Buttons */}
             <div className="flex flex-col-reverse gap-3 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm sm:flex-row sm:justify-end sm:p-5">
               <button
                 type="button"
                 onClick={handleReset}
                 disabled={saving}
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 px-5 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:opacity-50 sm:w-auto"
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 px-5 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
               >
                 <FaUndo size={14} />
                 Reset
@@ -407,7 +417,7 @@ const Settings = () => {
               <button
                 type="submit"
                 disabled={saving}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#6B1028] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#54101F] disabled:opacity-60 sm:w-auto"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#6B1028] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#54101F] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
               >
                 <FaSave size={15} />
                 {saving ? "Saving..." : "Save Settings"}
@@ -420,6 +430,7 @@ const Settings = () => {
   );
 };
 
+// Reusable section
 const SettingsSection = ({
   icon,
   title,
@@ -447,6 +458,7 @@ const SettingsSection = ({
   </section>
 );
 
+// Reusable field
 const Field = ({ label, htmlFor, children }) => (
   <div className="min-w-0">
     <label htmlFor={htmlFor} className={labelClass}>
@@ -456,6 +468,7 @@ const Field = ({ label, htmlFor, children }) => (
   </div>
 );
 
+// Reusable toggle
 const ToggleSetting = ({
   icon,
   iconBackground = "",

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -20,7 +21,6 @@ const Footer = () => {
     }
 
     alert("Thank you for subscribing ❤️");
-
     setEmail("");
   };
 
@@ -31,104 +31,94 @@ const Footer = () => {
     });
   };
 
+  const socialLinks = [
+    { label: "Instagram", icon: <FaInstagram /> },
+    { label: "Facebook", icon: <FaFacebookF /> },
+    { label: "Pinterest", icon: <FaPinterestP /> },
+    { label: "YouTube", icon: <FaYoutube /> },
+  ];
+
+  const shopLinks = [
+    "NEW ARRIVALS",
+    "BRIDAL FARSHI",
+    "WEDDING EDIT",
+    "FESTIVE FARSHI",
+    "PARTY WEAR",
+    "EMBROIDERED FARSHI",
+    "LUXURY FARSHI",
+  ];
+
   return (
-    <footer className="bg-[#5A0E22] text-white">
+    <footer className="relative overflow-hidden bg-[#5A0E22] text-white">
 
-      <div className="max-w-7xl mx-auto px-6 py-16">
+      <div className="mx-auto w-full max-w-7xl px-5 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
 
-        {/* Top */}
+        {/* Main Footer */}
 
-        <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 gap-9 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-10 lg:grid-cols-4 lg:gap-10">
 
           {/* Brand */}
 
-          <div>
-
-            <h2 className="text-3xl font-bold tracking-wider">
+          <div className="min-w-0">
+            <h2 className="font-serif text-2xl font-bold tracking-wide sm:text-3xl">
               THE GIRLY HOUSE
             </h2>
 
-            <p className="mt-5 text-gray-300 leading-7">
-
-              Discover elegant fashion curated
-              for modern women.
-
-              Style that speaks confidence,
-              beauty and comfort.
-
+            <p className="mt-4 max-w-sm text-sm leading-7 text-gray-300 sm:mt-5">
+              Discover elegant fashion curated for modern women.
+              Style that speaks confidence, beauty and comfort.
             </p>
 
-            <div className="flex gap-4 mt-8">
+            {/* Social Icons */}
 
-              {[
-                <FaInstagram />,
-                <FaFacebookF />,
-                <FaPinterestP />,
-                <FaYoutube />,
-              ].map((icon, index) => (
-                <div
-                  key={index}
-                  className="w-11 h-11 rounded-full border border-white/30 flex items-center justify-center cursor-pointer hover:bg-white hover:text-[#5A0E22] hover:rotate-12 transition-all duration-300"
+            <div className="mt-6 flex flex-wrap gap-3 sm:mt-7 sm:gap-4">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.label}
+                  href="#"
+                  aria-label={social.label}
+                  onClick={(e) => e.preventDefault()}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 text-base transition-all duration-300 hover:rotate-12 hover:bg-white hover:text-[#5A0E22] sm:h-11 sm:w-11 sm:text-lg"
                 >
-                  {icon}
-                </div>
+                  {social.icon}
+                </a>
               ))}
-
             </div>
-
           </div>
 
           {/* Shop */}
 
-          <div>
-
-            <h3 className="text-xl font-semibold mb-6">
+          <div className="min-w-0">
+            <h3 className="mb-4 text-lg font-semibold sm:mb-6 sm:text-xl">
               Shop
             </h3>
 
-            <ul className="space-y-4">
-
-              {[
-  "NEW ARRIVALS",
-  "BRIDAL FARSHI",
-  "WEDDING EDIT",
-  "FESTIVE FARSHI",
-  "PARTY WEAR",
-  "EMBROIDERED FARSHI",
-  "LUXURY FARSHI",
-].map((item) => (
-
+            <ul className="space-y-3 sm:space-y-4">
+              {shopLinks.map((item) => (
                 <li key={item}>
-
                   <Link
                     to="/shop"
-                    className="text-gray-300 hover:text-pink-300 hover:translate-x-2 inline-block transition-all"
+                    className="inline-block text-xs text-gray-300 transition-all duration-300 hover:translate-x-1 hover:text-pink-300 sm:text-sm"
                   >
                     {item}
                   </Link>
-
                 </li>
-
               ))}
-
             </ul>
-
           </div>
 
           {/* Company */}
 
-          <div>
-
-            <h3 className="text-xl font-semibold mb-6">
+          <div className="min-w-0">
+            <h3 className="mb-4 text-lg font-semibold sm:mb-6 sm:text-xl">
               Company
             </h3>
 
-            <ul className="space-y-4">
-
+            <ul className="space-y-3 sm:space-y-4">
               <li>
                 <Link
                   to="/about"
-                  className="text-gray-300 hover:text-pink-300 transition"
+                  className="text-sm text-gray-300 transition hover:text-pink-300"
                 >
                   About Us
                 </Link>
@@ -137,7 +127,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/contact"
-                  className="text-gray-300 hover:text-pink-300 transition"
+                  className="text-sm text-gray-300 transition hover:text-pink-300"
                 >
                   Contact
                 </Link>
@@ -145,8 +135,8 @@ const Footer = () => {
 
               <li>
                 <Link
-                  to="#"
-                  className="text-gray-300 hover:text-pink-300 transition"
+                  to="/privacy-policy"
+                  className="text-sm text-gray-300 transition hover:text-pink-300"
                 >
                   Privacy Policy
                 </Link>
@@ -154,104 +144,97 @@ const Footer = () => {
 
               <li>
                 <Link
-                  to="#"
-                  className="text-gray-300 hover:text-pink-300 transition"
+                  to="/terms"
+                  className="text-sm text-gray-300 transition hover:text-pink-300"
                 >
                   Terms & Conditions
                 </Link>
               </li>
-
             </ul>
-
           </div>
 
           {/* Newsletter */}
 
-          <div>
-
-            <h3 className="text-xl font-semibold">
+          <div className="min-w-0">
+            <h3 className="text-lg font-semibold sm:text-xl">
               Join Our Newsletter
             </h3>
 
-            <p className="text-gray-300 mt-4">
-
-              Get exclusive offers and latest
-              fashion updates.
-
+            <p className="mt-3 text-sm leading-6 text-gray-300 sm:mt-4">
+              Get exclusive offers and the latest fashion updates.
             </p>
 
             <form
               onSubmit={handleSubscribe}
-              className="mt-6"
+              className="mt-5 sm:mt-6"
             >
+              <label htmlFor="footer-email" className="sr-only">
+                Enter your email
+              </label>
 
               <input
+                id="footer-email"
                 type="email"
                 placeholder="Enter your email"
                 value={email}
-                onChange={(e) =>
-                  setEmail(e.target.value)
-                }
-                className="w-full px-5 py-3 rounded-full text-black outline-none"
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full min-w-0 rounded-full border border-white/20 bg-white px-4 py-3 text-sm text-gray-900 outline-none placeholder:text-gray-500 focus:border-pink-300 focus:ring-2 focus:ring-pink-200/40 sm:px-5"
               />
 
               <button
-                className="w-full mt-4 bg-white text-[#5A0E22] font-semibold py-3 rounded-full hover:scale-105 transition"
+                type="submit"
+                className="mt-3 min-h-11 w-full rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#5A0E22] transition-all duration-300 hover:bg-pink-100 sm:mt-4"
               >
                 Subscribe
               </button>
-
             </form>
-
           </div>
 
         </div>
 
+        {/* Bottom Footer */}
 
+        <div className="mt-10 flex flex-col items-center gap-5 border-t border-white/20 pt-6 sm:mt-12 sm:pt-8 lg:mt-16 lg:flex-row lg:justify-between">
 
-                {/* Bottom */}
-
-        <div className="border-t border-white/20 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
-
-          <p className="text-gray-300 text-sm text-center">
-            © {new Date().getFullYear()} The Girly House.
-            All Rights Reserved.
+          <p className="text-center text-xs leading-6 text-gray-300 sm:text-sm">
+            © {new Date().getFullYear()} The Girly House. All Rights Reserved.
           </p>
 
-          <div className="flex gap-6 text-sm">
-
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 text-xs sm:gap-x-6 sm:text-sm">
             <Link
-              to="#"
-              className="text-gray-300 hover:text-pink-300 transition"
+              to="/privacy-policy"
+              className="text-gray-300 transition hover:text-pink-300"
             >
               Privacy
             </Link>
 
             <Link
-              to="#"
-              className="text-gray-300 hover:text-pink-300 transition"
+              to="/terms"
+              className="text-gray-300 transition hover:text-pink-300"
             >
               Terms
             </Link>
 
             <Link
-              to="#"
-              className="text-gray-300 hover:text-pink-300 transition"
+              to="/returns"
+              className="text-gray-300 transition hover:text-pink-300"
             >
               Returns
             </Link>
-
           </div>
 
         </div>
-
       </div>
 
       {/* Back To Top */}
 
       <button
+        type="button"
         onClick={scrollTop}
-        className="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-white text-[#5A0E22] shadow-lg flex items-center justify-center hover:scale-110 hover:bg-pink-100 transition-all duration-300 z-50"
+        aria-label="Back to top"
+        title="Back to top"
+        className="fixed bottom-4 right-4 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#5A0E22] shadow-lg transition-all duration-300 hover:scale-110 hover:bg-pink-100 sm:bottom-6 sm:right-6 sm:h-12 sm:w-12"
       >
         <FaArrowUp />
       </button>

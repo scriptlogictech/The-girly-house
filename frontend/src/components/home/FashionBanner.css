@@ -1,14 +1,62 @@
+
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&display=swap");
 
+/* ==========================
+   FASHION BANNER TYPOGRAPHY
+========================== */
 
 .banner-title {
   font-family: "Playfair Display", serif;
+  overflow-wrap: break-word;
+  text-wrap: balance;
 }
 
 .banner-text {
   font-family: "Playfair Display", serif;
+  max-width: 100%;
+  overflow-wrap: break-word;
 }
 
-.banner-title {
-  font-family: "Playfair Display", serif;
+/* ==========================
+   TABLET
+========================== */
+
+@media (max-width: 768px) {
+  .banner-title {
+    line-height: 1.15;
+  }
+
+  .banner-text {
+    line-height: 1.7;
+  }
+}
+
+/* ==========================
+   MOBILE
+========================== */
+
+@media (max-width: 480px) {
+  .banner-title {
+    line-height: 1.12;
+    letter-spacing: -0.5px;
+  }
+
+  .banner-text {
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* ==========================
+   EXTRA SMALL MOBILE
+========================== */
+
+@media (max-width: 360px) {
+  .banner-title {
+    letter-spacing: -0.7px;
+  }
+
+  .banner-text {
+    font-size: 13px;
+  }
 }

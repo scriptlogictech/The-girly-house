@@ -958,3 +958,192 @@
     transform: none;
   }
 }
+
+
+
+
+
+
+
+
+
+/* MOBILE — IMAGE ON TOP, CONTENT BELOW */
+
+@media (max-width: 640px) {
+  .hero {
+    min-height: auto;
+    padding: 2rem 1rem 3rem;
+  }
+
+  .hero__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+  }
+
+  /* Image first */
+  .hero__visual {
+    order: -1;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0.5rem 0 1.5rem;
+  }
+
+  .hero__image-frame {
+    width: min(210px, 58vw);
+    max-width: 100%;
+    aspect-ratio: 4 / 5;
+  }
+
+  .hero__image-frame::before {
+    inset: -8px;
+  }
+
+  .hero__image-frame::after {
+    inset: -15px -10px -10px -15px;
+  }
+
+  .hero__ring--one {
+    width: min(260px, 72vw);
+    height: min(260px, 72vw);
+  }
+
+  .hero__ring--two {
+    width: min(290px, 78vw);
+    height: min(290px, 78vw);
+  }
+
+  /* Content below image */
+  .hero__content {
+    order: 1;
+    align-items: center;
+    width: 100%;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .hero__badge {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+  }
+
+  .hero__title {
+    font-size: clamp(2.2rem, 9vw, 3rem);
+    line-height: 1.05;
+  }
+
+  .hero__subtitle {
+    max-width: 42ch;
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+
+  .hero__buttons {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 340px;
+    gap: 0.7rem;
+    margin-top: 0.3rem;
+  }
+
+  .hero__btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 46px;
+    padding: 0.8rem 1rem;
+    font-size: 0.72rem;
+  }
+
+  /* Floating card */
+  .hero__card {
+    left: 50%;
+    bottom: 0;
+    max-width: calc(100% - 1rem);
+    padding: 0.6rem 0.8rem;
+    text-align: center;
+    align-items: center;
+    white-space: normal;
+    animation: none;
+    transform: translateX(-50%);
+  }
+
+  .hero__card-title {
+    font-size: 0.9rem;
+  }
+
+  .hero__card-subtitle {
+    font-size: 0.58rem;
+  }
+
+  .hero__decor--line,
+  .hero__scroll {
+    display: none;
+  }
+
+  .hero__decor--ring {
+    width: 200px;
+    height: 200px;
+    top: -3%;
+    left: -20%;
+    opacity: 0.07;
+  }
+
+  .hero__decor-dot {
+    width: 8px;
+    height: 8px;
+    top: 4%;
+    right: 6%;
+  }
+
+  .hero__top {
+    width: 40px;
+    height: 40px;
+    right: 0.7rem;
+    bottom: 0.7rem;
+    font-size: 1rem;
+  }
+}
+
+/* EXTRA SMALL PHONES */
+
+@media (max-width: 400px) {
+  .hero {
+    padding: 1.5rem 0.85rem 2.5rem;
+  }
+
+  .hero__inner {
+    gap: 1.5rem;
+  }
+
+  .hero__image-frame {
+    width: min(185px, 55vw);
+  }
+
+  .hero__ring--one {
+    width: 225px;
+    height: 225px;
+  }
+
+  .hero__ring--two {
+    width: 250px;
+    height: 250px;
+  }
+
+  .hero__title {
+    font-size: 2.15rem;
+  }
+
+  .hero__subtitle {
+    font-size: 0.85rem;
+  }
+
+  .hero__card-title {
+    font-size: 0.82rem;
+  }
+
+  .hero__card-subtitle {
+    font-size: 0.54rem;
+  }
+}

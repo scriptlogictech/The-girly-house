@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
 
@@ -9,9 +10,9 @@ const TrendingProducts = () => {
 
   if (loading) {
     return (
-      <section className="py-10 bg-[#faf7f2]">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center">
+      <section className="bg-[#faf7f2] py-12 sm:py-16 lg:py-20">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <h2 className="text-center font-serif text-2xl font-bold text-[#6B1028] sm:text-3xl lg:text-4xl">
             Loading Trending Products...
           </h2>
         </div>
@@ -20,80 +21,74 @@ const TrendingProducts = () => {
   }
 
   if (!products.length) {
-  return (
-    <section className="py-10 text-center">
-      <h2 className="text-3xl font-bold">Trending Products</h2>
-      <p className="mt-4 text-red-500">
-        No trending products found.
-      </p>
-    </section>
-  );
-}
+    return (
+      <section className="bg-[#faf7f2] px-4 py-12 text-center sm:py-16">
+        <h2 className="font-serif text-2xl font-bold text-[#6B1028] sm:text-3xl">
+          Trending Products
+        </h2>
+
+        <p className="mt-3 text-sm text-red-500 sm:text-base">
+          No trending products found.
+        </p>
+      </section>
+    );
+  }
 
   return (
-    <section className="py-20 bg-[#faf7f2]">
-      <div className="container mx-auto px-4">
+    <section className="overflow-hidden bg-[#faf7f2] py-12 sm:py-16 lg:py-20">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
 
-        {/* Heading */}
+        {/* Section Heading */}
 
-        <div className="flex justify-between items-center mb-12">
-
-          <div>
-
-            <p className="text-[#6B1028] uppercase tracking-[3px] text-sm font-semibold">
-              TRENDING NOW
+        <div className="mb-7 flex items-end justify-between gap-4 sm:mb-9 lg:mb-12">
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-semibold uppercase tracking-[2px] text-[#6B1028] sm:text-sm sm:tracking-[3px]">
+              Trending Now
             </p>
 
-            <h2 className="text-4xl md:text-5xl font-bold mt-2">
+            <h2 className="mt-2 font-serif text-2xl font-bold leading-tight text-[#292323] sm:text-3xl md:text-4xl lg:text-5xl">
               Trending Products
             </h2>
 
-            <p className="text-gray-500 mt-3">
+            <p className="mt-2 max-w-xl text-xs leading-6 text-gray-500 sm:mt-3 sm:text-sm md:text-base">
               Discover the latest styles loved by our customers.
             </p>
-
           </div>
+
+          {/* Desktop View All Button */}
 
           <Link
             to="/shop"
-            className="hidden md:flex items-center gap-2 text-[#6B1028] font-semibold hover:gap-3 transition-all"
+            className="mb-1 hidden shrink-0 items-center gap-2 whitespace-nowrap font-semibold text-[#6B1028] transition-all duration-300 hover:gap-3 md:inline-flex"
           >
             View All
             <FaArrowRight />
           </Link>
-
         </div>
 
-        {/* Products */}
+        {/* Responsive Product Grid */}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-
+        <div className="grid grid-cols-2 items-stretch gap-x-3 gap-y-5 min-[480px]:gap-x-4 min-[480px]:gap-y-6 sm:grid-cols-2 sm:gap-5 md:gap-6 lg:grid-cols-4 lg:gap-7 xl:gap-8">
           {products.map((product) => (
-            <ProductCard
-              key={product._id}
-              product={product}
-            />
+            <div key={product._id} className="min-w-0">
+              <ProductCard product={product} />
+            </div>
           ))}
-
         </div>
 
-        {/* Mobile Button */}
+        {/* Mobile View All Button */}
 
-        <div className="mt-10 flex justify-center md:hidden">
-
+        <div className="mt-8 flex justify-center sm:mt-10 md:hidden">
           <Link
             to="/shop"
-            className="bg-[#6B1028] text-white px-8 py-3 rounded-full"
+            className="inline-flex min-h-11 w-full max-w-xs items-center justify-center gap-2 rounded-full bg-[#6B1028] px-6 py-3 text-sm font-semibold text-white transition-colors duration-300 hover:bg-[#841b37] sm:text-base"
           >
             View All Products
+            <FaArrowRight />
           </Link>
-
         </div>
 
       </div>
-
-
-      
     </section>
   );
 };

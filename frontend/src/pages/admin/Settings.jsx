@@ -15,6 +15,7 @@ import {
 } from "react-icons/fa";
 import { toast } from "react-toastify";
 import API from "../../services/api";
+import AdminLayout from "../../layouts/AdminLayout";
 
 const defaultSettings = {
   storeName: "The Girly House By Manisha",
@@ -127,290 +128,296 @@ const Settings = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="mx-auto w-full max-w-6xl min-w-0">
-        <div className="rounded-2xl border border-gray-100 bg-white px-4 py-12 text-center shadow-sm sm:px-8">
-          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-[#6B1028] border-t-transparent" />
-          <p className="mt-4 text-sm text-gray-500">
-            Loading settings...
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="mx-auto w-full max-w-6xl min-w-0">
-      {/* Page heading */}
-      <div className="mb-5 flex items-start gap-3 sm:mb-8 sm:gap-4">
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#F9F4EC] text-[#6B1028] sm:h-12 sm:w-12">
-          <FaCog size={20} />
+    <AdminLayout>
+      <div className="mx-auto w-full max-w-6xl min-w-0">
+        {/* Page Header */}
+        <div className="mb-5 flex items-start gap-3 sm:mb-8 sm:gap-4">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#F9F4EC] text-[#6B1028] sm:h-12 sm:w-12">
+            <FaCog size={20} />
+          </div>
+
+          <div className="min-w-0">
+            <h1 className="text-2xl font-bold text-[#6B1028] sm:text-3xl">
+              Settings
+            </h1>
+
+            <p className="mt-2 text-sm leading-6 text-gray-500 sm:text-base">
+              Manage your store information, shipping, payments,
+              and order settings.
+            </p>
+          </div>
         </div>
 
-        <div className="min-w-0">
-          <h1 className="text-2xl font-bold leading-tight text-[#6B1028] sm:text-3xl">
-            Settings
-          </h1>
-          <p className="mt-2 text-sm leading-6 text-gray-500 sm:text-base">
-            Manage your store information, shipping, payments
-            and order settings.
-          </p>
-        </div>
-      </div>
+        {/* Loading State */}
+        {loading ? (
+          <div className="rounded-2xl border border-gray-100 bg-white px-4 py-12 text-center shadow-sm sm:px-8">
+            <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-[#6B1028] border-t-transparent" />
 
-      <form
-        onSubmit={handleSave}
-        className="space-y-4 sm:space-y-6"
-      >
-        {/* Store Information */}
-        <SettingsSection
-          icon={<FaStore size={18} />}
-          title="Store Information"
-          description="Basic information about your store."
-        >
-          <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-2">
-            <Field label="Store Name" htmlFor="storeName">
-              <input
-                id="storeName"
-                name="storeName"
-                value={settings.storeName}
-                onChange={handleChange}
-                placeholder="Store name"
-                className={inputClass}
-              />
-            </Field>
-
-            <Field label="Contact Email" htmlFor="contactEmail">
-              <div className="relative">
-                <FaEnvelope className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 sm:left-4" />
-                <input
-                  id="contactEmail"
-                  type="email"
-                  name="contactEmail"
-                  value={settings.contactEmail}
-                  onChange={handleChange}
-                  placeholder="store@example.com"
-                  className={`${inputClass} pl-10 sm:pl-11`}
-                />
-              </div>
-            </Field>
-
-            <Field label="Contact Phone" htmlFor="contactPhone">
-              <div className="relative">
-                <FaPhone className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 sm:left-4" />
-                <input
-                  id="contactPhone"
-                  type="tel"
-                  name="contactPhone"
-                  value={settings.contactPhone}
-                  onChange={handleChange}
-                  placeholder="+91 XXXXX XXXXX"
-                  className={`${inputClass} pl-10 sm:pl-11`}
-                />
-              </div>
-            </Field>
-
-            <Field label="Currency" htmlFor="currency">
-              <select
-                id="currency"
-                name="currency"
-                value={settings.currency}
-                onChange={handleChange}
-                className={inputClass}
-              >
-                <option value="INR">INR - Indian Rupee</option>
-                <option value="USD">USD - US Dollar</option>
-              </select>
-            </Field>
-
-            <div className="min-w-0 md:col-span-2">
-              <Field label="Store Address" htmlFor="address">
-                <div className="relative">
-                  <FaMapMarkerAlt className="pointer-events-none absolute left-3.5 top-4 text-gray-400 sm:left-4" />
-                  <textarea
-                    id="address"
-                    name="address"
-                    value={settings.address}
-                    onChange={handleChange}
-                    rows={3}
-                    placeholder="Enter your store address"
-                    className={`${inputClass} resize-y pl-10 sm:pl-11`}
-                  />
-                </div>
-              </Field>
-            </div>
-
-            <div className="min-w-0 md:col-span-2">
-              <Field
-                label="Store Description"
-                htmlFor="storeDescription"
-              >
-                <textarea
-                  id="storeDescription"
-                  name="storeDescription"
-                  value={settings.storeDescription}
-                  onChange={handleChange}
-                  rows={3}
-                  placeholder="Describe your store..."
-                  className={`${inputClass} resize-y`}
-                />
-              </Field>
-            </div>
+            <p className="mt-4 text-sm text-gray-500">
+              Loading settings...
+            </p>
           </div>
-        </SettingsSection>
-
-        {/* Shipping Settings */}
-        <SettingsSection
-          icon={<FaTruck size={18} />}
-          title="Shipping Settings"
-          description="Configure your shipping charges."
-        >
-          <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-2">
-            <Field
-              label="Free Shipping Above"
-              htmlFor="freeShippingThreshold"
+        ) : (
+          <form
+            onSubmit={handleSave}
+            className="space-y-4 sm:space-y-6"
+          >
+            {/* Store Information */}
+            <SettingsSection
+              icon={<FaStore size={18} />}
+              title="Store Information"
+              description="Basic information about your store."
             >
-              <div className="relative">
-                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 sm:left-4">
-                  ₹
-                </span>
-                <input
-                  id="freeShippingThreshold"
-                  type="number"
-                  min="0"
-                  name="freeShippingThreshold"
-                  value={settings.freeShippingThreshold}
-                  onChange={handleChange}
-                  className={`${inputClass} pl-9 sm:pl-10`}
-                />
-              </div>
-              <p className="mt-2 text-xs leading-5 text-gray-400">
-                Orders above this amount get free shipping.
-              </p>
-            </Field>
-
-            <Field
-              label="Shipping Charge"
-              htmlFor="shippingCharge"
-            >
-              <div className="relative">
-                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 sm:left-4">
-                  ₹
-                </span>
-                <input
-                  id="shippingCharge"
-                  type="number"
-                  min="0"
-                  name="shippingCharge"
-                  value={settings.shippingCharge}
-                  onChange={handleChange}
-                  className={`${inputClass} pl-9 sm:pl-10`}
-                />
-              </div>
-              <p className="mt-2 text-xs leading-5 text-gray-400">
-                Charge applied when an order does not qualify
-                for free shipping.
-              </p>
-            </Field>
-          </div>
-        </SettingsSection>
-
-        {/* Payment Settings */}
-        <SettingsSection
-          icon={<FaCreditCard size={18} />}
-          title="Payment Settings"
-          description="Enable or disable payment methods."
-        >
-          <div className="space-y-3 sm:space-y-4">
-            <ToggleSetting
-              icon={<FaShoppingBag className="text-green-600" />}
-              iconBackground="bg-green-50"
-              title="Cash on Delivery"
-              description="Allow customers to pay when their order arrives."
-              name="enableCOD"
-              checked={settings.enableCOD}
-              onChange={handleChange}
-            />
-
-            <ToggleSetting
-              icon={<FaCreditCard className="text-blue-600" />}
-              iconBackground="bg-blue-50"
-              title="Razorpay"
-              description="Accept online payments through Razorpay."
-              name="enableRazorpay"
-              checked={settings.enableRazorpay}
-              onChange={handleChange}
-            />
-          </div>
-        </SettingsSection>
-
-        {/* Order Settings */}
-        <SettingsSection
-          icon={<FaShoppingBag size={18} />}
-          title="Order Settings"
-          description="Configure customer order options."
-        >
-          <div className="space-y-5">
-            <ToggleSetting
-              title="Allow Order Cancellation"
-              description="Allow customers to cancel their orders."
-              name="allowOrderCancellation"
-              checked={settings.allowOrderCancellation}
-              onChange={handleChange}
-            />
-
-            <div className="w-full max-w-md">
-              <Field
-                label="Cancellation Time Limit"
-                htmlFor="cancellationTimeLimit"
-              >
-                <div className="flex items-center gap-3">
+              <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-2">
+                <Field label="Store Name" htmlFor="storeName">
                   <input
-                    id="cancellationTimeLimit"
-                    type="number"
-                    min="0"
-                    name="cancellationTimeLimit"
-                    value={settings.cancellationTimeLimit}
+                    id="storeName"
+                    name="storeName"
+                    value={settings.storeName}
                     onChange={handleChange}
-                    disabled={!settings.allowOrderCancellation}
-                    className={`${inputClass} disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400`}
+                    placeholder="Store name"
+                    className={inputClass}
                   />
-                  <span className="shrink-0 text-sm text-gray-500">
-                    Hours
-                  </span>
+                </Field>
+
+                <Field label="Contact Email" htmlFor="contactEmail">
+                  <div className="relative">
+                    <FaEnvelope className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 sm:left-4" />
+
+                    <input
+                      id="contactEmail"
+                      type="email"
+                      name="contactEmail"
+                      value={settings.contactEmail}
+                      onChange={handleChange}
+                      placeholder="store@example.com"
+                      className={`${inputClass} pl-10 sm:pl-11`}
+                    />
+                  </div>
+                </Field>
+
+                <Field label="Contact Phone" htmlFor="contactPhone">
+                  <div className="relative">
+                    <FaPhone className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 sm:left-4" />
+
+                    <input
+                      id="contactPhone"
+                      type="tel"
+                      name="contactPhone"
+                      value={settings.contactPhone}
+                      onChange={handleChange}
+                      placeholder="+91 XXXXX XXXXX"
+                      className={`${inputClass} pl-10 sm:pl-11`}
+                    />
+                  </div>
+                </Field>
+
+                <Field label="Currency" htmlFor="currency">
+                  <select
+                    id="currency"
+                    name="currency"
+                    value={settings.currency}
+                    onChange={handleChange}
+                    className={inputClass}
+                  >
+                    <option value="INR">INR - Indian Rupee</option>
+                    <option value="USD">USD - US Dollar</option>
+                  </select>
+                </Field>
+
+                <div className="min-w-0 md:col-span-2">
+                  <Field label="Store Address" htmlFor="address">
+                    <div className="relative">
+                      <FaMapMarkerAlt className="pointer-events-none absolute left-3.5 top-4 text-gray-400 sm:left-4" />
+
+                      <textarea
+                        id="address"
+                        name="address"
+                        value={settings.address}
+                        onChange={handleChange}
+                        rows={3}
+                        placeholder="Enter your store address"
+                        className={`${inputClass} resize-y pl-10 sm:pl-11`}
+                      />
+                    </div>
+                  </Field>
                 </div>
-              </Field>
-              <p className="mt-2 text-xs leading-5 text-gray-400">
-                Cancellation time limit after placing an order.
-              </p>
+
+                <div className="min-w-0 md:col-span-2">
+                  <Field
+                    label="Store Description"
+                    htmlFor="storeDescription"
+                  >
+                    <textarea
+                      id="storeDescription"
+                      name="storeDescription"
+                      value={settings.storeDescription}
+                      onChange={handleChange}
+                      rows={3}
+                      placeholder="Describe your store..."
+                      className={`${inputClass} resize-y`}
+                    />
+                  </Field>
+                </div>
+              </div>
+            </SettingsSection>
+
+            {/* Shipping Settings */}
+            <SettingsSection
+              icon={<FaTruck size={18} />}
+              title="Shipping Settings"
+              description="Configure your shipping charges."
+            >
+              <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-2">
+                <Field
+                  label="Free Shipping Above"
+                  htmlFor="freeShippingThreshold"
+                >
+                  <div className="relative">
+                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 sm:left-4">
+                      ₹
+                    </span>
+
+                    <input
+                      id="freeShippingThreshold"
+                      type="number"
+                      min="0"
+                      name="freeShippingThreshold"
+                      value={settings.freeShippingThreshold}
+                      onChange={handleChange}
+                      className={`${inputClass} pl-9 sm:pl-10`}
+                    />
+                  </div>
+
+                  <p className="mt-2 text-xs leading-5 text-gray-400">
+                    Orders above this amount get free shipping.
+                  </p>
+                </Field>
+
+                <Field
+                  label="Shipping Charge"
+                  htmlFor="shippingCharge"
+                >
+                  <div className="relative">
+                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 sm:left-4">
+                      ₹
+                    </span>
+
+                    <input
+                      id="shippingCharge"
+                      type="number"
+                      min="0"
+                      name="shippingCharge"
+                      value={settings.shippingCharge}
+                      onChange={handleChange}
+                      className={`${inputClass} pl-9 sm:pl-10`}
+                    />
+                  </div>
+
+                  <p className="mt-2 text-xs leading-5 text-gray-400">
+                    Charge applied when an order does not qualify
+                    for free shipping.
+                  </p>
+                </Field>
+              </div>
+            </SettingsSection>
+
+            {/* Payment Settings */}
+            <SettingsSection
+              icon={<FaCreditCard size={18} />}
+              title="Payment Settings"
+              description="Enable or disable payment methods."
+            >
+              <div className="space-y-3 sm:space-y-4">
+                <ToggleSetting
+                  icon={<FaShoppingBag className="text-green-600" />}
+                  iconBackground="bg-green-50"
+                  title="Cash on Delivery"
+                  description="Allow customers to pay when their order arrives."
+                  name="enableCOD"
+                  checked={settings.enableCOD}
+                  onChange={handleChange}
+                />
+
+                <ToggleSetting
+                  icon={<FaCreditCard className="text-blue-600" />}
+                  iconBackground="bg-blue-50"
+                  title="Razorpay"
+                  description="Accept online payments through Razorpay."
+                  name="enableRazorpay"
+                  checked={settings.enableRazorpay}
+                  onChange={handleChange}
+                />
+              </div>
+            </SettingsSection>
+
+            {/* Order Settings */}
+            <SettingsSection
+              icon={<FaShoppingBag size={18} />}
+              title="Order Settings"
+              description="Configure customer order options."
+            >
+              <div className="space-y-5">
+                <ToggleSetting
+                  title="Allow Order Cancellation"
+                  description="Allow customers to cancel their orders."
+                  name="allowOrderCancellation"
+                  checked={settings.allowOrderCancellation}
+                  onChange={handleChange}
+                />
+
+                <div className="w-full max-w-md">
+                  <Field
+                    label="Cancellation Time Limit"
+                    htmlFor="cancellationTimeLimit"
+                  >
+                    <div className="flex items-center gap-3">
+                      <input
+                        id="cancellationTimeLimit"
+                        type="number"
+                        min="0"
+                        name="cancellationTimeLimit"
+                        value={settings.cancellationTimeLimit}
+                        onChange={handleChange}
+                        disabled={!settings.allowOrderCancellation}
+                        className={`${inputClass} disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400`}
+                      />
+
+                      <span className="shrink-0 text-sm text-gray-500">
+                        Hours
+                      </span>
+                    </div>
+                  </Field>
+                </div>
+              </div>
+            </SettingsSection>
+
+            {/* Actions */}
+            <div className="flex flex-col-reverse gap-3 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm sm:flex-row sm:justify-end sm:p-5">
+              <button
+                type="button"
+                onClick={handleReset}
+                disabled={saving}
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 px-5 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:opacity-50 sm:w-auto"
+              >
+                <FaUndo size={14} />
+                Reset
+              </button>
+
+              <button
+                type="submit"
+                disabled={saving}
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#6B1028] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#54101F] disabled:opacity-60 sm:w-auto"
+              >
+                <FaSave size={15} />
+                {saving ? "Saving..." : "Save Settings"}
+              </button>
             </div>
-          </div>
-        </SettingsSection>
-
-        {/* Action buttons */}
-        <div className="flex flex-col-reverse gap-3 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm sm:flex-row sm:justify-end sm:p-5">
-          <button
-            type="button"
-            onClick={handleReset}
-            disabled={saving || loading}
-            className="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 px-5 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
-          >
-            <FaUndo size={14} />
-            Reset
-          </button>
-
-          <button
-            type="submit"
-            disabled={saving || loading}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#6B1028] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#54101F] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
-          >
-            <FaSave size={15} />
-            {saving ? "Saving..." : "Save Settings"}
-          </button>
-        </div>
-      </form>
-    </div>
+          </form>
+        )}
+      </div>
+    </AdminLayout>
   );
 };
 
@@ -430,6 +437,7 @@ const SettingsSection = ({
         <h2 className="text-base font-semibold text-gray-800 sm:text-lg">
           {title}
         </h2>
+
         <p className="mt-1 text-xs leading-5 text-gray-500 sm:text-sm">
           {description}
         </p>
@@ -472,6 +480,7 @@ const ToggleSetting = ({
         <h3 className="break-words text-sm font-semibold text-gray-800 sm:text-base">
           {title}
         </h3>
+
         {description && (
           <p className="mt-1 text-xs leading-5 text-gray-500 sm:text-sm">
             {description}

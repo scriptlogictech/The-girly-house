@@ -23,7 +23,7 @@ export const CheckoutProvider = ({ children }) => {
     useState(null);
 
   const [paymentMethod, setPaymentMethod] =
-    useState("COD");
+    useState("RAZORPAY");
 
   const [couponCode, setCouponCode] = useState("");
 

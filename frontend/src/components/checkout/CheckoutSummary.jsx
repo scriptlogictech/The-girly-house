@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -88,6 +89,7 @@ const CheckoutSummary = () => {
 
   // ==========================================
   // COD ORDER
+  // Preserved for future use
   // ==========================================
 
   const handleCODOrder = async () => {
@@ -127,6 +129,10 @@ const CheckoutSummary = () => {
   // ==========================================
 
   const handleRazorpayPayment = async () => {
+    if (paymentProcessing) {
+      return;
+    }
+
     try {
       setPaymentProcessing(true);
 
@@ -165,14 +171,20 @@ const CheckoutSummary = () => {
       ==========================================
       */
 
-      if (
-        !window.Razorpay
-      ) {
-        toast.error(
+      if (!window.Razorpay) {
+        throw new Error(
           "Razorpay is not loaded. Please refresh the page and try again."
         );
+      }
 
-        return;
+      if (
+        !paymentData?.keyId ||
+        !paymentData?.razorpayOrderId ||
+        !paymentData?.amount
+      ) {
+        throw new Error(
+          "Invalid payment details received from the server."
+        );
       }
 
       /*
@@ -201,20 +213,18 @@ const CheckoutSummary = () => {
         order_id:
           paymentData.razorpayOrderId,
 
+        /*
+        ==========================================
+        STEP 3
+        Verify Payment On Backend
+        ==========================================
+        */
+
         handler:
           async function (
             razorpayResponse
           ) {
             try {
-              setPaymentProcessing(true);
-
-              /*
-              ==================================
-              STEP 3
-              Verify Payment On Backend
-              ==================================
-              */
-
               const verificationResponse =
                 await verifyRazorpayPayment({
                   razorpayOrderId:
@@ -338,28 +348,27 @@ const CheckoutSummary = () => {
       );
 
       razorpay.open();
+
+      /*
+      Keep paymentProcessing true while the
+      Razorpay window is open.
+
+      The handler, failure event, modal dismissal,
+      or initialization error will reset it.
+      */
     } catch (error) {
       console.error(
         "Razorpay Order Error:",
         error
       );
 
+      setPaymentProcessing(false);
+
       toast.error(
         error?.response?.data?.message ||
           error?.message ||
           "Unable to start Razorpay payment."
       );
-    } finally {
-      /*
-        We don't immediately consider the whole
-        process finished here because the Razorpay
-        popup may still be open.
-
-        The handler / modal callbacks will update
-        paymentProcessing.
-      */
-
-      setPaymentProcessing(false);
     }
   };
 
@@ -368,6 +377,16 @@ const CheckoutSummary = () => {
   // ==========================================
 
   const handlePlaceOrder = async () => {
+    /*
+    ==========================================
+    PREVENT DUPLICATE SUBMISSIONS
+    ==========================================
+    */
+
+    if (loading || paymentProcessing) {
+      return;
+    }
+
     /*
     ==========================================
     ADDRESS VALIDATION
@@ -388,9 +407,9 @@ const CheckoutSummary = () => {
     ==========================================
     */
 
-    if (!paymentMethod) {
+    if (paymentMethod !== "RAZORPAY") {
       toast.error(
-        "Please select a payment method."
+        "Please select Razorpay to continue."
       );
 
       return;
@@ -426,37 +445,13 @@ const CheckoutSummary = () => {
     ==========================================
     */
 
-    if (
-      paymentMethod === "RAZORPAY"
-    ) {
-      await handleRazorpayPayment();
+    // Razorpay is the only payment method enabled
+    // in the frontend checkout for now.
+    //
+    // Keep handleCODOrder() above for future use,
+    // but do not route checkout to COD currently.
 
-      return;
-    }
-
-    /*
-    ==========================================
-    COD
-    ==========================================
-    */
-
-    if (
-      paymentMethod === "COD"
-    ) {
-      await handleCODOrder();
-
-      return;
-    }
-
-    /*
-    ==========================================
-    OTHER METHODS
-    ==========================================
-    */
-
-    toast.info(
-      "This payment method is not available yet."
-    );
+    await handleRazorpayPayment();
   };
 
   // ==========================================
@@ -469,22 +464,14 @@ const CheckoutSummary = () => {
 
   const getButtonText = () => {
     if (paymentProcessing) {
-      return paymentMethod === "RAZORPAY"
-        ? "Opening Payment..."
-        : "Processing...";
+      return "Processing Payment...";
     }
 
     if (loading) {
       return "Processing...";
     }
 
-    if (
-      paymentMethod === "RAZORPAY"
-    ) {
-      return "Pay with Razorpay";
-    }
-
-    return "Place Order";
+    return "Pay with Razorpay";
   };
 
   // ==========================================
